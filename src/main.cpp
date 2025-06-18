@@ -1,6 +1,12 @@
-#include <iostream>
+#include <QApplication>
+#include <QPushButton>
 
 int main()
 {
-    std::cout << "hello world\n";
+    QApplication app (argc, argv);
+
+    QPushButton button ("Hello world!");
+    button.show();
+
+    return app.exec();
 }
