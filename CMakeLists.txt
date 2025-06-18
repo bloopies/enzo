@@ -9,7 +9,7 @@ qt_standard_project_setup()
 
 
 qt_add_executable(${AppExec}
-    src/main.cpp
+    src/gui/main.cpp
 )
 
 target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets)
