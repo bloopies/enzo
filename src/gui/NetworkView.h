@@ -8,4 +8,5 @@ class NetworkView
 public:
     NetworkView(QWidget *parent = nullptr);
 private:
+
 };

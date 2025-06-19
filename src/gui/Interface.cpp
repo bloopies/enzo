@@ -6,18 +6,21 @@
 
 EnzoUI::EnzoUI()
 {
-    mainLayout_ = new QVBoxLayout();
-    this->setLayout(mainLayout_);
+    // layout
+    mainLayout_ = new QVBoxLayout(this);
+    setLayout(mainLayout_);
+
+    // title and size
+    setWindowTitle("Enzo");
+    setMinimumSize(1920/2, 1080/2);
 
     Viewport* viewport = new Viewport();
-    NetworkView* networkView = new NetworkView();
+    NetworkView* networkView = new NetworkView(this);
 
-    viewportSplitter_ = new QSplitter();
-    viewportSplitLayout_ = new QVBoxLayout();
-    viewportSplitter_->setLayout(viewportSplitLayout_);
+    viewportSplitter_ = new QSplitter(this);
 
-    viewportSplitLayout_->addWidget(viewport);
-    viewportSplitLayout_->addWidget(networkView);
+    viewportSplitter_->addWidget(viewport);
+    viewportSplitter_->addWidget(networkView);
 
     mainLayout_->addWidget(viewportSplitter_);
 }
