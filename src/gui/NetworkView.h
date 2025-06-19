@@ -1,8 +1,11 @@
 #pragma once
 #include <qwidget.h>
+#include <QGraphicsView>
 
 class NetworkView
-: public QWidget
+: public QGraphicsView
 {
-
+public:
+    NetworkView(QWidget *parent = nullptr);
+private:
 };
