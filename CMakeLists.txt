@@ -1,9 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
-project(enzo_project)
 
-set(AppExec enzo_gui)
+# set vars
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# set exec names
+set(AppExec enzoGui)
 set(TestExec tests)
 
+# setup project
+project(enzo_project)
+
+
+# qt
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
 qt_standard_project_setup()
 
@@ -13,6 +20,7 @@ qt_add_executable(${AppExec}
 )
 
 target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets)
+target_include_directories(${AppExec} PUBLIC src)
 
 # tests
 add_executable(${TestExec} tests/main-tests.cpp)

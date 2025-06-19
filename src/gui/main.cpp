@@ -1,12 +1,14 @@
 #include <QApplication>
 #include <QPushButton>
 
+#include "Interface.h"
+
 int main(int argc, char **argv)
 {
-     QApplication app (argc, argv);
+    QApplication app (argc, argv);
 
-     QPushButton button ("Hello world !");
-     button.show();
+    EnzoUI interface;
+    interface.show();
 
-     return app.exec();
+    return app.exec();
 }
