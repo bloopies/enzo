@@ -9,7 +9,7 @@ NetworkGraphicsScene::NetworkGraphicsScene()
 {
     sceneWidth_ = 64000;
     sceneHeight_ = 64000;
-    gridSize_ = 20;
+    gridSize_ = 40;
 
     setSceneRect(sceneWidth_/-2.0f, sceneHeight_/-2.0f, sceneWidth_, sceneHeight_);
     

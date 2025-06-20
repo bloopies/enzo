@@ -12,17 +12,7 @@ NetworkGraphicsView::NetworkGraphicsView(QWidget *parent, QGraphicsScene* scene)
 
     initUI();
 
-    QPen greenPen = QPen(Qt::green);
-    greenPen.setWidth(6);
 
-    auto* rect1 = scene->addRect(50, 50, 100, 100, greenPen);
-    rect1->setFlag(QGraphicsItem::ItemIsMovable);
-
-    auto* rect2 = scene->addRect(80, 120, 100, 100, greenPen);
-    rect2->setFlag(QGraphicsItem::ItemIsMovable);
-
-    auto* rect3 = scene->addRect(80, -120, 100, 100, greenPen);
-    rect3->setFlag(QGraphicsItem::ItemIsMovable);
 }
 
 void NetworkGraphicsView::initUI()
