@@ -68,3 +68,19 @@ void NetworkGraphicsView::mouseMoveEvent(QMouseEvent *mouseEvent)
     
 }
 
+void NetworkGraphicsView::wheelEvent(QWheelEvent *event)
+{
+    std::cout << "delta: " << event->angleDelta().x() << "\n";
+    std::cout << "delta: " << event->angleDelta().y() << "\n";
+    int delta = event->angleDelta().y();
+    if(delta > 0)
+    {
+        scale(1.1, 1.1);
+    }
+    else if(delta < 0)
+    {
+        scale(0.9, 0.9);
+    }
+    event->accept();
+}
+

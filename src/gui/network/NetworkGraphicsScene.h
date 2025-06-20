@@ -6,10 +6,7 @@ class NetworkGraphicsScene
 : public QGraphicsScene
 {
 public:
-    NetworkGraphicsScene(QGraphicsView *parent = nullptr);
+    NetworkGraphicsScene();
 private:
-    QGraphicsView* parent_;
 protected:
-    void wheelEvent(QGraphicsSceneWheelEvent *wheelEvent) override;
-
 };
