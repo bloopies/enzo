@@ -10,9 +10,10 @@ NetworkGraphicsView::NetworkGraphicsView(QWidget *parent, QGraphicsScene* scene)
 {
     setScene(scene);
 
+    initUI();
+
     QPen greenPen = QPen(Qt::green);
     greenPen.setWidth(6);
-
 
     auto* rect1 = scene->addRect(50, 50, 100, 100, greenPen);
     rect1->setFlag(QGraphicsItem::ItemIsMovable);
@@ -20,6 +21,21 @@ NetworkGraphicsView::NetworkGraphicsView(QWidget *parent, QGraphicsScene* scene)
     auto* rect2 = scene->addRect(80, 120, 100, 100, greenPen);
     rect2->setFlag(QGraphicsItem::ItemIsMovable);
 
+    auto* rect3 = scene->addRect(80, -120, 100, 100, greenPen);
+    rect3->setFlag(QGraphicsItem::ItemIsMovable);
+}
+
+void NetworkGraphicsView::initUI()
+{
+    // zoom from mouse
+    setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+    // disable scroll bars
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform | QPainter::TextAntialiasing);
+    //
+    setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
 }
 
 

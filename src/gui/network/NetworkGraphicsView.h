@@ -10,6 +10,7 @@ public:
     NetworkGraphicsView(QWidget *parent = nullptr, QGraphicsScene* scene = nullptr);
 private:
     QPointF panStartPos;
+    void initUI();
 
 protected:
     void mouseMoveEvent(QMouseEvent *mouseEvent) override;

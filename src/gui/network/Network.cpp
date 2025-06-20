@@ -8,8 +8,10 @@ Network::Network(QWidget* parent)
 {
 
     mainLayout_ = new QVBoxLayout(parent);
+    mainLayout_->setContentsMargins(0,0,0,0);
 
     this->setLayout(mainLayout_); 
+
 
     NetworkGraphicsScene* scene = new NetworkGraphicsScene();
     NetworkGraphicsView* view = new NetworkGraphicsView(parent, scene);
