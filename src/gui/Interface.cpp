@@ -1,6 +1,6 @@
 #include "gui/Interface.h"
 #include "gui/viewport/Viewport.h"
-#include "gui/network/NetworkView.h"
+#include "gui/network/Network.h"
 #include <qpushbutton.h>
 #include <qsplitter.h>
 
@@ -15,13 +15,13 @@ EnzoUI::EnzoUI()
     setMinimumSize(1920/2, 1080/2);
 
     Viewport* viewport = new Viewport();
-    NetworkView* networkView = new NetworkView(this);
-    networkView->setMinimumWidth(400);
+    Network* network = new Network(this);
+    network->setMinimumWidth(400);
 
     viewportSplitter_ = new QSplitter(this);
 
     viewportSplitter_->addWidget(viewport);
-    viewportSplitter_->addWidget(networkView);
+    viewportSplitter_->addWidget(network);
 
     mainLayout_->addWidget(viewportSplitter_);
 }

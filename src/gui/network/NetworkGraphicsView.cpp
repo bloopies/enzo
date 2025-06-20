@@ -1,14 +1,13 @@
-#include "gui/network/NetworkView.h"
+#include "gui/network/NetworkGraphicsView.h"
 #include <QGraphicsItem>
 #include "gui/network/NetworkGraphicsScene.h"
 #include <iostream>
 #include <QMouseEvent>
 #include <QScrollBar>
 
-NetworkView::NetworkView(QWidget *parent)
+NetworkGraphicsView::NetworkGraphicsView(QWidget *parent, QGraphicsScene* scene)
 : QGraphicsView(parent) 
 {
-    QGraphicsScene *scene = new NetworkGraphicsScene(this);
     setScene(scene);
 
     QPen greenPen = QPen(Qt::green);
@@ -24,7 +23,7 @@ NetworkView::NetworkView(QWidget *parent)
 }
 
 
-void NetworkView::mousePressEvent(QMouseEvent *event)
+void NetworkGraphicsView::mousePressEvent(QMouseEvent *event)
 {
     if(
         event->button() & Qt::MiddleButton
@@ -48,7 +47,7 @@ void NetworkView::mousePressEvent(QMouseEvent *event)
 //     }
 // }
 
-void NetworkView::mouseMoveEvent(QMouseEvent *mouseEvent)
+void NetworkGraphicsView::mouseMoveEvent(QMouseEvent *mouseEvent)
 {
 
     if( mouseEvent->buttons() & Qt::MiddleButton)

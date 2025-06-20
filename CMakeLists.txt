@@ -19,8 +19,9 @@ qt_add_executable(${AppExec}
     src/gui/main.cpp
     src/gui/Interface.cpp
     src/gui/viewport/Viewport.cpp
-    src/gui/network/NetworkView.cpp
+    src/gui/network/NetworkGraphicsView.cpp
     src/gui/network/NetworkGraphicsScene.cpp
+    src/gui/network/Network.cpp
 )
 
 target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets)

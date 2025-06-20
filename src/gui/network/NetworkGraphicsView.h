@@ -1,12 +1,13 @@
 #pragma once
 #include <qwidget.h>
 #include <QGraphicsView>
+#include <QGraphicsScene>
 
-class NetworkView
+class NetworkGraphicsView
 : public QGraphicsView
 {
 public:
-    NetworkView(QWidget *parent = nullptr);
+    NetworkGraphicsView(QWidget *parent = nullptr, QGraphicsScene* scene = nullptr);
 private:
     QPointF panStartPos;
 
