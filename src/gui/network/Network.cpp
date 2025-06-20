@@ -1,5 +1,6 @@
 #include "gui/network/Network.h"
 #include "gui/network/NetworkGraphicsView.h"
+#include "gui/network/NodeEdgeGraphic.h"
 #include "gui/network/NetworkGraphicsScene.h"
 #include "gui/network/NodeGraphic.h"
 #include <qboxlayout.h>
@@ -33,5 +34,15 @@ Network::Network(QWidget* parent)
     NodeGraphic* node1 = new NodeGraphic();
     scene->addItem(node1);
     
+    NodeGraphic* node2 = new NodeGraphic();
+    scene->addItem(node2);
+
+    NodeEdgeGraphic* edge1 = new NodeEdgeGraphic(node1->getOutput(0), node2->getInput(0));
+    scene->addItem(edge1);
+
+    node1->addEdge(edge1);
+    node2->addEdge(edge1);
+
+
     mainLayout_->addWidget(view);
 }

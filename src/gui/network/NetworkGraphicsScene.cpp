@@ -13,7 +13,7 @@ NetworkGraphicsScene::NetworkGraphicsScene()
 
     setSceneRect(sceneWidth_/-2.0f, sceneHeight_/-2.0f, sceneWidth_, sceneHeight_);
     
-    setBackgroundBrush(QColor("#1b1b1b"));
+    setBackgroundBrush(QColor("#282828"));
 }
 
 void NetworkGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
@@ -25,11 +25,6 @@ void NetworkGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
     int bottom = floor(rect.bottom());
     int left = floor(rect.left());
     int right = ceil(rect.right());
-
-    std::cout << "top: " << top << "\n";
-    std::cout << "bottom: " << bottom << "\n";
-    std::cout << "left: " << left << "\n";
-    std::cout << "right: " << right << "\n";
 
     QPen gridPen(QColor("#323232"));
 

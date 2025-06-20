@@ -32,7 +32,7 @@ void NetworkGraphicsView::initUI()
 void NetworkGraphicsView::mousePressEvent(QMouseEvent *event)
 {
     if(
-        event->button() & Qt::MiddleButton
+        event->button() == Qt::MiddleButton
     )
     {
         panStartPos = event->pos();
@@ -60,8 +60,6 @@ void NetworkGraphicsView::mouseMoveEvent(QMouseEvent *mouseEvent)
     {
         QPointF pos = mouseEvent->pos();
         QPointF delta = pos-panStartPos;
-        std::cout << "pos: " << mouseEvent->pos().x() << " " << mouseEvent->pos().y() << "\n";
-        std::cout << "delta: " << delta.x() << " " << delta.y() << "\n";
 
         float speed = 1.0f;
         horizontalScrollBar()->setValue(horizontalScrollBar()->value() - delta.x());
@@ -77,8 +75,6 @@ void NetworkGraphicsView::mouseMoveEvent(QMouseEvent *mouseEvent)
 
 void NetworkGraphicsView::wheelEvent(QWheelEvent *event)
 {
-    std::cout << "delta: " << event->angleDelta().x() << "\n";
-    std::cout << "delta: " << event->angleDelta().y() << "\n";
     int delta = event->angleDelta().y();
     if(delta > 0)
     {
