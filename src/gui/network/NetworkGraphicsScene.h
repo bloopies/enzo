@@ -8,5 +8,7 @@ class NetworkGraphicsScene
 public:
     NetworkGraphicsScene();
 private:
+    uint sceneWidth_;
+    uint sceneHeight_;
 protected:
 };

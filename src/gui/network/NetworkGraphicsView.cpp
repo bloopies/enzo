@@ -58,7 +58,8 @@ void NetworkGraphicsView::mouseMoveEvent(QMouseEvent *mouseEvent)
         std::cout << "delta: " << delta.x() << " " << delta.y() << "\n";
 
         float speed = 1.0f;
-        setSceneRect(sceneRect().translated(-delta.x()*speed, -delta.y()*speed));
+        horizontalScrollBar()->setValue(horizontalScrollBar()->value() - delta.x());
+        verticalScrollBar()->setValue(verticalScrollBar()->value() - delta.y());
         panStartPos = mouseEvent->pos();
         mouseEvent->accept();
         return;
