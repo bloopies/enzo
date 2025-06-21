@@ -17,7 +17,7 @@ private:
     NetworkGraphicsScene* scene_;
     NetworkGraphicsView* view_;
     FloatingEdgeGraphic* floatingEdge_=nullptr;
-    
+    void keyPressEvent(QKeyEvent *event) override;
 
 protected:
 };

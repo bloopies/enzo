@@ -74,3 +74,17 @@ void Network::mouseMoved(QMouseEvent *event)
     }
 }
 
+
+void Network::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Escape)
+    {
+        // delete floating edge
+        if(floatingEdge_)
+        {
+            scene_->removeItem(floatingEdge_);
+            delete floatingEdge_;
+            floatingEdge_=nullptr;
+        }
+    }
+}
