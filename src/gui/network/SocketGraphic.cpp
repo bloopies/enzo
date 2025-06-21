@@ -11,7 +11,8 @@ SocketGraphic::SocketGraphic(QGraphicsItem *parent)
 
 QRectF SocketGraphic::boundingRect() const
 {
-    auto boundRect = QRect(-socketSize_/2, -socketSize_/2, socketSize_, socketSize_);
+    float paddingScale = 10;
+    auto boundRect = QRect(-socketSize_/2.0f*paddingScale, -socketSize_/2.0f*paddingScale, socketSize_*paddingScale, socketSize_*paddingScale);
     return boundRect;
 }
 

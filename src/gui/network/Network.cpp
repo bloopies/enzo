@@ -53,13 +53,14 @@ Network::Network(QWidget* parent)
     mainLayout_->addWidget(view_);
 }
 
-void Network::socketClicked(SocketGraphic* socket)
+void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
 {
     std::cout << "socket clicked\n";
     if(!floatingEdge_)
     {
         std::cout << "creating floating edge\n";
         floatingEdge_ = new FloatingEdgeGraphic(socket);
+        floatingEdge_->setFloatPos(view_->mapToScene(event->pos()));
         scene_->addItem(floatingEdge_);
     }
 }

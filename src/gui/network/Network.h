@@ -10,7 +10,7 @@ class Network
 {
 public:
     Network(QWidget* parent = nullptr);
-    void socketClicked(SocketGraphic* socket);
+    void socketClicked(SocketGraphic* socket, QMouseEvent *event);
     void mouseMoved(QMouseEvent *event);
 private:
     QLayout* mainLayout_;

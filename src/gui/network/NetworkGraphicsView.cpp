@@ -61,7 +61,7 @@ void NetworkGraphicsView::leftMousePress(QMouseEvent *event)
     if(isSocket)
     {
         std::cout << "SOCKET!\n";
-        network_->socketClicked(static_cast<SocketGraphic*>(itemClicked));
+        network_->socketClicked(static_cast<SocketGraphic*>(itemClicked), event);
     }
 
 }
