@@ -1,5 +1,7 @@
 #pragma once
 #include <QWidget>
+#include <qgraphicsitem.h>
+#include <typeinfo>
 #include "gui/network/NetworkGraphicsView.h"
 #include "gui/network/NetworkGraphicsScene.h"
 #include "gui/network/SocketGraphic.h"
@@ -26,6 +28,12 @@ private:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
     void destroyFloatingEdge();
+
+    template<typename T>
+    bool isType(QGraphicsItem* item)
+    {
+        return item && typeid(*item)==typeid(T);
+    }
 
 protected:
     void resizeEvent(QResizeEvent *event) override;

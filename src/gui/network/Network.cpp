@@ -71,8 +71,7 @@ void Network::resizeEvent(QResizeEvent *event)
 void Network::leftMousePress(QMouseEvent *event)
 {
     QGraphicsItem* itemClicked = view_->itemAt(event->pos());
-    bool isSocket = itemClicked && typeid(*itemClicked)==typeid(SocketGraphic);
-    if(isSocket)
+    if(isType<SocketGraphic>(itemClicked))
     {
         std::cout << "SOCKET!\n";
         socketClicked(static_cast<SocketGraphic*>(itemClicked), event);
@@ -83,6 +82,8 @@ void Network::leftMousePress(QMouseEvent *event)
     }
 
 }
+
+
 
 
 void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
@@ -135,24 +136,20 @@ void Network::mouseMoved(QMouseEvent *event)
     }
 
     QGraphicsItem* hoverItem = view_->itemAt(event->pos());
-    bool isEdge = hoverItem && typeid(*hoverItem)==typeid(NodeEdgeGraphic);
 
-    // set 
-    if(ctrlMod && isEdge)
+    // set node edge color
+    if(ctrlMod && isType<NodeEdgeGraphic>(hoverItem))
     {
-        std::cout << "EDGE\n";
         static_cast<NodeEdgeGraphic*>(hoverItem)->setColor(QColor("red"));
         hoverItem->update();
         prevHoverItem_=hoverItem;
     }
     // reset node edge color
     if(
-        prevHoverItem &&
         (!ctrlMod || hoverItem!=prevHoverItem) &&
-        typeid(*prevHoverItem)==typeid(NodeEdgeGraphic)
+        isType<NodeEdgeGraphic>(prevHoverItem)
     )
     {
-        std::cout << " reset\n";
         static_cast<NodeEdgeGraphic*>(prevHoverItem)->useDefaultColor();
         prevHoverItem->update();
     }
@@ -174,7 +171,7 @@ void Network::keyPressEvent(QKeyEvent *event)
 
     if(
         event->key() == Qt::Key_Control &&
-        hoverItem && typeid(*hoverItem)==typeid(NodeEdgeGraphic)
+        isType<NodeEdgeGraphic>(hoverItem)
     )
     {
         static_cast<NodeEdgeGraphic*>(hoverItem)->setColor(QColor("red"));
@@ -197,7 +194,7 @@ void Network::keyReleaseEvent(QKeyEvent *event)
     if(
         prevHoverItem_ &&
         event->key() == Qt::Key_Control &&
-        typeid(*prevHoverItem_)==typeid(NodeEdgeGraphic)
+        isType<NodeEdgeGraphic>(prevHoverItem_)
     )
     {
         static_cast<NodeEdgeGraphic*>(prevHoverItem_)->useDefaultColor();
