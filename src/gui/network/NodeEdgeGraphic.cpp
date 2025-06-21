@@ -18,7 +18,9 @@ QRectF NodeEdgeGraphic::boundingRect() const
 
 void NodeEdgeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->setPen(QPen("white"));
+    auto pen = QPen("white");
+    pen.setCapStyle(Qt::RoundCap);
+    painter->setPen(pen);
     painter->drawLine(socket1_->scenePos(),socket2_->scenePos());
  
 }

@@ -22,17 +22,17 @@ Network::Network(QWidget* parent)
     scene_ = new NetworkGraphicsScene();
     view_ = new NetworkGraphicsView(this, this, scene_);
 
-    QPen greenPen = QPen(Qt::green);
-    greenPen.setWidth(6);
+    // QPen greenPen = QPen(Qt::green);
+    // greenPen.setWidth(6);
 
-    auto* rect1 = scene_->addRect(50, 50, 100, 100, greenPen);
-    rect1->setFlag(QGraphicsItem::ItemIsMovable);
+    // auto* rect1 = scene_->addRect(50, 50, 100, 100, greenPen);
+    // rect1->setFlag(QGraphicsItem::ItemIsMovable);
 
-    auto* rect2 = scene_->addRect(80, 120, 100, 100, greenPen);
-    rect2->setFlag(QGraphicsItem::ItemIsMovable);
+    // auto* rect2 = scene_->addRect(80, 120, 100, 100, greenPen);
+    // rect2->setFlag(QGraphicsItem::ItemIsMovable);
 
-    auto* rect3 = scene_->addRect(80, -120, 100, 100, greenPen);
-    rect3->setFlag(QGraphicsItem::ItemIsMovable);
+    // auto* rect3 = scene_->addRect(80, -120, 100, 100, greenPen);
+    // rect3->setFlag(QGraphicsItem::ItemIsMovable);
 
     NodeGraphic* node1 = new NodeGraphic();
     node1->setPos(-50, -50);
