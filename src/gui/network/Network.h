@@ -3,6 +3,7 @@
 #include <qgraphicsitem.h>
 #include <typeinfo>
 #include "gui/network/NetworkGraphicsView.h"
+#include "gui/network/NodeEdgeGraphic.h"
 #include "gui/network/NetworkGraphicsScene.h"
 #include "gui/network/SocketGraphic.h"
 #include "gui/network/FloatingEdgeGraphic.h"
@@ -28,6 +29,8 @@ private:
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
     void destroyFloatingEdge();
+
+    void highlightEdge(QGraphicsItem* edge, bool state);
 
     template<typename T>
     bool isType(QGraphicsItem* item)

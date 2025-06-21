@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QGraphicsItem>
 #include <QMouseEvent>
+#include <qgraphicsitem.h>
 #include <qnamespace.h>
 
 Network::Network(QWidget* parent)
@@ -140,9 +141,7 @@ void Network::mouseMoved(QMouseEvent *event)
     // set node edge color
     if(ctrlMod && isType<NodeEdgeGraphic>(hoverItem))
     {
-        static_cast<NodeEdgeGraphic*>(hoverItem)->setColor(QColor("red"));
-        hoverItem->update();
-        prevHoverItem_=hoverItem;
+        highlightEdge(hoverItem, true);
     }
     // reset node edge color
     if(
@@ -150,8 +149,7 @@ void Network::mouseMoved(QMouseEvent *event)
         isType<NodeEdgeGraphic>(prevHoverItem)
     )
     {
-        static_cast<NodeEdgeGraphic*>(prevHoverItem)->useDefaultColor();
-        prevHoverItem->update();
+        highlightEdge(prevHoverItem, false);
     }
 
 }
@@ -169,14 +167,13 @@ void Network::keyPressEvent(QKeyEvent *event)
 
     QGraphicsItem* hoverItem = view_->itemAt(widgetPos);
 
+    // edge detection
     if(
         event->key() == Qt::Key_Control &&
         isType<NodeEdgeGraphic>(hoverItem)
     )
     {
-        static_cast<NodeEdgeGraphic*>(hoverItem)->setColor(QColor("red"));
-        hoverItem->update();
-        prevHoverItem_=hoverItem;
+        highlightEdge(hoverItem, true);
     }
 
     if(event->key() == Qt::Key_Escape)
@@ -185,19 +182,36 @@ void Network::keyPressEvent(QKeyEvent *event)
     }
 }
 
+void Network::highlightEdge(QGraphicsItem* edge, bool state)
+{
+    if(state)
+    {
+        static_cast<NodeEdgeGraphic*>(edge)->setColor(QColor("red"));
+        edge->update();
+        prevHoverItem_=edge;
+    }
+    else
+    {
+        static_cast<NodeEdgeGraphic*>(edge)->useDefaultColor();
+        edge->update();
+    }
+
+}
+
+
 void Network::keyReleaseEvent(QKeyEvent *event)
 {
     // modifiers
     Qt::KeyboardModifiers mods = event->modifiers();
     bool ctrlMod = mods & Qt::ControlModifier;
 
+    // edge detection
     if(
         prevHoverItem_ &&
         event->key() == Qt::Key_Control &&
         isType<NodeEdgeGraphic>(prevHoverItem_)
     )
     {
-        static_cast<NodeEdgeGraphic*>(prevHoverItem_)->useDefaultColor();
-        prevHoverItem_->update();
+        highlightEdge(prevHoverItem_, false);
     }
 }
