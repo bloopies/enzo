@@ -71,15 +71,21 @@ void Network::resizeEvent(QResizeEvent *event)
 
 void Network::leftMousePress(QMouseEvent *event)
 {
+    Qt::KeyboardModifiers mods = event->modifiers();
+
     QGraphicsItem* itemClicked = view_->itemAt(event->pos());
     if(isType<SocketGraphic>(itemClicked))
     {
-        std::cout << "SOCKET!\n";
         socketClicked(static_cast<SocketGraphic*>(itemClicked), event);
     }
-    else
+    else if(floatingEdge_)
     {
         destroyFloatingEdge();
+    }
+    // delete edges
+    else if(mods & Qt::ControlModifier && isType<NodeEdgeGraphic>(itemClicked))
+    {
+        scene_->removeItem(itemClicked);
     }
 
 }
