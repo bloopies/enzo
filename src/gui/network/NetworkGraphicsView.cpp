@@ -56,13 +56,14 @@ void NetworkGraphicsView::mousePressEvent(QMouseEvent *event)
 
 void NetworkGraphicsView::leftMousePress(QMouseEvent *event)
 {
-    QGraphicsItem* itemClicked = itemAt(event->pos());
-    bool isSocket = itemClicked && typeid(*itemClicked)==typeid(SocketGraphic);
-    if(isSocket)
-    {
-        std::cout << "SOCKET!\n";
-        network_->socketClicked(static_cast<SocketGraphic*>(itemClicked), event);
-    }
+    network_->leftMousePress(event);
+    // QGraphicsItem* itemClicked = itemAt(event->pos());
+    // bool isSocket = itemClicked && typeid(*itemClicked)==typeid(SocketGraphic);
+    // if(isSocket)
+    // {
+    //     std::cout << "SOCKET!\n";
+    //     network_->socketClicked(static_cast<SocketGraphic*>(itemClicked), event);
+    // }
 
 }
 

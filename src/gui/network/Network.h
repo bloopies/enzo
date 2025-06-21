@@ -12,12 +12,14 @@ public:
     Network(QWidget* parent = nullptr);
     void socketClicked(SocketGraphic* socket, QMouseEvent *event);
     void mouseMoved(QMouseEvent *event);
+    void leftMousePress(QMouseEvent *event);
 private:
     QLayout* mainLayout_;
     NetworkGraphicsScene* scene_;
     NetworkGraphicsView* view_;
     FloatingEdgeGraphic* floatingEdge_=nullptr;
     void keyPressEvent(QKeyEvent *event) override;
+    void destroyFloatingEdge();
 
 protected:
 };

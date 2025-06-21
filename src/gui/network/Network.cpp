@@ -53,6 +53,23 @@ Network::Network(QWidget* parent)
     mainLayout_->addWidget(view_);
 }
 
+void Network::leftMousePress(QMouseEvent *event)
+{
+    QGraphicsItem* itemClicked = view_->itemAt(event->pos());
+    bool isSocket = itemClicked && typeid(*itemClicked)==typeid(SocketGraphic);
+    if(isSocket)
+    {
+        std::cout << "SOCKET!\n";
+        socketClicked(static_cast<SocketGraphic*>(itemClicked), event);
+    }
+    else
+    {
+        destroyFloatingEdge();
+    }
+
+}
+
+
 void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
 {
     std::cout << "socket clicked\n";
@@ -64,6 +81,17 @@ void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
         scene_->addItem(floatingEdge_);
     }
 }
+
+void Network::destroyFloatingEdge()
+{
+    if(floatingEdge_)
+    {
+        scene_->removeItem(floatingEdge_);
+        delete floatingEdge_;
+        floatingEdge_=nullptr;
+    }
+}
+
 
 
 void Network::mouseMoved(QMouseEvent *event)
@@ -80,12 +108,6 @@ void Network::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_Escape)
     {
-        // delete floating edge
-        if(floatingEdge_)
-        {
-            scene_->removeItem(floatingEdge_);
-            delete floatingEdge_;
-            floatingEdge_=nullptr;
-        }
+        destroyFloatingEdge();
     }
 }
