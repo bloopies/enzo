@@ -1,14 +1,20 @@
 #include "gui/network/NetworkGraphicsView.h"
 #include <QGraphicsItem>
+#include "gui/network/Network.h"
 #include "gui/network/NetworkGraphicsScene.h"
+#include "gui/network/SocketGraphic.h"
 #include <iostream>
 #include <QMouseEvent>
 #include <QScrollBar>
+#include <qgraphicsitem.h>
+#include <qobject.h>
+#include <typeinfo>
 
-NetworkGraphicsView::NetworkGraphicsView(QWidget *parent, QGraphicsScene* scene)
-: QGraphicsView(parent) 
+NetworkGraphicsView::NetworkGraphicsView(QWidget *parent, Network* network, QGraphicsScene* scene)
+: QGraphicsView(parent), scene_{scene}, network_{network}
 {
-    setScene(scene);
+    setScene(scene_);
+    setMouseTracking(true);
 
     initUI();
 
@@ -31,6 +37,10 @@ void NetworkGraphicsView::initUI()
 
 void NetworkGraphicsView::mousePressEvent(QMouseEvent *event)
 {
+    if( event->buttons() & Qt::LeftButton)
+    {
+        leftMousePress(event);
+    }
     if(
         event->button() == Qt::MiddleButton
     )
@@ -43,6 +53,19 @@ void NetworkGraphicsView::mousePressEvent(QMouseEvent *event)
     QGraphicsView::mousePressEvent(event);
 }
 
+
+void NetworkGraphicsView::leftMousePress(QMouseEvent *event)
+{
+    QGraphicsItem* itemClicked = itemAt(event->pos());
+    bool isSocket = itemClicked && typeid(*itemClicked)==typeid(SocketGraphic);
+    if(isSocket)
+    {
+        std::cout << "SOCKET!\n";
+        network_->socketClicked(static_cast<SocketGraphic*>(itemClicked));
+    }
+
+}
+
 // void NetworkView::mouseReleaseEvent(QMouseEvent *event)
 // {
 //     if(
@@ -53,25 +76,28 @@ void NetworkGraphicsView::mousePressEvent(QMouseEvent *event)
 //     }
 // }
 
-void NetworkGraphicsView::mouseMoveEvent(QMouseEvent *mouseEvent)
+void NetworkGraphicsView::mouseMoveEvent(QMouseEvent *event)
 {
+    network_->mouseMoved(event);
 
-    if( mouseEvent->buttons() & Qt::MiddleButton)
+    // pan view
+    if( event->buttons() & Qt::MiddleButton)
     {
-        QPointF pos = mouseEvent->pos();
+        QPointF pos = event->pos();
         QPointF delta = pos-panStartPos;
 
         float speed = 1.0f;
         horizontalScrollBar()->setValue(horizontalScrollBar()->value() - delta.x());
         verticalScrollBar()->setValue(verticalScrollBar()->value() - delta.y());
-        panStartPos = mouseEvent->pos();
-        mouseEvent->accept();
+        panStartPos = event->pos();
+        event->accept();
         return;
     }
 
-    QGraphicsView::mouseMoveEvent(mouseEvent);
+    QGraphicsView::mouseMoveEvent(event);
     
 }
+
 
 void NetworkGraphicsView::wheelEvent(QWheelEvent *event)
 {

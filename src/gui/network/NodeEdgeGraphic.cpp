@@ -19,7 +19,6 @@ QRectF NodeEdgeGraphic::boundingRect() const
 void NodeEdgeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setPen(QPen("white"));
-    std::cout << "drawing " << socket1_->scenePos().x() << " " << socket1_->scenePos().y() << "\n";
     painter->drawLine(socket1_->scenePos(),socket2_->scenePos());
  
 }
