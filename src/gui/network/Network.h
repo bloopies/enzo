@@ -25,4 +25,5 @@ private:
     void destroyFloatingEdge();
 
 protected:
+    void resizeEvent(QResizeEvent *event) override;
 };

@@ -3,6 +3,7 @@
 #include <QGraphicsSceneWheelEvent>
 #include <iostream>
 #include <qgraphicsview.h>
+#include <QPainterPath>
 
 NetworkGraphicsScene::NetworkGraphicsScene()
 : QGraphicsScene() 
@@ -18,7 +19,13 @@ NetworkGraphicsScene::NetworkGraphicsScene()
 
 void NetworkGraphicsScene::drawBackground(QPainter *painter, const QRectF &rect)
 {
+
+    // QPainterPath path;
+    // path.addRoundedRect(rect, 15, 15);
+    // painter->setClipPath(path);
+
     QGraphicsScene::drawBackground(painter, rect);
+
 
 
     int top = ceil(rect.top());

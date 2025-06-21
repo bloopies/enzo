@@ -16,6 +16,7 @@ Network::Network(QWidget* parent)
     mainLayout_ = new QVBoxLayout(parent);
     mainLayout_->setContentsMargins(0,0,0,0);
 
+
     this->setLayout(mainLayout_); 
 
 
@@ -55,6 +56,15 @@ Network::Network(QWidget* parent)
 
 
     mainLayout_->addWidget(view_);
+
+}
+
+void Network::resizeEvent(QResizeEvent *event)
+{
+    QPainterPath path;
+    path.addRoundedRect(this->rect(), 15, 15);
+    QRegion region = QRegion(path.toFillPolygon().toPolygon());
+    this->setMask(region);
 }
 
 void Network::leftMousePress(QMouseEvent *event)
