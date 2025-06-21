@@ -21,7 +21,10 @@ private:
     FloatingEdgeGraphic* floatingEdge_=nullptr;
     SocketGraphic* startSocket_=nullptr;
 
+    QGraphicsItem* prevHoverItem_=nullptr;
+
     void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
     void destroyFloatingEdge();
 
 protected:

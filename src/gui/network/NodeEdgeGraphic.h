@@ -12,9 +12,14 @@ public:
     QRectF boundingRect() const override;
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    QPainterPath shape() const override;
+    void setColor(QColor color);
+    void useDefaultColor();
 
 private:
     SocketGraphic* socket1_;
     SocketGraphic* socket2_;
+    QColor color_;
+    QColor defaultColor_;
 };
 

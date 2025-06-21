@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QGraphicsItem>
 #include <QMouseEvent>
+#include <qnamespace.h>
 
 Network::Network(QWidget* parent)
 : QWidget(parent)
@@ -118,17 +119,88 @@ void Network::destroyFloatingEdge()
 
 void Network::mouseMoved(QMouseEvent *event)
 {
+    // cache and reset prev hover item
+    QGraphicsItem* prevHoverItem=prevHoverItem_;
+    prevHoverItem_=nullptr;
+
+    // modifiers
+    Qt::KeyboardModifiers mods = event->modifiers();
+    bool ctrlMod = mods & Qt::ControlModifier;
+
     if(floatingEdge_)
     {
         floatingEdge_->setFloatPos(view_->mapToScene(event->pos()));
+        event->accept();
+        return;
     }
+
+    QGraphicsItem* hoverItem = view_->itemAt(event->pos());
+    bool isEdge = hoverItem && typeid(*hoverItem)==typeid(NodeEdgeGraphic);
+
+    // set 
+    if(ctrlMod && isEdge)
+    {
+        std::cout << "EDGE\n";
+        static_cast<NodeEdgeGraphic*>(hoverItem)->setColor(QColor("red"));
+        hoverItem->update();
+        prevHoverItem_=hoverItem;
+    }
+    // reset node edge color
+    if(
+        prevHoverItem &&
+        (!ctrlMod || hoverItem!=prevHoverItem) &&
+        typeid(*prevHoverItem)==typeid(NodeEdgeGraphic)
+    )
+    {
+        std::cout << " reset\n";
+        static_cast<NodeEdgeGraphic*>(prevHoverItem)->useDefaultColor();
+        prevHoverItem->update();
+    }
+
 }
 
 
 void Network::keyPressEvent(QKeyEvent *event)
 {
+    // modifiers
+    Qt::KeyboardModifiers mods = event->modifiers();
+    bool ctrlMod = mods & Qt::ControlModifier;
+
+    // get pos
+    QPoint globalPos = QCursor::pos();
+    QPoint widgetPos = mapFromGlobal(globalPos);
+
+    QGraphicsItem* hoverItem = view_->itemAt(widgetPos);
+
+    if(
+        event->key() == Qt::Key_Control &&
+        hoverItem && typeid(*hoverItem)==typeid(NodeEdgeGraphic)
+    )
+    {
+        static_cast<NodeEdgeGraphic*>(hoverItem)->setColor(QColor("red"));
+        hoverItem->update();
+        prevHoverItem_=hoverItem;
+    }
+
     if(event->key() == Qt::Key_Escape)
     {
         destroyFloatingEdge();
+    }
+}
+
+void Network::keyReleaseEvent(QKeyEvent *event)
+{
+    // modifiers
+    Qt::KeyboardModifiers mods = event->modifiers();
+    bool ctrlMod = mods & Qt::ControlModifier;
+
+    if(
+        prevHoverItem_ &&
+        event->key() == Qt::Key_Control &&
+        typeid(*prevHoverItem_)==typeid(NodeEdgeGraphic)
+    )
+    {
+        static_cast<NodeEdgeGraphic*>(prevHoverItem_)->useDefaultColor();
+        prevHoverItem_->update();
     }
 }
