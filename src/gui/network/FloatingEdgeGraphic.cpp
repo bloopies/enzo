@@ -21,7 +21,6 @@ void FloatingEdgeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsIte
 {
     // auto pen = QPen("white");
 
-    std::cout << "draw\n";
     QLinearGradient gradient(socket1_->scenePos(), floatPos_);
     gradient.setColorAt(0.0, QColor(255, 255, 255, 255));
     gradient.setColorAt(1.0, QColor(255, 255, 255, 50));
@@ -35,7 +34,6 @@ void FloatingEdgeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsIte
 }
 
 void FloatingEdgeGraphic::setFloatPos(QPointF floatPos) {
-    std::cout << "moving" << floatPos.x() << " " << floatPos.y() << "\n";
     prepareGeometryChange();
     floatPos_ = floatPos;
     update();

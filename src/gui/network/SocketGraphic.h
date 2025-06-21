@@ -13,5 +13,11 @@ public:
 
 private:
     int socketSize_ = 1;
+    QBrush brushInactive_;
+    QBrush brushActive_;
+    bool hovered_=false;
+protected:
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 };
 

@@ -6,7 +6,10 @@
 SocketGraphic::SocketGraphic(QGraphicsItem *parent)
 : QGraphicsItem(parent)
 {
+    brushActive_ = QBrush("white");
+    brushInactive_ = QBrush("#9f9f9f");
     socketSize_ = 3;
+    setAcceptHoverEvents(true);
 }
 
 QRectF SocketGraphic::boundingRect() const
@@ -18,11 +21,21 @@ QRectF SocketGraphic::boundingRect() const
 
 void SocketGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QBrush whiteBrush = QBrush("white");
     painter->setPen(Qt::NoPen);
-    painter->setBrush(whiteBrush);
+    painter->setBrush(hovered_ ? brushActive_ : brushInactive_);
     painter->drawEllipse(QPoint(0,0), socketSize_, socketSize_);
  
 }
 
+void SocketGraphic::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    hovered_ = true;
+    update();
+}
 
+
+void SocketGraphic::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    hovered_ = false;
+    update();
+}
