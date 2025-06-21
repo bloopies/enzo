@@ -77,8 +77,8 @@ void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
     {
         std::cout << "creating floating edge\n";
         floatingEdge_ = new FloatingEdgeGraphic(socket);
-        floatingEdge_->setFloatPos(view_->mapToScene(event->pos()));
         scene_->addItem(floatingEdge_);
+        floatingEdge_->setFloatPos(view_->mapToScene(event->pos()));
     }
 }
 
@@ -99,7 +99,6 @@ void Network::mouseMoved(QMouseEvent *event)
     if(floatingEdge_)
     {
         floatingEdge_->setFloatPos(view_->mapToScene(event->pos()));
-        floatingEdge_->update();
     }
 }
 

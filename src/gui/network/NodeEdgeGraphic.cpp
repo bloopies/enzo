@@ -12,7 +12,7 @@ NodeEdgeGraphic::NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2,
 
 QRectF NodeEdgeGraphic::boundingRect() const
 {
-    auto boundRect = QRect(10,10,10,10);
+    auto boundRect = QRectF(socket1_->scenePos(), socket2_->scenePos());
     return boundRect;
 }
 
