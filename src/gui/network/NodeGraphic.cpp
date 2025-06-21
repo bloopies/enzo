@@ -21,19 +21,30 @@ NodeGraphic::NodeGraphic(QGraphicsItem *parent)
 
 void NodeGraphic::initSockets()
 {
-    auto* socketInput = new SocketGraphic(this);
+    auto* socketInput = new SocketGraphic(SocketGraphic::SocketType::Input, this);
     socketInput->setPos(bodyRect_.center().x(), bodyRect_.top());
     inputs_.push_back(socketInput);
 
-    auto* socketOutput = new SocketGraphic(this);
+    auto* socketOutput = new SocketGraphic(SocketGraphic::SocketType::Output, this);
     socketOutput->setPos(bodyRect_.center().x(), bodyRect_.bottom());
     outputs_.push_back(socketOutput);
 }
 
-void NodeGraphic::addEdge(NodeEdgeGraphic* edge)
-{
-    edges_.push_back(edge);
-}
+// void setInputEdge(NodeEdgeGraphic* edge, int indx)
+// {
+
+// }
+
+// void setOutputEdge(NodeEdgeGraphic* edge, int indx)
+// {
+
+// }
+
+
+// void NodeGraphic::addEdge(NodeEdgeGraphic* edge)
+// {
+//     edges_.push_back(edge);
+// }
 
 SocketGraphic* NodeGraphic::getInput(int indx) const
 {

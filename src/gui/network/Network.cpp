@@ -42,11 +42,15 @@ Network::Network(QWidget* parent)
     node2->setPos(50, 50);
     scene_->addItem(node2);
 
+    NodeGraphic* node3 = new NodeGraphic();
+    node3->setPos(50, 200);
+    scene_->addItem(node3);
+
     NodeEdgeGraphic* edge1 = new NodeEdgeGraphic(node1->getOutput(0), node2->getInput(0));
     scene_->addItem(edge1);
 
-    node1->addEdge(edge1);
-    node2->addEdge(edge1);
+    // node1->addEdge(edge1);
+    // node2->addEdge(edge1);
 
 
 
@@ -75,10 +79,18 @@ void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
     std::cout << "socket clicked\n";
     if(!floatingEdge_)
     {
+        startSocket_=socket;
         std::cout << "creating floating edge\n";
         floatingEdge_ = new FloatingEdgeGraphic(socket);
         scene_->addItem(floatingEdge_);
         floatingEdge_->setFloatPos(view_->mapToScene(event->pos()));
+    }
+    // connect to opposite type
+    else if (socket->getIO()!=startSocket_->getIO())
+    {
+        NodeEdgeGraphic* newEdge = new NodeEdgeGraphic(startSocket_, socket);
+        scene_->addItem(newEdge);
+        destroyFloatingEdge();
     }
 }
 

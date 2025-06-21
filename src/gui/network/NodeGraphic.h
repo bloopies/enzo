@@ -15,9 +15,12 @@ public:
     SocketGraphic* getInput(int indx) const;
     SocketGraphic* getOutput(int indx) const;
 
-    void addEdge(NodeEdgeGraphic* edge);
+    // void addEdge(NodeEdgeGraphic* edge);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+
+    // void setInputEdge(NodeEdgeGraphic* edge, int indx);
+    // void setOutputEdge(NodeEdgeGraphic* edge, int indx);
 
 
 
@@ -27,7 +30,7 @@ private:
     std::vector<SocketGraphic*> inputs_;
     std::vector<SocketGraphic*> outputs_;
 
-    std::vector<NodeEdgeGraphic*> edges_;
+    // std::vector<NodeEdgeGraphic*> edges_;
 
     std::string title_="";
     int maxTitleLen_=10;

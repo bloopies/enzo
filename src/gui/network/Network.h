@@ -17,7 +17,10 @@ private:
     QLayout* mainLayout_;
     NetworkGraphicsScene* scene_;
     NetworkGraphicsView* view_;
+
     FloatingEdgeGraphic* floatingEdge_=nullptr;
+    SocketGraphic* startSocket_=nullptr;
+
     void keyPressEvent(QKeyEvent *event) override;
     void destroyFloatingEdge();
 
