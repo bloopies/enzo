@@ -38,5 +38,8 @@ private:
     int socketSize_ = 1;
     int inputSocketCnt_=0;
     int outputSocketCnt_=0;
+protected:
+        QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
+
 };
 

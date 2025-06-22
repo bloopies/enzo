@@ -2,6 +2,7 @@
 #include <QTextDocument>
 #include <iostream>
 #include <qgraphicsitem.h>
+#include "gui/network/NodeEdgeGraphic.h"
 
 SocketGraphic::SocketGraphic(SocketGraphic::SocketType type, QGraphicsItem *parent)
 : QGraphicsItem(parent), type_{type}
@@ -12,9 +13,39 @@ SocketGraphic::SocketGraphic(SocketGraphic::SocketType type, QGraphicsItem *pare
     setAcceptHoverEvents(true);
 }
 
+void SocketGraphic::addEdge(NodeEdgeGraphic* edge)
+{
+    std::cout << "adding edge\n";
+    edges_.insert(edge);
+}
+
+void SocketGraphic::removeEdge(NodeEdgeGraphic* edge)
+{
+    edges_.erase(edge);
+    std::cout << "removing edge\n";
+    // auto it = find(edges_.begin(), edges_.end(), edge);
+    // if(it!=edges_.end())
+    // {
+    //     edges_.erase(it);
+    // }
+}
+
+
+void SocketGraphic::posChanged(QPointF pos)
+{
+    std::cout << "socket pos changed\n";
+    // 
+    // for(auto* edge : edges_)
+    // {
+    //     edge->prepareGeometryChange();
+    // }
+}
+
+
+
 QRectF SocketGraphic::boundingRect() const
 {
-    float paddingScale = 10;
+    float paddingScale = 20;
     auto boundRect = QRect(
         -socketSize_/2.0f*paddingScale, 
         type_==SocketType::Input ? -socketSize_/2.0f*paddingScale : 0,

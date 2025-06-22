@@ -7,6 +7,7 @@
 #include "gui/network/NetworkGraphicsScene.h"
 #include "gui/network/SocketGraphic.h"
 #include "gui/network/FloatingEdgeGraphic.h"
+#include <iostream>
 
 class Network
 : public QWidget
@@ -25,6 +26,7 @@ private:
     SocketGraphic* startSocket_=nullptr;
 
     QGraphicsItem* prevHoverItem_=nullptr;
+    QList<QGraphicsItem*> prevHoverItems_;
 
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
@@ -36,6 +38,21 @@ private:
     bool isType(QGraphicsItem* item)
     {
         return item && typeid(*item)==typeid(T);
+    }
+
+    template<typename T>
+    QGraphicsItem* itemOfType(QList<QGraphicsItem*> items)
+    {
+        // std::cout << "count: " << items.size() << "\n";
+        for(QGraphicsItem* item : items)
+        {
+            std::cout << "item: " << typeid(*item).name() << "\n";
+            if(item && typeid(*item)==typeid(T))
+            {
+                return item;
+            }
+        }
+        return nullptr;
     }
 
 protected:

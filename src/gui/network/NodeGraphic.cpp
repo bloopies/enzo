@@ -14,7 +14,7 @@ NodeGraphic::NodeGraphic(QGraphicsItem *parent)
     title_ = "hello world";
     bodyRect_ = QRect(-10, -10, 10*maxTitleLen_, 20);
 
-    setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemSendsGeometryChanges);
 
     initSockets();
 }
@@ -96,3 +96,18 @@ void NodeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 }
 
 
+QVariant NodeGraphic::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+{
+    if (change == ItemPositionChange && scene()) {
+        for(auto socket : inputs_)
+        {
+            socket->posChanged(value.toPointF());
+        }
+        for(auto socket : outputs_)
+        {
+            socket->posChanged(value.toPointF());
+        }
+    };
+
+    return QGraphicsItem::itemChange(change, value);
+}

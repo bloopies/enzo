@@ -9,6 +9,7 @@ class NodeEdgeGraphic
 {
 public:
     NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2, QGraphicsItem *parent = nullptr);
+    ~NodeEdgeGraphic();
     QRectF boundingRect() const override;
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
@@ -21,5 +22,6 @@ private:
     SocketGraphic* socket2_;
     QColor color_;
     QColor defaultColor_;
+    QPen pen_;
 };
 

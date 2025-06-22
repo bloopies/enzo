@@ -4,6 +4,7 @@
 #include "gui/network/NetworkGraphicsScene.h"
 #include "gui/network/NodeGraphic.h"
 #include "gui/network/FloatingEdgeGraphic.h"
+#include "gui/network/SocketGraphic.h"
 #include <qboxlayout.h>
 #include <QPushButton>
 #include <QGraphicsItem>
@@ -49,6 +50,10 @@ Network::Network(QWidget* parent)
     node3->setPos(50, 200);
     scene_->addItem(node3);
 
+    NodeGraphic* node4 = new NodeGraphic();
+    node4->setPos(50, -200);
+    scene_->addItem(node4);
+
     NodeEdgeGraphic* edge1 = new NodeEdgeGraphic(node1->getOutput(0), node2->getInput(0));
     scene_->addItem(edge1);
 
@@ -73,19 +78,29 @@ void Network::leftMousePress(QMouseEvent *event)
 {
     Qt::KeyboardModifiers mods = event->modifiers();
 
-    QGraphicsItem* itemClicked = view_->itemAt(event->pos());
-    if(isType<SocketGraphic>(itemClicked))
+    // QGraphicsItem* itemClicked = view_->itemAt(event->pos());
+    QList<QGraphicsItem*> clickedItems = view_->items(event->pos());
+    QGraphicsItem* clickedSocket = itemOfType<SocketGraphic>(clickedItems);
+    QGraphicsItem* clickedEdge = itemOfType<NodeEdgeGraphic>(clickedItems);
+
+
+    // delete edges
+    if(mods & Qt::ControlModifier && clickedEdge)
     {
-        socketClicked(static_cast<SocketGraphic*>(itemClicked), event);
+        scene_->removeItem(clickedEdge);
+        if(prevHoverItem_==clickedEdge)
+        {
+            prevHoverItem_=nullptr;
+        }
+        delete clickedEdge;
+    }
+    else if(clickedSocket)
+    {
+        socketClicked(static_cast<SocketGraphic*>(clickedSocket), event);
     }
     else if(floatingEdge_)
     {
         destroyFloatingEdge();
-    }
-    // delete edges
-    else if(mods & Qt::ControlModifier && isType<NodeEdgeGraphic>(itemClicked))
-    {
-        scene_->removeItem(itemClicked);
     }
 
 }
@@ -96,6 +111,7 @@ void Network::leftMousePress(QMouseEvent *event)
 void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
 {
     std::cout << "socket clicked\n";
+    // if first click
     if(!floatingEdge_)
     {
         startSocket_=socket;
@@ -104,6 +120,7 @@ void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
         scene_->addItem(floatingEdge_);
         floatingEdge_->setFloatPos(view_->mapToScene(event->pos()));
     }
+    // second click
     // connect to opposite type
     else if (socket->getIO()!=startSocket_->getIO())
     {
@@ -142,19 +159,23 @@ void Network::mouseMoved(QMouseEvent *event)
         return;
     }
 
-    QGraphicsItem* hoverItem = view_->itemAt(event->pos());
+    QList<QGraphicsItem*> hoverItems = view_->items(event->pos());
+    // QGraphicsItem* hoverItem = view_->itemAt(event->pos());
+    QGraphicsItem* hoverEdge = itemOfType<NodeEdgeGraphic>(hoverItems);
 
     // set node edge color
-    if(ctrlMod && isType<NodeEdgeGraphic>(hoverItem))
+    if(ctrlMod && hoverEdge)
     {
-        highlightEdge(hoverItem, true);
+        std::cout << "highlighting\n";
+        highlightEdge(hoverEdge, true);
     }
     // reset node edge color
     if(
-        (!ctrlMod || hoverItem!=prevHoverItem) &&
-        isType<NodeEdgeGraphic>(prevHoverItem)
+        prevHoverItem &&
+        (!ctrlMod || hoverEdge!=prevHoverItem)
     )
     {
+        std::cout << "unhighlighting\n";
         highlightEdge(prevHoverItem, false);
     }
 
@@ -171,15 +192,19 @@ void Network::keyPressEvent(QKeyEvent *event)
     QPoint globalPos = QCursor::pos();
     QPoint widgetPos = mapFromGlobal(globalPos);
 
-    QGraphicsItem* hoverItem = view_->itemAt(widgetPos);
+    QList<QGraphicsItem*> hoverItems = view_->items(widgetPos);
 
     // edge detection
     if(
-        event->key() == Qt::Key_Control &&
-        isType<NodeEdgeGraphic>(hoverItem)
+        event->key() == Qt::Key_Control
     )
     {
-        highlightEdge(hoverItem, true);
+        QGraphicsItem* hoverItem = itemOfType<NodeEdgeGraphic>(hoverItems);
+        if(hoverItem!=nullptr)
+        {
+            highlightEdge(hoverItem, true);
+        }
+
     }
 
     if(event->key() == Qt::Key_Escape)
@@ -193,13 +218,11 @@ void Network::highlightEdge(QGraphicsItem* edge, bool state)
     if(state)
     {
         static_cast<NodeEdgeGraphic*>(edge)->setColor(QColor("red"));
-        edge->update();
         prevHoverItem_=edge;
     }
     else
     {
         static_cast<NodeEdgeGraphic*>(edge)->useDefaultColor();
-        edge->update();
     }
 
 }
