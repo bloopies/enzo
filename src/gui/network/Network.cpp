@@ -128,8 +128,12 @@ void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
     // connect to opposite type
     else if (socket->getIO()!=startSocket_->getIO())
     {
-        NodeEdgeGraphic* newEdge = new NodeEdgeGraphic(startSocket_, socket);
-        newEdge->setPos(startSocket_->scenePos(), socket->scenePos());
+        auto inputSocket = startSocket_->getIO()==SocketGraphic::SocketType::Input ? startSocket_ : socket;
+        auto outputSocket = socket->getIO()==SocketGraphic::SocketType::Output ? socket : startSocket_;
+
+        NodeEdgeGraphic* newEdge = new NodeEdgeGraphic(inputSocket, outputSocket);
+
+        newEdge->setPos(inputSocket->scenePos(), outputSocket->scenePos());
         scene_->addItem(newEdge);
         destroyFloatingEdge();
     }

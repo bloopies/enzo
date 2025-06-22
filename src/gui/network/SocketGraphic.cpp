@@ -40,7 +40,14 @@ void SocketGraphic::posChanged(QPointF pos)
     for(auto* edge : edges_)
     {
         // edge->setPos(startSocket_->scenePos(), socket->scenePos());
-        edge->setStartPos(this->scenePos());
+        if(type_==SocketType::Input)
+        {
+            edge->setStartPos(this->scenePos());
+        }
+        else if(type_==SocketType::Output)
+        {
+            edge->setEndPos(this->scenePos());
+        }
     }
 }
 

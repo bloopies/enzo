@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <string>
 #include "gui/network/SocketGraphic.h"
+#include <QGraphicsScene>
 
 NodeGraphic::NodeGraphic(QGraphicsItem *parent)
 : QGraphicsItem(parent)

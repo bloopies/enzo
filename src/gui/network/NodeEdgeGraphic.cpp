@@ -26,6 +26,7 @@ void NodeEdgeGraphic::updatePath()
     path_.clear();
     path_.moveTo(pos1_);
     path_.lineTo(pos2_);
+    update();
 
 }
 
@@ -33,27 +34,28 @@ void NodeEdgeGraphic::setPos(QPointF pos1, QPointF pos2)
 {
     pos1_ = pos1;
     pos2_ = pos2;
+    prepareGeometryChange();
     updatePath();
-    // prepareGeometryChange();
 }
 
 void NodeEdgeGraphic::setStartPos(QPointF pos)
 {
     pos1_ = pos;
+    prepareGeometryChange();
     updatePath();
-    // prepareGeometryChange();
 }
 
 void NodeEdgeGraphic::setEndPos(QPointF pos)
 {
     pos2_ = pos;
+    prepareGeometryChange();
     updatePath();
-    // prepareGeometryChange();
 }
 
 QRectF NodeEdgeGraphic::boundingRect() const
 {
     // std::cout << "bounds set" << socket1_->scenePos().x() << " " << socket1_->scenePos().y() << " " << socket2_->scenePos().x() << " " << socket2_->scenePos().y() << "\n";
+    // QRectF boundRect_ = QRectF(socket1_->scenePos(), socket1_->scenePos()).normalized();
     QRectF boundRect_ = QRectF(pos1_, pos2_).normalized();
     return boundRect_;
 }
