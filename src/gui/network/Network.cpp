@@ -224,6 +224,7 @@ void Network::keyPressEvent(QKeyEvent *event)
 
 void Network::highlightEdge(QGraphicsItem* edge, bool state)
 {
+    if(!edge) return;
     if(state)
     {
         static_cast<NodeEdgeGraphic*>(edge)->setColor(QColor("red"));
