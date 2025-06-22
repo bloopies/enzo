@@ -21,8 +21,10 @@ void SocketGraphic::addEdge(NodeEdgeGraphic* edge)
 
 void SocketGraphic::removeEdge(NodeEdgeGraphic* edge)
 {
-    edges_.erase(edge);
     std::cout << "removing edge\n";
+    std::cout << "before size: " << edges_.size() << "\n";
+    edges_.erase(edge);
+    std::cout << "after size: " << edges_.size() << "\n";
     // auto it = find(edges_.begin(), edges_.end(), edge);
     // if(it!=edges_.end())
     // {
@@ -35,10 +37,11 @@ void SocketGraphic::posChanged(QPointF pos)
 {
     std::cout << "socket pos changed\n";
     // 
-    // for(auto* edge : edges_)
-    // {
-    //     edge->prepareGeometryChange();
-    // }
+    for(auto* edge : edges_)
+    {
+        // edge->setPos(startSocket_->scenePos(), socket->scenePos());
+        edge->setStartPos(this->scenePos());
+    }
 }
 
 

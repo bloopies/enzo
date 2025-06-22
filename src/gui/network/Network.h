@@ -1,5 +1,6 @@
 #pragma once
 #include <QWidget>
+#include <memory>
 #include <qgraphicsitem.h>
 #include <typeinfo>
 #include "gui/network/NetworkGraphicsView.h"
@@ -8,6 +9,7 @@
 #include "gui/network/SocketGraphic.h"
 #include "gui/network/FloatingEdgeGraphic.h"
 #include <iostream>
+#include <QPointer>
 
 class Network
 : public QWidget
@@ -26,11 +28,14 @@ private:
     SocketGraphic* startSocket_=nullptr;
 
     QGraphicsItem* prevHoverItem_=nullptr;
-    QList<QGraphicsItem*> prevHoverItems_;
+    // QPointer<QGraphicsItem> prevHoverItem_=nullptr;
+    // std::shared_ptr<QGraphicsItem> prevHoverItem_=nullptr;
+    // QList<QGraphicsItem*> prevHoverItems_;
 
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
     void destroyFloatingEdge();
+    void deleteEdge(QGraphicsItem* edge);
 
     void highlightEdge(QGraphicsItem* edge, bool state);
 

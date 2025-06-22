@@ -16,6 +16,9 @@ public:
     QPainterPath shape() const override;
     void setColor(QColor color);
     void useDefaultColor();
+    void setPos(QPointF pos1, QPointF pos2);
+    void setStartPos(QPointF pos);
+    void setEndPos(QPointF pos);
 
 private:
     SocketGraphic* socket1_;
@@ -23,5 +26,11 @@ private:
     QColor color_;
     QColor defaultColor_;
     QPen pen_;
+    QPointF pos1_;
+    QPointF pos2_;
+    QPainterPath path_;
+    QRectF boundRect_;
+
+    void updatePath();
 };
 

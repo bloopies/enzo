@@ -21,24 +21,50 @@ NodeEdgeGraphic::~NodeEdgeGraphic()
     socket2_->removeEdge(this);
 }
 
+void NodeEdgeGraphic::updatePath()
+{
+    path_.clear();
+    path_.moveTo(pos1_);
+    path_.lineTo(pos2_);
+
+}
+
+void NodeEdgeGraphic::setPos(QPointF pos1, QPointF pos2)
+{
+    pos1_ = pos1;
+    pos2_ = pos2;
+    updatePath();
+    // prepareGeometryChange();
+}
+
+void NodeEdgeGraphic::setStartPos(QPointF pos)
+{
+    pos1_ = pos;
+    updatePath();
+    // prepareGeometryChange();
+}
+
+void NodeEdgeGraphic::setEndPos(QPointF pos)
+{
+    pos2_ = pos;
+    updatePath();
+    // prepareGeometryChange();
+}
 
 QRectF NodeEdgeGraphic::boundingRect() const
 {
     // std::cout << "bounds set" << socket1_->scenePos().x() << " " << socket1_->scenePos().y() << " " << socket2_->scenePos().x() << " " << socket2_->scenePos().y() << "\n";
-    auto boundRect = QRectF(socket1_->scenePos(), socket2_->scenePos());
-    return boundRect;
+    QRectF boundRect_ = QRectF(pos1_, pos2_).normalized();
+    return boundRect_;
 }
 
 QPainterPath NodeEdgeGraphic::shape() const{
     // FIX: shape not changing with node position
-    QPainterPath path;
-    // std::cout << "setting shape to: " << socket1_->scenePos().x() << " " << socket2_->scenePos().x() <<"\n";
-    path.moveTo(socket1_->scenePos());
-    path.lineTo(socket2_->scenePos());
+    std::cout << "setting shape to: " << socket1_->scenePos().x() << " " << socket2_->scenePos().x() <<"\n";
 
     QPainterPathStroker stroker;
-    stroker.setWidth(10);
-    return stroker.createStroke(path);
+    stroker.setWidth(40);
+    return stroker.createStroke(path_);
 }
 
 void NodeEdgeGraphic::setColor(QColor color)
@@ -59,7 +85,7 @@ void NodeEdgeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
     std::cout << "painting\n";
     pen_.setCapStyle(Qt::RoundCap);
     painter->setPen(pen_);
-    painter->drawLine(socket1_->scenePos(),socket2_->scenePos());
+    painter->drawPath(path_);
  
 }
 

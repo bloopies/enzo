@@ -54,8 +54,7 @@ Network::Network(QWidget* parent)
     node4->setPos(50, -200);
     scene_->addItem(node4);
 
-    NodeEdgeGraphic* edge1 = new NodeEdgeGraphic(node1->getOutput(0), node2->getInput(0));
-    scene_->addItem(edge1);
+    // scene_->addItem(new NodeEdgeGraphic(node1->getOutput(0), node2->getInput(0)));
 
     // node1->addEdge(edge1);
     // node2->addEdge(edge1);
@@ -74,6 +73,16 @@ void Network::resizeEvent(QResizeEvent *event)
     this->setMask(region);
 }
 
+void Network::deleteEdge(QGraphicsItem* edge)
+{
+    if(prevHoverItem_==edge)
+    {
+        prevHoverItem_=nullptr;
+    }
+    scene_->removeItem(edge);
+    delete edge;
+}
+
 void Network::leftMousePress(QMouseEvent *event)
 {
     Qt::KeyboardModifiers mods = event->modifiers();
@@ -87,12 +96,7 @@ void Network::leftMousePress(QMouseEvent *event)
     // delete edges
     if(mods & Qt::ControlModifier && clickedEdge)
     {
-        scene_->removeItem(clickedEdge);
-        if(prevHoverItem_==clickedEdge)
-        {
-            prevHoverItem_=nullptr;
-        }
-        delete clickedEdge;
+        deleteEdge(clickedEdge);
     }
     else if(clickedSocket)
     {
@@ -125,6 +129,7 @@ void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
     else if (socket->getIO()!=startSocket_->getIO())
     {
         NodeEdgeGraphic* newEdge = new NodeEdgeGraphic(startSocket_, socket);
+        newEdge->setPos(startSocket_->scenePos(), socket->scenePos());
         scene_->addItem(newEdge);
         destroyFloatingEdge();
     }
@@ -219,10 +224,14 @@ void Network::highlightEdge(QGraphicsItem* edge, bool state)
     {
         static_cast<NodeEdgeGraphic*>(edge)->setColor(QColor("red"));
         prevHoverItem_=edge;
+        // NOTE: sloppy fix for color not updating
+        view_->update();
     }
     else
     {
         static_cast<NodeEdgeGraphic*>(edge)->useDefaultColor();
+        // NOTE: sloppy fix for color not updating
+        view_->update();
     }
 
 }
@@ -230,6 +239,7 @@ void Network::highlightEdge(QGraphicsItem* edge, bool state)
 
 void Network::keyReleaseEvent(QKeyEvent *event)
 {
+    std::cout << "released\n";
     // modifiers
     Qt::KeyboardModifiers mods = event->modifiers();
     bool ctrlMod = mods & Qt::ControlModifier;
