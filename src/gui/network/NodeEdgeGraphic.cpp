@@ -23,9 +23,10 @@ NodeEdgeGraphic::~NodeEdgeGraphic()
 
 void NodeEdgeGraphic::updatePath()
 {
+    qreal cubicStrength = 40;
     path_.clear();
     path_.moveTo(pos1_);
-    path_.lineTo(pos2_);
+    path_.cubicTo(pos1_-QPoint(0,cubicStrength), pos2_+QPoint(0,cubicStrength), pos2_);
     update();
 
 }
