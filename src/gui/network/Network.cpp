@@ -187,14 +187,22 @@ void Network::mouseMoved(QMouseEvent *event)
     Qt::KeyboardModifiers mods = event->modifiers();
     bool ctrlMod = mods & Qt::ControlModifier;
 
+    QList<QGraphicsItem*> hoverItems = view_->items(event->pos());
+
     if(floatingEdge_)
     {
-        floatingEdge_->setFloatPos(view_->mapToScene(event->pos()));
+        if(QGraphicsItem* hoverSocket = itemOfType<SocketGraphic>(hoverItems))
+        {
+            floatingEdge_->setFloatPos(hoverSocket->scenePos());
+        }
+        else
+        {
+            floatingEdge_->setFloatPos(view_->mapToScene(event->pos()));
+        }
         event->accept();
         return;
     }
 
-    QList<QGraphicsItem*> hoverItems = view_->items(event->pos());
     // QGraphicsItem* hoverItem = view_->itemAt(event->pos());
     QGraphicsItem* hoverEdge = itemOfType<NodeEdgeGraphic>(hoverItems);
 
