@@ -33,5 +33,6 @@ private:
     qreal padding_=40;
 
     void updatePath();
+    void cleanUp();
 };
 

@@ -1,4 +1,5 @@
 #include "gui/network/Network.h"
+#include "gui/network/DisplayFlagButton.h"
 #include "gui/network/NodeEdgeGraphic.h"
 #include "gui/network/NetworkGraphicsView.h"
 #include "gui/network/NetworkGraphicsScene.h"
@@ -115,13 +116,21 @@ void Network::leftMousePressed(QMouseEvent *event)
     {
         deleteEdge(clickedEdge);
     }
+    // socket logic
     else if(clickedSocket)
     {
         socketClicked(static_cast<SocketGraphic*>(clickedSocket), event);
     }
+    // floating edge
     else if(floatingEdge_)
     {
         destroyFloatingEdge();
+    }
+    // display flag
+    else if(QGraphicsItem* clickedDisplayFlag = itemOfType<DisplayFlagButton>(clickedItems))
+    {
+        std::cout << "HERE\n";
+        static_cast<DisplayFlagButton*>(clickedDisplayFlag)->setEnabled(true);
     }
 
 }

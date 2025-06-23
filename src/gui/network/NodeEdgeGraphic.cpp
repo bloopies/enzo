@@ -18,9 +18,8 @@ NodeEdgeGraphic::NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2,
 NodeEdgeGraphic::~NodeEdgeGraphic()
 {
     std::cout << "edge destructor\n";
-    scene()->removeItem(this);
-    socket1_->removeEdge(this);
-    socket2_->removeEdge(this);
+    cleanUp();
+    std::cout << "destructor finished\n";
 }
 
 void NodeEdgeGraphic::updatePath()
@@ -95,4 +94,9 @@ void NodeEdgeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
  
 }
 
-
+void NodeEdgeGraphic::cleanUp()
+{
+    scene()->removeItem(this);
+    socket1_->removeEdge(this);
+    socket2_->removeEdge(this);
+}
