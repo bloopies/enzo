@@ -57,6 +57,7 @@ QRectF NodeEdgeGraphic::boundingRect() const
     // std::cout << "bounds set" << socket1_->scenePos().x() << " " << socket1_->scenePos().y() << " " << socket2_->scenePos().x() << " " << socket2_->scenePos().y() << "\n";
     // QRectF boundRect_ = QRectF(socket1_->scenePos(), socket1_->scenePos()).normalized();
     QRectF boundRect_ = QRectF(pos1_, pos2_).normalized();
+    boundRect_.adjust(-padding_,-padding_,padding_,padding_);
     return boundRect_;
 }
 
@@ -65,7 +66,7 @@ QPainterPath NodeEdgeGraphic::shape() const{
     std::cout << "setting shape to: " << socket1_->scenePos().x() << " " << socket2_->scenePos().x() <<"\n";
 
     QPainterPathStroker stroker;
-    stroker.setWidth(40);
+    stroker.setWidth(padding_);
     return stroker.createStroke(path_);
 }
 

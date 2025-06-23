@@ -30,6 +30,7 @@ private:
     QPointF pos2_;
     QPainterPath path_;
     QRectF boundRect_;
+    qreal padding_=40;
 
     void updatePath();
 };
