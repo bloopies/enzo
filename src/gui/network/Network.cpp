@@ -80,6 +80,7 @@ void Network::deleteEdge(QGraphicsItem* edge)
         prevHoverItem_=nullptr;
     }
     scene_->removeItem(edge);
+    scene_->update();
     delete edge;
 }
 
@@ -224,7 +225,7 @@ void Network::keyPressEvent(QKeyEvent *event)
 
 void Network::highlightEdge(QGraphicsItem* edge, bool state)
 {
-    if(!edge) return;
+    if(!edge || !isType<NodeEdgeGraphic>(edge)) return;
     if(state)
     {
         static_cast<NodeEdgeGraphic*>(edge)->setColor(QColor("red"));
