@@ -192,8 +192,15 @@ void Network::mouseMoved(QMouseEvent *event)
     // set node edge color
     if(ctrlMod && hoverEdge)
     {
-        std::cout << "highlighting\n";
-        highlightEdge(hoverEdge, true);
+        if(event->buttons() & Qt::LeftButton)
+        {
+            deleteEdge(hoverEdge);
+        }
+        else
+        {
+            std::cout << "highlighting\n";
+            highlightEdge(hoverEdge, true);
+        }
     }
     // reset node edge color
     if(
