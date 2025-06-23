@@ -102,6 +102,12 @@ void NodeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->drawRoundedRect(bodyRect_, 5, 5);
 
     painter->setPen(QPen(QColor("white")));
+
+    QFont font = painter->font();
+    font.setPixelSize(10);
+    painter->setFont(font);
+    painter->setPen(QPen(QColor("#d2d2d2")));
+
     painter->drawText(	bodyRect_, Qt::AlignCenter, title_.c_str());
  
 }
