@@ -34,6 +34,23 @@ void NetworkGraphicsView::initUI()
     setViewportUpdateMode(ViewportUpdateMode::FullViewportUpdate);
 }
 
+void NetworkGraphicsView::mouseReleaseEvent(QMouseEvent *event) {
+    // pass event to parent
+    QGraphicsView::mouseReleaseEvent(event);
+
+    if (parentWidget()) {
+       QMouseEvent *eventCopy = new QMouseEvent(
+            event->type(),
+            event->position(),
+            event->scenePosition(),
+            event->globalPosition(),
+            event->button(),
+            event->buttons(),
+            event->modifiers()
+        );
+        QCoreApplication::postEvent(parentWidget(), eventCopy);
+    }
+}
 
 void NetworkGraphicsView::mousePressEvent(QMouseEvent *event)
 {

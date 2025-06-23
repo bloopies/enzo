@@ -75,7 +75,7 @@ SocketGraphic* NodeGraphic::getOutput(int indx) const
 QRectF NodeGraphic::boundingRect() const
 {
     QRectF boundRect = bodyRect_;
-    float padding = 10;
+    float padding = 0;
     boundRect.adjust(-padding, -padding, padding, padding);
     return boundRect;
 }

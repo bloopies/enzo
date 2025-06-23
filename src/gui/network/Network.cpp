@@ -263,3 +263,13 @@ void Network::keyReleaseEvent(QKeyEvent *event)
         highlightEdge(prevHoverItem_, false);
     }
 }
+
+void Network::mouseReleaseEvent(QMouseEvent *event)
+{
+    QList<QGraphicsItem*> hoverItems = view_->items(event->pos());
+    QGraphicsItem* hoverSocket = itemOfType<SocketGraphic>(hoverItems);
+    if(floatingEdge_ && hoverSocket)
+    {
+        socketClicked(static_cast<SocketGraphic*>(hoverSocket), event);
+    }
+}
