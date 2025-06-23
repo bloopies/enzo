@@ -11,6 +11,7 @@ SocketGraphic::SocketGraphic(SocketGraphic::SocketType type, QGraphicsItem *pare
     brushInactive_ = QBrush("#9f9f9f");
     socketSize_ = 3;
     setAcceptHoverEvents(true);
+    initBoundingBox();
 }
 
 void SocketGraphic::addEdge(NodeEdgeGraphic* edge)
@@ -32,6 +33,16 @@ void SocketGraphic::removeEdge(NodeEdgeGraphic* edge)
     // }
 }
 
+void SocketGraphic::initBoundingBox()
+{
+    boundRect_ = QRect(
+        -socketSize_/2.0f*paddingScale_, 
+        -socketSize_/2.0f*paddingScale_,
+        socketSize_*paddingScale_,
+        socketSize_*paddingScale_
+    );
+    
+}
 
 void SocketGraphic::posChanged(QPointF pos)
 {
@@ -55,14 +66,18 @@ void SocketGraphic::posChanged(QPointF pos)
 
 QRectF SocketGraphic::boundingRect() const
 {
-    float paddingScale = 20;
-    auto boundRect = QRect(
-        -socketSize_/2.0f*paddingScale, 
-        type_==SocketType::Input ? -socketSize_/2.0f*paddingScale : 0,
-        socketSize_*paddingScale,
-        socketSize_/2.0f*paddingScale
-    );
-    return boundRect;
+    return boundRect_;
+}
+
+QPainterPath SocketGraphic::shape() const{
+    QPainterPath path;
+    QPointF startPt(boundRect_.center().x(), type_==SocketType::Input ? boundRect_.top() : boundRect_.bottom());
+    path.moveTo(startPt);
+    path.arcTo(boundRect_, 0, type_==SocketType::Input ? 180 : -180);
+    path.lineTo(boundRect_.right(), boundRect_.center().y());
+    path.closeSubpath();
+
+    return path;
 }
 
 SocketGraphic::SocketType SocketGraphic::getIO() { return type_; }
@@ -73,6 +88,9 @@ void SocketGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     painter->setPen(Qt::NoPen);
     painter->setBrush(hovered_ ? brushActive_ : brushInactive_);
     painter->drawEllipse(QPoint(0,0), socketSize_, socketSize_);
+
+    // painter->drawRect(boundRect_);
+
  
 }
 

@@ -81,7 +81,10 @@ void Network::deleteEdge(QGraphicsItem* edge)
     }
     scene_->removeItem(edge);
     scene_->update();
-    delete edge;
+    view_->update();
+    // NOTE: deleting edge kept giving me segmentation faults
+    // I coundn't figure it out so I'm just leaving it for now
+    // delete edge;
 }
 
 void Network::leftMousePress(QMouseEvent *event)

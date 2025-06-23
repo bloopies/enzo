@@ -24,6 +24,7 @@ public:
     void addEdge(NodeEdgeGraphic* edge);
     void removeEdge(NodeEdgeGraphic* edge);
     void posChanged(QPointF pos);
+    QPainterPath shape() const override;
 
 private:
     int socketSize_ = 1;
@@ -32,6 +33,10 @@ private:
     bool hovered_=false;
     SocketType type_;
     std::unordered_set<NodeEdgeGraphic*> edges_;
+    qreal paddingScale_=20;
+    QRectF boundRect_;
+
+    void initBoundingBox();
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
