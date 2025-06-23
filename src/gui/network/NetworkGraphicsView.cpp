@@ -35,9 +35,9 @@ void NetworkGraphicsView::initUI()
 }
 
 void NetworkGraphicsView::mouseReleaseEvent(QMouseEvent *event) {
-    // pass event to parent
     QGraphicsView::mouseReleaseEvent(event);
 
+    // pass event to parent
     if (parentWidget()) {
        QMouseEvent *eventCopy = new QMouseEvent(
             event->type(),
@@ -63,23 +63,21 @@ void NetworkGraphicsView::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-    // pass event to parent
-    QGraphicsView::mouseReleaseEvent(event);
-    if (parentWidget()) {
-       QMouseEvent *eventCopy = new QMouseEvent(
-            event->type(),
-            event->position(),
-            event->scenePosition(),
-            event->globalPosition(),
-            event->button(),
-            event->buttons(),
-            event->modifiers()
-        );
-        QCoreApplication::postEvent(parentWidget(), eventCopy);
-    }
-
-
     QGraphicsView::mousePressEvent(event);
+
+    // pass event to parent
+    // if (parentWidget()) {
+    //    QMouseEvent *eventCopy = new QMouseEvent(
+    //         event->type(),
+    //         event->position(),
+    //         event->scenePosition(),
+    //         event->globalPosition(),
+    //         event->button(),
+    //         event->buttons(),
+    //         event->modifiers()
+    //     );
+    //     QCoreApplication::postEvent(parentWidget(), eventCopy);
+    // }
 }
 
 

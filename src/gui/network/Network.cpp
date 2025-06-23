@@ -98,6 +98,7 @@ void Network::mousePressEvent(QMouseEvent *event)
 
 void Network::leftMousePressed(QMouseEvent *event)
 {
+    std::cout << "LEFT MOUSE PRESSED\n";
     Qt::KeyboardModifiers mods = event->modifiers();
 
     // QGraphicsItem* itemClicked = view_->itemAt(event->pos());
@@ -257,7 +258,6 @@ void Network::highlightEdge(QGraphicsItem* edge, bool state)
 
 void Network::keyReleaseEvent(QKeyEvent *event)
 {
-    std::cout << "released\n";
     // modifiers
     Qt::KeyboardModifiers mods = event->modifiers();
     bool ctrlMod = mods & Qt::ControlModifier;
@@ -275,6 +275,7 @@ void Network::keyReleaseEvent(QKeyEvent *event)
 
 void Network::mouseReleaseEvent(QMouseEvent *event)
 {
+    // std::cout << "----\nMOUSE RELEASED\n---\n";
     QList<QGraphicsItem*> hoverItems = view_->items(event->pos());
     QGraphicsItem* hoverSocket = itemOfType<SocketGraphic>(hoverItems);
     if(floatingEdge_ && hoverSocket)
