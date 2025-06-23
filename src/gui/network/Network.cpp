@@ -87,7 +87,16 @@ void Network::deleteEdge(QGraphicsItem* edge)
     // delete edge;
 }
 
-void Network::leftMousePress(QMouseEvent *event)
+void Network::mousePressEvent(QMouseEvent *event)
+{
+    if( event->buttons() & Qt::LeftButton)
+    {
+        leftMousePressed(event);
+    }
+
+}
+
+void Network::leftMousePressed(QMouseEvent *event)
 {
     Qt::KeyboardModifiers mods = event->modifiers();
 

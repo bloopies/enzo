@@ -54,10 +54,6 @@ void NetworkGraphicsView::mouseReleaseEvent(QMouseEvent *event) {
 
 void NetworkGraphicsView::mousePressEvent(QMouseEvent *event)
 {
-    if( event->buttons() & Qt::LeftButton)
-    {
-        leftMousePress(event);
-    }
     if(
         event->button() == Qt::MiddleButton
     )
@@ -67,22 +63,26 @@ void NetworkGraphicsView::mousePressEvent(QMouseEvent *event)
         return;
     }
 
+    // pass event to parent
+    QGraphicsView::mouseReleaseEvent(event);
+    if (parentWidget()) {
+       QMouseEvent *eventCopy = new QMouseEvent(
+            event->type(),
+            event->position(),
+            event->scenePosition(),
+            event->globalPosition(),
+            event->button(),
+            event->buttons(),
+            event->modifiers()
+        );
+        QCoreApplication::postEvent(parentWidget(), eventCopy);
+    }
+
+
     QGraphicsView::mousePressEvent(event);
 }
 
 
-void NetworkGraphicsView::leftMousePress(QMouseEvent *event)
-{
-    network_->leftMousePress(event);
-    // QGraphicsItem* itemClicked = itemAt(event->pos());
-    // bool isSocket = itemClicked && typeid(*itemClicked)==typeid(SocketGraphic);
-    // if(isSocket)
-    // {
-    //     std::cout << "SOCKET!\n";
-    //     network_->socketClicked(static_cast<SocketGraphic*>(itemClicked), event);
-    // }
-
-}
 
 // void NetworkView::mouseReleaseEvent(QMouseEvent *event)
 // {

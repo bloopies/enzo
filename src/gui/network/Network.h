@@ -18,7 +18,6 @@ public:
     Network(QWidget* parent = nullptr);
     void socketClicked(SocketGraphic* socket, QMouseEvent *event);
     void mouseMoved(QMouseEvent *event);
-    void leftMousePress(QMouseEvent *event);
 private:
     QLayout* mainLayout_;
     NetworkGraphicsScene* scene_;
@@ -38,6 +37,7 @@ private:
     void deleteEdge(QGraphicsItem* edge);
 
     void highlightEdge(QGraphicsItem* edge, bool state);
+    void leftMousePressed(QMouseEvent* event);
 
     template<typename T>
     bool isType(QGraphicsItem* item)
@@ -63,4 +63,5 @@ private:
 protected:
     void resizeEvent(QResizeEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
 };
