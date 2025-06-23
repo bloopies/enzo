@@ -3,6 +3,7 @@
 #include "gui/network/SocketGraphic.h"
 #include <iostream>
 #include <qgraphicsitem.h>
+#include <QGraphicsScene>
 
 NodeEdgeGraphic::NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2, QGraphicsItem *parent)
 : QGraphicsItem(parent), socket1_{socket1}, socket2_{socket2}, defaultColor_{QColor("white")}, pen_{QPen(QColor("white"))}
@@ -17,6 +18,7 @@ NodeEdgeGraphic::NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2,
 NodeEdgeGraphic::~NodeEdgeGraphic()
 {
     std::cout << "edge destructor\n";
+    scene()->removeItem(this);
     socket1_->removeEdge(this);
     socket2_->removeEdge(this);
 }
