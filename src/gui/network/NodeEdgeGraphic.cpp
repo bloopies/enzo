@@ -86,7 +86,7 @@ void NodeEdgeGraphic::useDefaultColor()
 
 void NodeEdgeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    std::cout << "painting\n";
+    // std::cout << "painting\n";
     pen_.setCapStyle(Qt::RoundCap);
     painter->setPen(pen_);
     painter->drawPath(path_);

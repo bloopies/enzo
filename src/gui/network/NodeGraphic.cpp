@@ -6,6 +6,7 @@
 #include <string>
 #include "gui/network/SocketGraphic.h"
 #include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
 
 NodeGraphic::NodeGraphic(QGraphicsItem *parent)
 : QGraphicsItem(parent)
@@ -15,7 +16,7 @@ NodeGraphic::NodeGraphic(QGraphicsItem *parent)
     title_ = "hello world";
     bodyRect_ = QRect(-10, -10, 10*maxTitleLen_, 20);
 
-    setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemSendsGeometryChanges);
+    setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
 
     initSockets();
 }
@@ -23,11 +24,11 @@ NodeGraphic::NodeGraphic(QGraphicsItem *parent)
 void NodeGraphic::initSockets()
 {
     auto* socketInput = new SocketGraphic(SocketGraphic::SocketType::Input, this);
-    socketInput->setPos(bodyRect_.center().x(), bodyRect_.top());
+    socketInput->setPos(getSocketPosition(0, SocketGraphic::SocketType::Input));
     inputs_.push_back(socketInput);
 
     auto* socketOutput = new SocketGraphic(SocketGraphic::SocketType::Output, this);
-    socketOutput->setPos(bodyRect_.center().x(), bodyRect_.bottom());
+    socketOutput->setPos(getSocketPosition(0, SocketGraphic::SocketType::Output));
     outputs_.push_back(socketOutput);
 }
 
@@ -96,19 +97,58 @@ void NodeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
  
 }
 
-
-QVariant NodeGraphic::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+void NodeGraphic::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (change == ItemPositionChange && scene()) {
-        for(auto socket : inputs_)
-        {
-            socket->posChanged(value.toPointF());
-        }
-        for(auto socket : outputs_)
-        {
-            socket->posChanged(value.toPointF());
-        }
-    };
-
-    return QGraphicsItem::itemChange(change, value);
+    QGraphicsItem::mouseMoveEvent(event);
+    updatePositions(event->scenePos());
 }
+
+// void NodeGraphic::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+// {
+//     updatePositions(event->scenePos());
+//     QGraphicsItem::mouseReleaseEvent(event);
+// }
+
+void NodeGraphic::updatePositions(QPointF pos)
+{
+    // NOTE: in the future I might store socket ids as internal member variables,
+    // but for now I'm just going based on order
+    for(int socketIndex=0; socketIndex<inputs_.size(); ++socketIndex)
+    {
+        inputs_[socketIndex]->posChanged(getSocketScenePosition(socketIndex, SocketGraphic::SocketType::Input));
+    }
+    for(int socketIndex=0; socketIndex<outputs_.size(); ++socketIndex)
+    {
+        outputs_[socketIndex]->posChanged(getSocketScenePosition(socketIndex, SocketGraphic::SocketType::Output));
+    }
+}
+
+QPointF NodeGraphic::getSocketPosition(int socketIndex, SocketGraphic::SocketType socketType)
+{
+    float xPos, yPos;
+    xPos = bodyRect_.center().x();
+    yPos = socketType == SocketGraphic::SocketType::Input ? bodyRect_.top() : bodyRect_.bottom();
+
+    return QPointF(xPos, yPos);
+}
+QPointF NodeGraphic::getSocketScenePosition(int socketIndex, SocketGraphic::SocketType socketType)
+{
+    return this->pos()+getSocketPosition(socketIndex, socketType);
+}
+
+
+// QVariant NodeGraphic::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+// {
+//     if (change == ItemPositionChange && scene()) {
+//         for(auto socket : inputs_)
+//         {
+//             socket->posChanged(value.toPointF());
+//         }
+//         for(auto socket : outputs_)
+//         {
+//             socket->posChanged(value.toPointF());
+//         }
+//     };
+
+//     return QGraphicsItem::itemChange(change, value);
+// }

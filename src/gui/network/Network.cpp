@@ -75,6 +75,7 @@ void Network::resizeEvent(QResizeEvent *event)
 
 void Network::deleteEdge(QGraphicsItem* edge)
 {
+    std::cout << "----\ndeleting edge\n";
     if(prevHoverItem_==edge)
     {
         prevHoverItem_=nullptr;
@@ -85,6 +86,7 @@ void Network::deleteEdge(QGraphicsItem* edge)
     // NOTE: deleting edge kept giving me segmentation faults
     // I coundn't figure it out so I'm just leaving it for now
     // delete edge;
+    std::cout << "finished deleting edge\n----\n";
 }
 
 void Network::mousePressEvent(QMouseEvent *event)

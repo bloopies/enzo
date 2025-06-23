@@ -14,6 +14,8 @@ public:
     
     SocketGraphic* getInput(int indx) const;
     SocketGraphic* getOutput(int indx) const;
+    QPointF getSocketPosition(int socketIndex, SocketGraphic::SocketType socketType);
+    QPointF getSocketScenePosition(int socketIndex, SocketGraphic::SocketType socketType);
 
     // void addEdge(NodeEdgeGraphic* edge);
 
@@ -38,8 +40,12 @@ private:
     int socketSize_ = 1;
     int inputSocketCnt_=0;
     int outputSocketCnt_=0;
+
+    void updatePositions(QPointF pos);
 protected:
-        QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
+        // QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
+        void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+        // void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 };
 

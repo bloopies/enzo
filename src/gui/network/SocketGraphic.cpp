@@ -53,11 +53,11 @@ void SocketGraphic::posChanged(QPointF pos)
         // edge->setPos(startSocket_->scenePos(), socket->scenePos());
         if(type_==SocketType::Input)
         {
-            edge->setStartPos(this->scenePos());
+            edge->setStartPos(pos);
         }
         else if(type_==SocketType::Output)
         {
-            edge->setEndPos(this->scenePos());
+            edge->setEndPos(pos);
         }
     }
 }
