@@ -4,6 +4,7 @@
 #include <qgraphicsitem.h>
 #include <stdexcept>
 #include <string>
+#include "gui/network/DisplayFlagButton.h"
 #include "gui/network/SocketGraphic.h"
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
@@ -19,6 +20,14 @@ NodeGraphic::NodeGraphic(QGraphicsItem *parent)
     setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
 
     initSockets();
+    initFlagButtons();
+}
+
+void NodeGraphic::initFlagButtons()
+{
+    displayFlagButton_ = new DisplayFlagButton(this);
+    float padding = 4;
+    displayFlagButton_->setPos(QPointF(bodyRect_.right()-displayFlagButton_->getWidth()/2.0f-padding, bodyRect_.center().y()));
 }
 
 void NodeGraphic::initSockets()

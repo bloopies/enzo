@@ -1,6 +1,7 @@
 #pragma once
 #include <QGraphicsItem>
 #include <QPainter>
+#include "gui/network/DisplayFlagButton.h"
 #include "gui/network/SocketGraphic.h"
 #include "gui/network/NodeEdgeGraphic.h"
 #include <iostream>
@@ -29,6 +30,8 @@ public:
 
 private:
     void initSockets();
+    void initFlagButtons();
+
     std::vector<SocketGraphic*> inputs_;
     std::vector<SocketGraphic*> outputs_;
 
@@ -40,6 +43,8 @@ private:
     int socketSize_ = 1;
     int inputSocketCnt_=0;
     int outputSocketCnt_=0;
+
+    DisplayFlagButton* displayFlagButton_;
 
     void updatePositions(QPointF pos);
 protected:
