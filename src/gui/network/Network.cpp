@@ -87,7 +87,8 @@ void Network::deleteEdge(QGraphicsItem* edge)
     // view_->update();
     // NOTE: deleting edge kept giving me segmentation faults
     // I coundn't figure it out so I'm just leaving it for now
-    delete edge;
+    // delete edge;
+    static_cast<NodeEdgeGraphic*>(edge)->cleanUp();
     std::cout << "finished deleting edge\n----\n";
 }
 
@@ -268,14 +269,14 @@ void Network::highlightEdge(QGraphicsItem* edge, bool state)
     if(!edge || !isType<NodeEdgeGraphic>(edge)) return;
     if(state)
     {
-        static_cast<NodeEdgeGraphic*>(edge)->setColor(QColor("red"));
+        static_cast<NodeEdgeGraphic*>(edge)->setDeleteHighlight(true);
         prevHoverItem_=edge;
         // NOTE: sloppy fix for color not updating
         view_->update();
     }
     else
     {
-        static_cast<NodeEdgeGraphic*>(edge)->useDefaultColor();
+        static_cast<NodeEdgeGraphic*>(edge)->setDeleteHighlight(false);
         // NOTE: sloppy fix for color not updating
         view_->update();
     }

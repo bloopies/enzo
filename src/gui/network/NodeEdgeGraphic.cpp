@@ -6,13 +6,30 @@
 #include <QGraphicsScene>
 
 NodeEdgeGraphic::NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2, QGraphicsItem *parent)
-: QGraphicsItem(parent), socket1_{socket1}, socket2_{socket2}, defaultColor_{QColor("white")}, pen_{QPen(QColor("white"))}
+: QGraphicsItem(parent), socket1_{socket1}, socket2_{socket2}, defaultColor_{QColor("white")}
 {
     setZValue(-1);
     color_=defaultColor_;
+    defaultPen_=QPen(defaultColor_);
+    defaultPen_.setCapStyle(Qt::RoundCap);
+
+    deleteHighlightPen_.setCapStyle(Qt::RoundCap);
+    deleteHighlightPen_.setWidth(1);
+    updateDeleteHighlightPen();
+
 
     socket1_->addEdge(this);
     socket2_->addEdge(this);
+}
+
+void NodeEdgeGraphic::updateDeleteHighlightPen()
+{
+    QLinearGradient gradient(pos1_, pos2_);
+    gradient.setColorAt(0.0, QColor(255, 0, 0, 200));
+    gradient.setColorAt(0.5, QColor(255, 0, 0, 50));
+    gradient.setColorAt(1.0, QColor(255, 0, 0, 200));
+
+    deleteHighlightPen_.setBrush(QBrush(gradient));
 }
 
 NodeEdgeGraphic::~NodeEdgeGraphic()
@@ -28,29 +45,36 @@ void NodeEdgeGraphic::updatePath()
     path_.clear();
     path_.moveTo(pos1_);
     path_.cubicTo(pos1_-QPoint(0,cubicStrength), pos2_+QPoint(0,cubicStrength), pos2_);
+    updateDeleteHighlightPen();
     update();
 
 }
 
 void NodeEdgeGraphic::setPos(QPointF pos1, QPointF pos2)
 {
+    prepareGeometryChange();
     pos1_ = pos1;
     pos2_ = pos2;
-    prepareGeometryChange();
     updatePath();
+}
+
+void NodeEdgeGraphic::setDeleteHighlight(bool enable)
+{
+    deleteHighlight_=enable;
+    update();
 }
 
 void NodeEdgeGraphic::setStartPos(QPointF pos)
 {
-    pos1_ = pos;
     prepareGeometryChange();
+    pos1_ = pos;
     updatePath();
 }
 
 void NodeEdgeGraphic::setEndPos(QPointF pos)
 {
-    pos2_ = pos;
     prepareGeometryChange();
+    pos2_ = pos;
     updatePath();
 }
 
@@ -72,30 +96,34 @@ QPainterPath NodeEdgeGraphic::shape() const{
     return stroker.createStroke(path_);
 }
 
-void NodeEdgeGraphic::setColor(QColor color)
-{
-    std::cout << "color set to: " << color.name().toStdString() << "\n";
-    color_ = color;
-    pen_.setColor(color_);
-    update();
-}
+// void NodeEdgeGraphic::setColor(QColor color)
+// {
+//     std::cout << "color set to: " << color.name().toStdString() << "\n";
+//     color_ = color;
+//     pen_.setColor(color_);
+//     update();
+// }
 
-void NodeEdgeGraphic::useDefaultColor()
-{
-    setColor(defaultColor_);
-}
+// void NodeEdgeGraphic::useDefaultColor()
+// {
+//     setColor(defaultColor_);
+// }
 
 void NodeEdgeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     // std::cout << "painting\n";
-    pen_.setCapStyle(Qt::RoundCap);
-    painter->setPen(pen_);
+    painter->setPen(deleteHighlight_ ? deleteHighlightPen_ : defaultPen_);
     painter->drawPath(path_);
  
 }
 
 void NodeEdgeGraphic::cleanUp()
 {
+    // these probably aren't necessary but i'm trying to fix a bug
+    prepareGeometryChange();
+    update();
+    scene()->update();
+
     scene()->removeItem(this);
     socket1_->removeEdge(this);
     socket2_->removeEdge(this);
