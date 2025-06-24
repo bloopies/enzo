@@ -55,6 +55,8 @@ Network::Network(QWidget* parent)
     node4->setPos(50, -200);
     scene_->addItem(node4);
 
+
+
     // scene_->addItem(new NodeEdgeGraphic(node1->getOutput(0), node2->getInput(0)));
 
     // node1->addEdge(edge1);

@@ -8,6 +8,8 @@
 #include "gui/network/SocketGraphic.h"
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsSvgItem>
+#include "gui/network/NodeIconGraphic.h"
 
 NodeGraphic::NodeGraphic(QGraphicsItem *parent)
 : QGraphicsItem(parent)
@@ -21,6 +23,17 @@ NodeGraphic::NodeGraphic(QGraphicsItem *parent)
 
     initSockets();
     initFlagButtons();
+    initIcon();
+
+}
+
+void NodeGraphic::initIcon()
+{
+    NodeIconGraphic* icon = new NodeIconGraphic("/home/parker/MyRepos/masters/static/node-icons/grid.svg", this);
+    float iconLeftPadding = 5;
+    float iconScale = 12;
+    icon->setScale(1.0f/icon->boundingRect().size().height()*iconScale);
+    icon->setPos(iconLeftPadding-iconScale/2.0f, -iconScale/2.0f);
 }
 
 void NodeGraphic::initFlagButtons()

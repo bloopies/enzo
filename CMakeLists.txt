@@ -12,7 +12,7 @@ project(enzo_project)
 
 
 # qt
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets SvgWidgets)
 qt_standard_project_setup()
 
 
@@ -28,9 +28,10 @@ qt_add_executable(${AppExec}
     src/gui/network/NodeEdgeGraphic.cpp
     src/gui/network/FloatingEdgeGraphic.cpp
     src/gui/network/DisplayFlagButton.cpp
+    src/gui/network/NodeIconGraphic.cpp
 )
 
-target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets)
+target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets)
 target_include_directories(${AppExec} PUBLIC src)
 
 # tests

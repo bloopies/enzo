@@ -31,6 +31,7 @@ public:
 private:
     void initSockets();
     void initFlagButtons();
+    void initIcon();
 
     std::vector<SocketGraphic*> inputs_;
     std::vector<SocketGraphic*> outputs_;
