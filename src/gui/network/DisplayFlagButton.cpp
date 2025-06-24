@@ -1,4 +1,5 @@
 #include "gui/network/DisplayFlagButton.h"
+#include "gui/network/NodeGraphic.h"
 #include <QPainter>
 #include <qgraphicsitem.h>
 #include <qnamespace.h>
@@ -7,7 +8,7 @@ DisplayFlagButton::DisplayFlagButton(QGraphicsItem *parent)
 : QGraphicsItem(parent)
 {
     constexpr float width = 8;
-    constexpr float height = 14;
+    const float height = static_cast<NodeGraphic*>(parent)->getBodyRect().height()*0.8;
     baseRect_ = QRectF(-width/2.0f, -height/2.0f, width, height);
     setAcceptHoverEvents(true);
 

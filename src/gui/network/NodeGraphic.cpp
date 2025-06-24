@@ -14,32 +14,62 @@
 NodeGraphic::NodeGraphic(QGraphicsItem *parent)
 : QGraphicsItem(parent)
 {
-    maxTitleLen_ = 10;
     socketSize_ = 3;
-    title_ = "hello world";
-    bodyRect_ = QRect(-10, -10, 10*maxTitleLen_, 20);
+    titlePadding_=1;
+    titleText_ = "Attr_Del_1";
+    subTitleText_ = "Attribute Delete";
+    constexpr int height = 27;
+    constexpr int width = 100;
+    bodyRect_ = QRect(-width*0.5f, -height*0.5f, width, height);
+    iconScale_=height*0.55;
 
     setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
 
+    initFonts();
+    initIcon();
     initSockets();
     initFlagButtons();
-    initIcon();
+
+}
+
+void NodeGraphic::initFonts()
+{
+    // declare fonts
+    titleFont_ = QFont();
+    titleFont_.setPixelSize(8);
+
+    subTitleFont_ = QFont();
+    subTitleFont_.setPixelSize(5);
+
+    // compute text positions
+    QRectF titleBounds = QFontMetricsF(titleFont_).boundingRect(titleText_.c_str());
+    QRectF subTitleBounds = QFontMetricsF(subTitleFont_).boundingRect(subTitleText_.c_str());
+    float titleOffsetX = (titleBounds.width()-bodyRect_.width()-iconScale_)*0.5f;
+    float titleOffsetY = subTitleBounds.height()*0.5f+titlePadding_+(-(subTitleBounds.height()*0.5+titleBounds.height()+titlePadding_)+bodyRect_.height())*0.5f;
+    // float titleOffsetY = (bodyRect_.height())*0.5f;
+    // titleOffsetY -= subTitleBounds.height()*0.5f;
+    float subTitleOffsetX = titleOffsetX;
+    float subTitleOffsetY = (-(subTitleBounds.height()*0.5+titleBounds.height()+titlePadding_)+bodyRect_.height())*0.5f;
+
+    titleRect_ = bodyRect_.adjusted(-titleOffsetX, titleOffsetY, -titleOffsetX, titleOffsetY);
+    subTitleRect_ = bodyRect_.adjusted(-subTitleOffsetX, subTitleOffsetY, -subTitleOffsetX, subTitleOffsetY);
 
 }
 
 void NodeGraphic::initIcon()
 {
-    NodeIconGraphic* icon = new NodeIconGraphic("/home/parker/MyRepos/masters/static/node-icons/grid.svg", this);
-    float iconLeftPadding = 5;
-    float iconScale = 12;
-    icon->setScale(1.0f/icon->boundingRect().size().height()*iconScale);
-    icon->setPos(iconLeftPadding-iconScale/2.0f, -iconScale/2.0f);
+    icon_ = new NodeIconGraphic("/home/parker/MyRepos/masters/static/node-icons/grid.svg", this);
+    // icon_ = new NodeIconGraphic("/home/parker/MyRepos/masters/static/icons/icon-main-white.svg", this);
+    
+    icon_->setScale(1.0f/icon_->boundingRect().width()*iconScale_);
+    // icon_->setScale(0.01);
+    icon_->setPos(titleRect_.left()-iconScale_-iconPadding_, -iconScale_*0.5f);
 }
 
 void NodeGraphic::initFlagButtons()
 {
     displayFlagButton_ = new DisplayFlagButton(this);
-    float padding = 4;
+    float padding = 2;
     displayFlagButton_->setPos(QPointF(bodyRect_.right()-displayFlagButton_->getWidth()/2.0f-padding, bodyRect_.center().y()));
 }
 
@@ -116,13 +146,15 @@ void NodeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 
     painter->setPen(QPen(QColor("white")));
 
-    QFont font = painter->font();
-    font.setPixelSize(8);
-    painter->setFont(font);
+    painter->setFont(titleFont_);
     // painter->setPen(QPen(QColor("#d2d2d2")));
     painter->setPen(QPen(QColor("white")));
 
-    painter->drawText(	bodyRect_, Qt::AlignCenter, title_.c_str());
+    painter->drawText(titleRect_, Qt::AlignLeft, titleText_.c_str());
+
+    painter->setFont(subTitleFont_);
+    painter->drawText(subTitleRect_, Qt::AlignLeft, subTitleText_.c_str());
+
  
 }
 
@@ -164,6 +196,12 @@ QPointF NodeGraphic::getSocketScenePosition(int socketIndex, SocketGraphic::Sock
 {
     return this->pos()+getSocketPosition(socketIndex, socketType);
 }
+
+QRectF NodeGraphic::getBodyRect()
+{
+    return bodyRect_;
+}
+
 
 
 // QVariant NodeGraphic::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)

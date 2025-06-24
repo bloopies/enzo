@@ -3,6 +3,7 @@
 #include <QPainter>
 #include "gui/network/DisplayFlagButton.h"
 #include "gui/network/SocketGraphic.h"
+#include "gui/network/NodeIconGraphic.h"
 #include "gui/network/NodeEdgeGraphic.h"
 #include <iostream>
 
@@ -17,6 +18,7 @@ public:
     SocketGraphic* getOutput(int indx) const;
     QPointF getSocketPosition(int socketIndex, SocketGraphic::SocketType socketType);
     QPointF getSocketScenePosition(int socketIndex, SocketGraphic::SocketType socketType);
+    QRectF getBodyRect();
 
     // void addEdge(NodeEdgeGraphic* edge);
 
@@ -32,18 +34,31 @@ private:
     void initSockets();
     void initFlagButtons();
     void initIcon();
+    void initFonts();
 
     std::vector<SocketGraphic*> inputs_;
     std::vector<SocketGraphic*> outputs_;
 
     // std::vector<NodeEdgeGraphic*> edges_;
 
-    std::string title_="";
+    std::string titleText_="";
+    std::string subTitleText_="";
     int maxTitleLen_=10;
     QRectF bodyRect_;
     int socketSize_ = 1;
     int inputSocketCnt_=0;
     int outputSocketCnt_=0;
+    NodeIconGraphic* icon_;
+    int iconScale_;
+    float iconPadding_ = 5;
+    QGraphicsItem* test_;
+
+    QFont titleFont_;
+    QFont subTitleFont_;
+    int titlePadding_;
+
+    QRectF titleRect_;
+    QRectF subTitleRect_;
 
     DisplayFlagButton* displayFlagButton_;
 
