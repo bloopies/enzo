@@ -12,7 +12,7 @@ project(enzo_project)
 
 
 # qt
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets SvgWidgets)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets SvgWidgets OpenGLWidgets)
 qt_standard_project_setup()
 
 
@@ -31,7 +31,7 @@ qt_add_executable(${AppExec}
     src/gui/network/NodeIconGraphic.cpp
 )
 
-target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets)
+target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets)
 target_include_directories(${AppExec} PUBLIC src)
 
 # tests
