@@ -117,7 +117,7 @@ void NodeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->setPen(QPen(QColor("white")));
 
     QFont font = painter->font();
-    font.setPixelSize(10);
+    font.setPixelSize(8);
     painter->setFont(font);
     // painter->setPen(QPen(QColor("#d2d2d2")));
     painter->setPen(QPen(QColor("white")));

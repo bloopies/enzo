@@ -194,7 +194,7 @@ void Network::mouseMoved(QMouseEvent *event)
 
     if(floatingEdge_)
     {
-        if(QGraphicsItem* hoverSocket = itemOfType<SocketGraphic>(hoverItems))
+        if(QGraphicsItem* hoverSocket = itemOfType<SocketGraphic>(hoverItems); hoverSocket && hoverSocket!=startSocket_)
         {
             floatingEdge_->setFloatPos(hoverSocket->scenePos());
         }
