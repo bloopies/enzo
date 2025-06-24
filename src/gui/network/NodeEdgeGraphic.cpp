@@ -14,7 +14,7 @@ NodeEdgeGraphic::NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2,
     defaultPen_.setCapStyle(Qt::RoundCap);
 
     deleteHighlightPen_.setCapStyle(Qt::RoundCap);
-    deleteHighlightPen_.setWidth(1);
+    deleteHighlightPen_.setWidth(2);
     updateDeleteHighlightPen();
 
 
@@ -25,9 +25,9 @@ NodeEdgeGraphic::NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2,
 void NodeEdgeGraphic::updateDeleteHighlightPen()
 {
     QLinearGradient gradient(pos1_, pos2_);
-    gradient.setColorAt(0.0, QColor(255, 0, 0, 200));
-    gradient.setColorAt(0.5, QColor(255, 0, 0, 50));
-    gradient.setColorAt(1.0, QColor(255, 0, 0, 200));
+    gradient.setColorAt(0.0, QColor(255, 74, 74, 200));
+    gradient.setColorAt(0.5, QColor(255, 74, 74, 50));
+    gradient.setColorAt(1.0, QColor(255, 74, 74, 200));
 
     deleteHighlightPen_.setBrush(QBrush(gradient));
 }
