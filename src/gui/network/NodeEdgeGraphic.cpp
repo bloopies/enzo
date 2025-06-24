@@ -4,10 +4,13 @@
 #include <iostream>
 #include <qgraphicsitem.h>
 #include <QGraphicsScene>
+#include <QGraphicsSceneHoverEvent>
 
 NodeEdgeGraphic::NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2, QGraphicsItem *parent)
 : QGraphicsItem(parent), socket1_{socket1}, socket2_{socket2}, defaultColor_{QColor("white")}
 {
+    setAcceptHoverEvents(true);
+
     setZValue(-1);
     color_=defaultColor_;
     defaultPen_=QPen(defaultColor_);
@@ -24,10 +27,10 @@ NodeEdgeGraphic::NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2,
 
 void NodeEdgeGraphic::updateDeleteHighlightPen()
 {
-    QLinearGradient gradient(pos1_, pos2_);
+    QLinearGradient gradient(pos1_, hoverPos_);
     gradient.setColorAt(0.0, QColor(255, 74, 74, 200));
-    gradient.setColorAt(0.5, QColor(255, 74, 74, 50));
-    gradient.setColorAt(1.0, QColor(255, 74, 74, 200));
+    gradient.setColorAt(1, QColor(255, 74, 74, 50));
+    // gradient.setColorAt(1.0, QColor(255, 74, 74, 200));
 
     deleteHighlightPen_.setBrush(QBrush(gradient));
 }
@@ -37,6 +40,16 @@ NodeEdgeGraphic::~NodeEdgeGraphic()
     std::cout << "edge destructor\n";
     cleanUp();
     std::cout << "destructor finished\n";
+}
+
+void NodeEdgeGraphic::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
+{
+    hoverPos_ = event->scenePos();
+    if(deleteHighlight_)
+    {
+        updateDeleteHighlightPen();
+        update();
+    }
 }
 
 void NodeEdgeGraphic::updatePath()

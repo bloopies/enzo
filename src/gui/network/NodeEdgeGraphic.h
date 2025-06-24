@@ -37,7 +37,10 @@ private:
     QPainterPath path_;
     QRectF boundRect_;
     qreal padding_=40;
+    QPointF hoverPos_;
 
     void updatePath();
+protected:
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
 };
 
