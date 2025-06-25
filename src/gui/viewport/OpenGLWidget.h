@@ -5,6 +5,7 @@ class MyGLWidget : public QOpenGLWidget
 {
 public:
     MyGLWidget(QWidget *parent) : QOpenGLWidget(parent) { }
+    QSize sizeHint() const override { return QSize(-1, -1); }
 
 protected:
     void initializeGL() override
@@ -13,6 +14,8 @@ protected:
         QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
         f->glClearColor(0.16f, 0.16f, 0.16f, 1.0f);
     }
+
+
 
     void resizeGL(int w, int h) override
     {

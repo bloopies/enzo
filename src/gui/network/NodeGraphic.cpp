@@ -2,6 +2,7 @@
 #include <QTextDocument>
 #include <iostream>
 #include <qgraphicsitem.h>
+#include <qnamespace.h>
 #include <stdexcept>
 #include <string>
 #include "gui/network/DisplayFlagButton.h"
@@ -135,11 +136,17 @@ QRectF NodeGraphic::boundingRect() const
 
 void NodeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    // default outline
+    QPen defaultPen = Qt::NoPen;
+    defaultPen.setWidth(1);
+    // outline when selected
+    QPen selectedPen = QPen("#edd044");
+    // choose outline
+    if(isSelected()) painter->setPen(selectedPen);
+    else painter->setPen(defaultPen);
+
+    // set fill
     QBrush whiteBrush = QBrush("white");
-    QPen greenPen = QPen(Qt::green);
-    greenPen.setWidth(6);
-    if(isSelected()) painter->setPen(QPen(QColor("#edd044")));
-    else painter->setPen(Qt::NoPen);
     painter->setBrush(QBrush(QColor("#1b1b1b")));
 
     painter->drawRoundedRect(bodyRect_, 5, 5);

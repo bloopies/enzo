@@ -19,6 +19,8 @@ Network::Network(QWidget* parent)
 
     mainLayout_ = new QVBoxLayout(parent);
     mainLayout_->setContentsMargins(0,0,0,0);
+    this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
 
 
     this->setLayout(mainLayout_); 

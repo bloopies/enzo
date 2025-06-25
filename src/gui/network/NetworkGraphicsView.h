@@ -11,6 +11,7 @@ class NetworkGraphicsView
 {
 public:
     NetworkGraphicsView(QWidget *parent = nullptr, Network* network=nullptr, QGraphicsScene* scene = nullptr);
+    QSize sizeHint() const override { return QSize(-1, -1); }
 private:
     QPointF panStartPos;
     void initUI();

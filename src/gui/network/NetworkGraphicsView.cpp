@@ -15,6 +15,7 @@ NetworkGraphicsView::NetworkGraphicsView(QWidget *parent, Network* network, QGra
 {
     setScene(scene_);
     setMouseTracking(true);
+    this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
     initUI();
 

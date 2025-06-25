@@ -18,6 +18,8 @@ public:
     Network(QWidget* parent = nullptr);
     void socketClicked(SocketGraphic* socket, QMouseEvent *event);
     void mouseMoved(QMouseEvent *event);
+    QSize sizeHint() const override { return QSize(-1, -1); }
+
 private:
     QLayout* mainLayout_;
     NetworkGraphicsScene* scene_;
