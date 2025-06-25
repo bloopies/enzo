@@ -31,7 +31,7 @@ qt_add_executable(${AppExec}
     src/gui/network/NodeIconGraphic.cpp
 )
 
-target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets)
+target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets GLU)
 target_include_directories(${AppExec} PUBLIC src)
 
 # tests
