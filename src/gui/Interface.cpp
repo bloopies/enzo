@@ -16,6 +16,9 @@ EnzoUI::EnzoUI()
     constexpr float scale = 0.8;
     resize(1920*scale, 1080*scale);
 
+    // TODO: unify stylsheet
+    setStyleSheet("background-color:#1d2021;");
+
     Viewport* viewport = new Viewport();
     Network* network = new Network(this);
 

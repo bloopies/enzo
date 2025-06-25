@@ -18,7 +18,7 @@ Network::Network(QWidget* parent)
 {
 
     mainLayout_ = new QVBoxLayout(parent);
-    mainLayout_->setContentsMargins(0,0,0,0);
+    // mainLayout_->setContentsMargins(0,0,0,0);
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 
@@ -73,7 +73,8 @@ Network::Network(QWidget* parent)
 void Network::resizeEvent(QResizeEvent *event)
 {
     QPainterPath path;
-    path.addRoundedRect(this->rect(), 15, 15);
+    constexpr float radius = 10;
+    path.addRoundedRect(mainLayout_->contentsRect(), radius, radius);
     QRegion region = QRegion(path.toFillPolygon().toPolygon());
     this->setMask(region);
 }

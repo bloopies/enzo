@@ -3,6 +3,7 @@
 #include <qpushbutton.h>
 #include <iostream>
 #include <QTimer>
+#include <QPainterPath>
 
 Viewport::Viewport(QWidget *parent, Qt::WindowFlags f)
 : QWidget(parent, f)
@@ -22,3 +23,11 @@ Viewport::Viewport(QWidget *parent, Qt::WindowFlags f)
 
 }
 
+void Viewport::resizeEvent(QResizeEvent *event)
+{
+    QPainterPath path;
+    constexpr float radius = 10;
+    path.addRoundedRect(mainLayout_->contentsRect(), radius, radius);
+    QRegion region = QRegion(path.toFillPolygon().toPolygon());
+    this->setMask(region);
+}

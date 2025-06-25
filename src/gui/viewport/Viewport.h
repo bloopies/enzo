@@ -11,5 +11,6 @@ public:
 private:
     QVBoxLayout* mainLayout_;
     MyGLWidget* openGLWidget_;
+    void resizeEvent(QResizeEvent *event) override;
 
 };
