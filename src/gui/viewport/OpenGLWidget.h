@@ -43,9 +43,8 @@ protected:
         "{\n"
         "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
         "}\n";
-        GLuint vertexShader;
         // shader type
-        glCreateShader(GL_VERTEX_SHADER);
+        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
         // convert source
         const GLchar* vertexShaderSourceC = vertexShaderSource.c_str();
         // create shader object
@@ -80,6 +79,9 @@ protected:
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), (void*)0);
         glEnableVertexAttribArray(0);
+
+        // unbind vertex array
+        glBindVertexArray(0);
 
         QSurfaceFormat fmt = context()->format();
         std::cout << "format: " << (fmt.renderableType() == QSurfaceFormat::OpenGLES ? "GLES" : "Desktop") << "\n";
