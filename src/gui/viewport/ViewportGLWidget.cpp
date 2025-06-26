@@ -133,14 +133,11 @@ void ViewportGLWidget::paintGL()
     );
 
 
-    glm::mat4 viewMatrix = curCamera.getViewMatrix();
-
-
     GLint projMLoc = glGetUniformLocation(shaderProgram, "uProj");
     glUniformMatrix4fv(projMLoc, 1, GL_FALSE, glm::value_ptr(projMatrix));
 
     GLint viewMLoc = glGetUniformLocation(shaderProgram, "uView");
-    glUniformMatrix4fv(viewMLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+    curCamera.setUniform(viewMLoc);
 
 
 

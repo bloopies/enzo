@@ -6,6 +6,8 @@
 #include <iostream>
 #include <glm/ext/quaternion_trigonometric.hpp>
 #include <glm/ext/quaternion_float.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <QOpenGLFunctions>
 
 void printMatrix(const glm::mat4& matrix) {
     for (int i = 0; i < 4; ++i) {
@@ -132,3 +134,8 @@ glm::vec3 GLCamera::getForward()
     return glm::normalize(camCenter_-camPos_);
 };
 
+void GLCamera::setUniform(uint uniformLocation)
+{
+    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
+    f->glUniformMatrix4fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(getViewMatrix()));
+}
