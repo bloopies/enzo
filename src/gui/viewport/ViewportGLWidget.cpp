@@ -14,9 +14,13 @@ void ViewportGLWidget::initializeGL()
     std::cout << "format: " << (fmt.renderableType() == QSurfaceFormat::OpenGL ? "true" : "false") << "\n";
     std::cout << "hello\n";
 
+    // init loop
     QTimer* loopTimer = new QTimer(this);
     connect(loopTimer, &QTimer::timeout, this, QOverload<>::of(&QOpenGLWidget::update));
     loopTimer->start(16);
+
+    // init camera
+    camera_ = GLCamera();
 
 
 
@@ -119,8 +123,6 @@ void ViewportGLWidget::paintGL()
 
     glClear(GL_COLOR_BUFFER_BIT);
 
-    angle_+=0.01;
-
     glUseProgram(shaderProgram);
 
     glm::mat4 projMatrix = glm::perspective(
@@ -131,11 +133,14 @@ void ViewportGLWidget::paintGL()
     );
 
 
-    glm::mat4 viewMatrix = glm::lookAt(
-        glm::vec3(sin(angle_)*5, 1, cos(angle_)*5),
-        glm::vec3(0,0,0),
-        glm::vec3(0,1,0)
-    );
+    // glm::mat4 viewMatrix = glm::lookAt(
+    //     glm::vec3(sin(angle_)*5, 1, cos(angle_)*5),
+    //     glm::vec3(0,0,0),
+    //     glm::vec3(0,1,0)
+    // );
+    camera_.rotateAroundCenter(0.01, glm::vec3(0,1,0));
+    glm::mat4 viewMatrix = camera_.getViewMatrix();
+
 
     GLint projMLoc = glGetUniformLocation(shaderProgram, "uProj");
     glUniformMatrix4fv(projMLoc, 1, GL_FALSE, glm::value_ptr(projMatrix));
