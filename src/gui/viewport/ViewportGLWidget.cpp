@@ -3,6 +3,7 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <qtimer.h>
 
 void ViewportGLWidget::initializeGL()
 {
@@ -13,6 +14,9 @@ void ViewportGLWidget::initializeGL()
     std::cout << "format: " << (fmt.renderableType() == QSurfaceFormat::OpenGL ? "true" : "false") << "\n";
     std::cout << "hello\n";
 
+    QTimer* loopTimer = new QTimer(this);
+    connect(loopTimer, &QTimer::timeout, this, QOverload<>::of(&QOpenGLWidget::update));
+    loopTimer->start(16);
 
 
 
@@ -116,7 +120,6 @@ void ViewportGLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT);
 
     angle_+=0.01;
-    std::cout << "angle\n";
 
     glUseProgram(shaderProgram);
 
