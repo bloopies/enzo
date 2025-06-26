@@ -2,6 +2,7 @@
 
 void ViewportGLWidget::initializeGL()
 {
+    // Set up the rendering context, load shaders and other resources, etc.:
     initializeOpenGLFunctions();
 
     glGenVertexArrays(1, &vao);
@@ -84,6 +85,7 @@ void ViewportGLWidget::resizeGL(int w, int h)
 
 void ViewportGLWidget::paintGL()
 {
+    initializeOpenGLFunctions();
     glClear(GL_COLOR_BUFFER_BIT);
     glUseProgram(shaderProgram);
     glBindVertexArray(vao);

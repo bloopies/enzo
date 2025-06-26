@@ -9,7 +9,7 @@ Viewport::Viewport(QWidget *parent, Qt::WindowFlags f)
 : QWidget(parent, f)
 {
     mainLayout_=new QVBoxLayout();
-    openGLWidget_ = new MyGLWidget(this);
+    openGLWidget_ = new ViewportGLWidget(this);
     mainLayout_->addWidget(openGLWidget_);
     openGLWidget_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

@@ -22,6 +22,7 @@ qt_add_executable(${AppExec}
     src/gui/main.cpp
     src/gui/Interface.cpp
     src/gui/viewport/Viewport.cpp
+    src/gui/viewport/ViewportGLWidget.cpp
     src/gui/network/NetworkGraphicsView.cpp
     src/gui/network/NetworkGraphicsScene.cpp
     src/gui/network/Network.cpp

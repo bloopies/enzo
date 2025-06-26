@@ -10,7 +10,7 @@ public:
     Viewport(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 private:
     QVBoxLayout* mainLayout_;
-    MyGLWidget* openGLWidget_;
+    ViewportGLWidget* openGLWidget_;
     void resizeEvent(QResizeEvent *event) override;
 
 };
