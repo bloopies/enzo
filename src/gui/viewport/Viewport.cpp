@@ -44,11 +44,9 @@ bool Viewport::event(QEvent *event)
         case QEvent::MouseMove:
         case QEvent::MouseButtonPress:
         case QEvent::MouseButtonRelease:
-            std::cout << "camera controls\n";
             handleCamera(event);
             break;
         default:
-            std::cout << "event " << event->type() << "\n";
             break;
     }
 
@@ -133,5 +131,4 @@ void Viewport::handleCamera(QEvent *event)
         default:
             break;
     }
-    std::cout << "event " << event->type() << "\n";
 }
