@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 # set exec names
 set(AppExec enzoGui)
 set(TestExec tests)
+set(CMAKE_AUTORCC ON)
 
 # setup project
 project(enzo_project)
@@ -17,6 +18,7 @@ qt_standard_project_setup()
 
 
 qt_add_executable(${AppExec}
+    static/resources.qrc
     src/gui/main.cpp
     src/gui/Interface.cpp
     src/gui/viewport/Viewport.cpp

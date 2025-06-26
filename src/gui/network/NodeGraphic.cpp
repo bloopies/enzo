@@ -59,7 +59,7 @@ void NodeGraphic::initFonts()
 
 void NodeGraphic::initIcon()
 {
-    icon_ = new NodeIconGraphic("/home/parker/MyRepos/masters/static/node-icons/grid.svg", this);
+    icon_ = new NodeIconGraphic(":/node-icons/grid.svg", this);
     // icon_ = new NodeIconGraphic("/home/parker/MyRepos/masters/static/icons/icon-main-white.svg", this);
     
     icon_->setScale(1.0f/icon_->boundingRect().width()*iconScale_);
