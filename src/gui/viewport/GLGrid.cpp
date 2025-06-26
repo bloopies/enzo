@@ -27,9 +27,11 @@ void GLGrid::initShaderProgram()
     "uniform mat4 uView;\n"
     "uniform mat4 uProj;\n"
     "layout (location = 0) in vec3 aPos;\n"
+    "out vec4 position;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = uProj * uView * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   gl_Position = uProj * uView * position;\n"
     "}\n";
     // shader type
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -59,15 +61,31 @@ void GLGrid::initShaderProgram()
     
     // fragment shader
     const std::string fragmentShaderSource = "#version 330 core\n"
+    "float remap(float value, float inMin, float inMax, float outMin, float outMax) {\n"
+    "    return outMin + (value - inMin) * (outMax - outMin) / (inMax - inMin);\n"
+    "}\n"
     "out vec4 FragColor;\n"
+    "in vec4 position;\n"
     "void main()\n"
     "{\n"
-    "    FragColor = vec4(0.53f, 0.53f, 0.53f, 0.1f);\n"
+    "    float distance = distance(position, vec4(0.0f,0.0f,0.0f,1.0f));\n"
+    "    FragColor = vec4(0.53f, 0.53f, 0.53f, 0.2f*remap(distance, 0, 40, 1, 0));\n"
     "}\n";
+
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     const GLchar* fragmentShaderSourceC = fragmentShaderSource.c_str();
     glShaderSource(fragmentShader, 1, &fragmentShaderSourceC, NULL);
     glCompileShader(fragmentShader);
+    if(!success)
+    {
+        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+    else
+    {
+        std::cout << "success\n";
+
+    }
 
     // create shader program
     shaderProgram = glCreateProgram();
@@ -84,8 +102,8 @@ void GLGrid::initShaderProgram()
 
 void GLGrid::initBuffers()
 {
-    constexpr int gridLen = 20;
-    constexpr int gridLines = 11;
+    constexpr int gridLen = 50;
+    constexpr int gridLines = 40;
     float halfLinesCnt = (gridLines-1)*0.5f;
     for(int i=0; i<gridLines; ++i)
     {

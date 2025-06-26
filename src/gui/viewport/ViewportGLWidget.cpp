@@ -113,7 +113,7 @@ void ViewportGLWidget::paintGL()
         glm::radians(45.0f),                  // FOV
         float(width()) / height(),          // aspect ratio
         0.1f,                                 // near plane
-        100.0f                                // far plane
+        1000.0f                                // far plane
     );
 
     gridMesh_->useProgram();
