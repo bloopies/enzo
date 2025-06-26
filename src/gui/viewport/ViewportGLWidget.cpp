@@ -1,13 +1,17 @@
 #include "gui/viewport/ViewportGLWidget.h"
+#include "gui/viewport/GLMesh.h"
 #include <glm/mat4x4.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <memory>
 #include <qtimer.h>
 
 void ViewportGLWidget::initializeGL()
 {
     initializeOpenGLFunctions();
+
+    triangleMesh_ = std::make_unique<GLMesh>();
 
     QSurfaceFormat fmt = context()->format();
     std::cout << "format: " << (fmt.renderableType() == QSurfaceFormat::OpenGLES ? "GLES" : "Desktop") << "\n";
@@ -21,25 +25,6 @@ void ViewportGLWidget::initializeGL()
 
     // init camera
     curCamera = GLCamera();
-
-
-
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
-    float vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f
-    };
-
-    GLuint vbo;
-    // create buffer of vertices
-    glGenBuffers(1, &vbo);
-    // set purpose
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    // store data in the buffer
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 
     // vertex shader
@@ -101,11 +86,6 @@ void ViewportGLWidget::initializeGL()
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // unbind vertex array
-    glBindVertexArray(0);
 
 
     glClearColor(0.16f, 0.16f, 0.16f, 1.0f);
@@ -140,7 +120,6 @@ void ViewportGLWidget::paintGL()
     curCamera.setUniform(viewMLoc);
 
 
+    triangleMesh_->draw();
 
-    glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
 }
