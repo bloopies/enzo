@@ -80,7 +80,7 @@ void Viewport::handleCamera(QEvent *event)
             if(leftMouseDown_)
             {
                 QPointF delta = mousePos-leftStartPos_;
-                delta*=rotateSpeed;
+                delta*=-rotateSpeed;
                 camera.rotateAroundCenter(delta.x(), {0,1,0});
                 camera.rotateAroundCenter(delta.y(),
                     camera.getRight() * glm::vec3(1.0f,0.0f,1.0f));
