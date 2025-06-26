@@ -12,6 +12,7 @@ void ViewportGLWidget::initializeGL()
     initializeOpenGLFunctions();
 
     triangleMesh_ = std::make_unique<GLMesh>();
+    gridMesh_ = std::make_unique<GLGrid>();
 
     QSurfaceFormat fmt = context()->format();
     std::cout << "format: " << (fmt.renderableType() == QSurfaceFormat::OpenGLES ? "GLES" : "Desktop") << "\n";
@@ -120,6 +121,7 @@ void ViewportGLWidget::paintGL()
     curCamera.setUniform(viewMLoc);
 
 
+    gridMesh_->draw();
     triangleMesh_->draw();
 
 }

@@ -5,6 +5,7 @@
 #include <QOpenGLFunctions_3_2_Core>
 #include "gui/viewport/GLCamera.h"
 #include "gui/viewport/GLMesh.h"
+#include "gui/viewport/GLGrid.h"
 
 class ViewportGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_2_Core
 {
@@ -14,6 +15,7 @@ public:
     GLuint shaderProgram;
     GLCamera curCamera;
     std::unique_ptr<GLMesh> triangleMesh_ ;
+    std::unique_ptr<GLGrid> gridMesh_ ;
 
 protected:
     void initializeGL() override;
