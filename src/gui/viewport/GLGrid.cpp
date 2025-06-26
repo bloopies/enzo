@@ -14,9 +14,72 @@ void GLGrid::init()
     glBindVertexArray(vao);
 
     initBuffers();
+    initShaderProgram();
 
     // unbind vertex array
     glBindVertexArray(0);
+}
+
+void GLGrid::initShaderProgram()
+{
+    // vertex shader
+    const std::string vertexShaderSource = "#version 330 core\n"
+    "uniform mat4 uView;\n"
+    "uniform mat4 uProj;\n"
+    "layout (location = 0) in vec3 aPos;\n"
+    "void main()\n"
+    "{\n"
+    "   gl_Position = uProj * uView * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "}\n";
+    // shader type
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    // convert source
+    const GLchar* vertexShaderSourceC = vertexShaderSource.c_str();
+    // create shader object
+    glShaderSource(vertexShader, 1, &vertexShaderSourceC, NULL);
+    // compile shader object
+    glCompileShader(vertexShader);
+
+    
+    // log shader error
+    int  success;
+    char infoLog[512];
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if(!success)
+    {
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+    else
+    {
+        std::cout << "success\n";
+
+    }
+    
+    
+    // fragment shader
+    const std::string fragmentShaderSource = "#version 330 core\n"
+    "out vec4 FragColor;\n"
+    "void main()\n"
+    "{\n"
+    "    FragColor = vec4(0.53f, 0.53f, 0.53f, 0.1f);\n"
+    "}\n";
+    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    const GLchar* fragmentShaderSourceC = fragmentShaderSource.c_str();
+    glShaderSource(fragmentShader, 1, &fragmentShaderSourceC, NULL);
+    glCompileShader(fragmentShader);
+
+    // create shader program
+    shaderProgram = glCreateProgram();
+    // attach shaders
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    // link program
+    glLinkProgram(shaderProgram);
+    
+    // delete shaders now that the program is complete
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
 }
 
 void GLGrid::initBuffers()
@@ -57,8 +120,14 @@ void GLGrid::unbind()
     glBindVertexArray(0);
 }
 
+void GLGrid::useProgram()
+{
+    glUseProgram(shaderProgram);
+}
+
 void GLGrid::draw()
 {
     bind();
+    useProgram();
     glDrawArrays(GL_LINES, 0, vertices.size());
 }

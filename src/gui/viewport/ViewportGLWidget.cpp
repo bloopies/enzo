@@ -11,6 +11,10 @@ void ViewportGLWidget::initializeGL()
 {
     initializeOpenGLFunctions();
 
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     triangleMesh_ = std::make_unique<GLMesh>();
     gridMesh_ = std::make_unique<GLGrid>();
 
@@ -102,9 +106,8 @@ void ViewportGLWidget::paintGL()
 {
 
 
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(shaderProgram);
 
     glm::mat4 projMatrix = glm::perspective(
         glm::radians(45.0f),                  // FOV
@@ -113,15 +116,21 @@ void ViewportGLWidget::paintGL()
         100.0f                                // far plane
     );
 
+    gridMesh_->useProgram();
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "uProj"), 1, GL_FALSE, glm::value_ptr(projMatrix));
+    curCamera.setUniform(glGetUniformLocation(shaderProgram, "uView"));
 
+
+    gridMesh_->draw();
+
+    glUseProgram(shaderProgram);
     GLint projMLoc = glGetUniformLocation(shaderProgram, "uProj");
     glUniformMatrix4fv(projMLoc, 1, GL_FALSE, glm::value_ptr(projMatrix));
 
     GLint viewMLoc = glGetUniformLocation(shaderProgram, "uView");
     curCamera.setUniform(viewMLoc);
 
-
-    gridMesh_->draw();
     triangleMesh_->draw();
+
 
 }

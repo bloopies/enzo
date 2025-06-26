@@ -9,10 +9,13 @@ public:
     GLGrid();
     GLuint vao;
     GLuint vbo;
+    GLuint shaderProgram;
     std::vector<glm::vec3> vertices;
 
     void init();
     void initBuffers();
+    void initShaderProgram();
+    void useProgram();
     void bind();
     void unbind();
     void draw();
