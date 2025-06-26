@@ -29,7 +29,7 @@ void ViewportGLWidget::initializeGL()
     loopTimer->start(16);
 
     // init camera
-    curCamera = GLCamera();
+    curCamera = GLCamera(-10, 5, -10);
 
 
     // vertex shader
