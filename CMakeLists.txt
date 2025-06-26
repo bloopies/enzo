@@ -16,6 +16,8 @@ project(enzo_project)
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets SvgWidgets OpenGLWidgets)
 qt_standard_project_setup()
 
+# glm
+find_package(glm REQUIRED)
 
 qt_add_executable(${AppExec}
     static/resources.qrc
@@ -34,7 +36,7 @@ qt_add_executable(${AppExec}
     src/gui/network/NodeIconGraphic.cpp
 )
 
-target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets GLU)
+target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm)
 target_include_directories(${AppExec} PUBLIC src)
 
 # tests

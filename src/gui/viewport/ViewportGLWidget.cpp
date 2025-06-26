@@ -1,9 +1,20 @@
-#include "gui/viewport/OpenGLWidget.h"
+#include "gui/viewport/ViewportGLWidget.h"
+#include <glm/mat4x4.hpp>
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 void ViewportGLWidget::initializeGL()
 {
-    // Set up the rendering context, load shaders and other resources, etc.:
     initializeOpenGLFunctions();
+
+    QSurfaceFormat fmt = context()->format();
+    std::cout << "format: " << (fmt.renderableType() == QSurfaceFormat::OpenGLES ? "GLES" : "Desktop") << "\n";
+    std::cout << "format: " << (fmt.renderableType() == QSurfaceFormat::OpenGL ? "true" : "false") << "\n";
+    std::cout << "hello\n";
+
+
+
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -25,10 +36,12 @@ void ViewportGLWidget::initializeGL()
 
     // vertex shader
     const std::string vertexShaderSource = "#version 330 core\n"
+    "uniform mat4 uView;\n"
+    "uniform mat4 uProj;\n"
     "layout (location = 0) in vec3 aPos;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   gl_Position = uProj * uView * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
     "}\n";
     // shader type
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -38,6 +51,22 @@ void ViewportGLWidget::initializeGL()
     glShaderSource(vertexShader, 1, &vertexShaderSourceC, NULL);
     // compile shader object
     glCompileShader(vertexShader);
+
+    
+    // log shader error
+    int  success;
+    char infoLog[512];
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    if(!success)
+    {
+        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+    else
+    {
+        std::cout << "success\n";
+
+    }
     
     
     // fragment shader
@@ -70,9 +99,6 @@ void ViewportGLWidget::initializeGL()
     // unbind vertex array
     glBindVertexArray(0);
 
-    QSurfaceFormat fmt = context()->format();
-    std::cout << "format: " << (fmt.renderableType() == QSurfaceFormat::OpenGLES ? "GLES" : "Desktop") << "\n";
-    std::cout << "format: " << (fmt.renderableType() == QSurfaceFormat::OpenGL ? "true" : "false") << "\n";
 
     glClearColor(0.16f, 0.16f, 0.16f, 1.0f);
 }
@@ -85,9 +111,37 @@ void ViewportGLWidget::resizeGL(int w, int h)
 
 void ViewportGLWidget::paintGL()
 {
-    initializeOpenGLFunctions();
+
+
     glClear(GL_COLOR_BUFFER_BIT);
+
+    angle_+=0.01;
+    std::cout << "angle\n";
+
     glUseProgram(shaderProgram);
+
+    glm::mat4 projMatrix = glm::perspective(
+        glm::radians(45.0f),                  // FOV
+        float(width()) / height(),          // aspect ratio
+        0.1f,                                 // near plane
+        100.0f                                // far plane
+    );
+
+
+    glm::mat4 viewMatrix = glm::lookAt(
+        glm::vec3(sin(angle_)*5, 1, cos(angle_)*5),
+        glm::vec3(0,0,0),
+        glm::vec3(0,1,0)
+    );
+
+    GLint projMLoc = glGetUniformLocation(shaderProgram, "uProj");
+    glUniformMatrix4fv(projMLoc, 1, GL_FALSE, glm::value_ptr(projMatrix));
+
+    GLint viewMLoc = glGetUniformLocation(shaderProgram, "uView");
+    glUniformMatrix4fv(viewMLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+
+
+
     glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
