@@ -12,7 +12,7 @@ public:
     QSize sizeHint() const override { return QSize(-1, -1); }
     GLuint vao;
     GLuint shaderProgram;
-    GLCamera camera_;
+    GLCamera curCamera;
 
 protected:
     void initializeGL() override;

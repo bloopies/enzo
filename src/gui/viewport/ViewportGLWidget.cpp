@@ -20,7 +20,7 @@ void ViewportGLWidget::initializeGL()
     loopTimer->start(16);
 
     // init camera
-    camera_ = GLCamera();
+    curCamera = GLCamera();
 
 
 
@@ -133,13 +133,7 @@ void ViewportGLWidget::paintGL()
     );
 
 
-    // glm::mat4 viewMatrix = glm::lookAt(
-    //     glm::vec3(sin(angle_)*5, 1, cos(angle_)*5),
-    //     glm::vec3(0,0,0),
-    //     glm::vec3(0,1,0)
-    // );
-    camera_.rotateAroundCenter(0.01, glm::vec3(0,1,0));
-    glm::mat4 viewMatrix = camera_.getViewMatrix();
+    glm::mat4 viewMatrix = curCamera.getViewMatrix();
 
 
     GLint projMLoc = glGetUniformLocation(shaderProgram, "uProj");
