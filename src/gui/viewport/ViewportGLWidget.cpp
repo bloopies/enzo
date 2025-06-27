@@ -94,7 +94,8 @@ void ViewportGLWidget::initializeGL()
 
 
 
-    glClearColor(0.16f, 0.16f, 0.16f, 1.0f);
+    constexpr float clearValue = 0.19;
+    glClearColor(clearValue, clearValue, clearValue, 1.0f);
 }
 
 
