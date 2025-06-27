@@ -23,6 +23,7 @@ qt_add_executable(${AppExec}
     static/resources.qrc
     src/gui/main.cpp
     src/gui/Interface.cpp
+    src/gui/UtilWidgets/Splitter.cpp
     src/gui/viewport/Viewport.cpp
     src/gui/viewport/ViewportGLWidget.cpp
     src/gui/viewport/GLCamera.cpp

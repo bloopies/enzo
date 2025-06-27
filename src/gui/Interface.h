@@ -2,6 +2,7 @@
 #include <QWidget>
 #include <QBoxLayout>
 #include <QSplitter>
+#include <gui/UtilWidgets/Splitter.h>
 
 class EnzoUI
 : public QWidget
@@ -12,7 +13,7 @@ class EnzoUI
     private:
         QVBoxLayout* mainLayout_;
         QVBoxLayout* viewportSplitLayout_;
-        QSplitter* viewportSplitter_;
+        Splitter* viewportSplitter_;
 
 
 };

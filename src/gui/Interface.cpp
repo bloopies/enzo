@@ -4,6 +4,7 @@
 #include <qpushbutton.h>
 #include <qsplitter.h>
 #include <QTimer>
+#include <gui/UtilWidgets/Splitter.h>
 
 EnzoUI::EnzoUI()
 {
@@ -22,8 +23,13 @@ EnzoUI::EnzoUI()
     Viewport* viewport = new Viewport();
     Network* network = new Network(this);
 
+    constexpr int margin = 2;
+    viewport->layout()->setContentsMargins(margin, margin, margin, margin);
+    network->layout()->setContentsMargins(margin, margin, margin, margin);
+    mainLayout_->setContentsMargins(margin, margin, margin, margin);
 
-    viewportSplitter_ = new QSplitter(this);
+
+    viewportSplitter_ = new Splitter(this);
 
 
 
@@ -31,7 +37,7 @@ EnzoUI::EnzoUI()
     viewportSplitter_->addWidget(network);
     // viewportSplitter_->addWidget(new QPushButton("hello world"));
 
-    viewportSplitter_->setStretchFactor(0, 10);
+    viewportSplitter_->setStretchFactor(0, 20);
     viewportSplitter_->setStretchFactor(1, 1);
 
     mainLayout_->addWidget(viewportSplitter_);
