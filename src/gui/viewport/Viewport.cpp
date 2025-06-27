@@ -45,13 +45,15 @@ bool Viewport::event(QEvent *event)
         case QEvent::MouseButtonPress:
         case QEvent::MouseButtonRelease:
             handleCamera(event);
+            event->ignore();
+            return true;
             break;
         default:
+            return QWidget::event(event);
             break;
     }
 
 
-    return true;
 }
 
 void Viewport::handleCamera(QEvent *event)
