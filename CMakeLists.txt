@@ -19,6 +19,8 @@ qt_standard_project_setup()
 # glm
 find_package(glm REQUIRED)
 
+
+
 qt_add_executable(${AppExec}
     static/resources.qrc
     src/gui/main.cpp
@@ -44,6 +46,12 @@ target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets 
 target_include_directories(${AppExec} PUBLIC src)
 
 # tests
-add_executable(${TestExec} tests/main-tests.cpp)
+add_executable(${TestExec}
+    tests/main-tests.cpp
+    tests/OperatorTests.cpp
+    src/Engine/Operator/Attribute.cpp
+    # src/Engine/Operator/Primitive.cpp
+)
 find_package(Catch2 3 REQUIRED)
 target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain)
+target_include_directories(${TestExec} PUBLIC src)
