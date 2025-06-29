@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['primitive_0',['Primitive',['../classenzo_1_1Primitive.html',1,'enzo']]]
+  ['geometry_0',['Geometry',['../classenzo_1_1geo_1_1Geometry.html',1,'enzo::geo']]]
 ];
