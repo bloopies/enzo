@@ -6,15 +6,14 @@ on:
 
 jobs:
   doxygen:
-    runs-on: ubuntu-latest
+    runs-on: ghcr.io/doxygen/doxygen:1.12.0
     steps:
       - uses: actions/checkout@v3
         with:
             submodules: recursive
-      - name: Install Doxygen
-        run: sudo apt-get update && sudo apt-get install -y doxygen
       - name: Build docs
         run: |
+          doxygen --version
           doxygen Doxyfile
           # ensure nojekyll so assets like underscore-files aren’t ignored
           touch .nojekyll
