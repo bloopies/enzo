@@ -6,16 +6,17 @@ on:
 
 jobs:
   doxygen:
-    runs-on: ghcr.io/doxygen/doxygen:1.12.0
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/doxygen/doxygen:1.12.0
     steps:
       - uses: actions/checkout@v3
         with:
-            submodules: recursive
+          submodules: recursive
       - name: Build docs
         run: |
           doxygen --version
           doxygen Doxyfile
-          # ensure nojekyll so assets like underscore-files aren’t ignored
           touch .nojekyll
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
