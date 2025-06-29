@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <optional>
+#include <string_view>
 #include <vector>
 #include "Engine/Types.h"
 #include <memory>
@@ -17,6 +18,7 @@ namespace enzo{
         public:
             Attribute(std::string name, ga::AttributeType type);
             AttributeType getType();
+            std::string getName();
 
 
 

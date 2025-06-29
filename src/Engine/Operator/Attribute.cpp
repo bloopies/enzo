@@ -20,7 +20,7 @@ ga::Attribute::Attribute(std::string name, ga::AttributeType type)
             floatStore_=std::make_shared<std::vector<float>>();
             break;
         default:
-            throw std::runtime_error("Type " + std::to_string(static_cast<int>(type_)) + " was not accounted for");
+            throw std::runtime_error("Type " + std::to_string(static_cast<int>(type_)) + " was not properly accounted for");
 
     }
 
@@ -31,4 +31,8 @@ ga::AttributeType ga::Attribute::getType()
     return type_;
 }
 
+std::string ga::Attribute::getName()
+{
+    return name_;
+}
 

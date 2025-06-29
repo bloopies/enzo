@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <optional>
@@ -16,40 +17,24 @@ class AttributeHandle
 public:
     ga::AttributeType type_;
 
-    AttributeHandle(Attribute& attribute)
+    AttributeHandle(std::shared_ptr<Attribute> attribute)
     {
-        type_ = attribute.getType();
+        type_ = attribute->getType();
         // get attribute data pointer
         // TODO: check types match
         // TODO: add the other types
         if constexpr (std::is_same<int, T>::value)
         {
-            data_=attribute.intStore_;
+            data_=attribute->intStore_;
         }
         else if constexpr (std::is_same<float, T>::value)
         {
-            data_=attribute.floatStore_;
+            data_=attribute->floatStore_;
         }
         else
         {
-                throw std::runtime_error("Type " + std::to_string(static_cast<int>(type_)) + " was not accounted for");
+                throw std::runtime_error("Type " + std::to_string(static_cast<int>(type_)) + " was not properly accounted for");
         }
-        // switch(type_)
-        // {
-        //     case(AttrType::intT):
-        //     {
-        //         data_=attribute.intStore_;
-        //         break;
-        //     }
-        //     case(AttrType::floatT):
-        //     {
-        //         data_=attribute.floatStore_;
-        //         break;
-        //     }
-        //     default:
-        //         throw std::runtime_error("Type " + std::to_string(static_cast<int>(type_)) + " was not accounted for");
-
-        // }
 
     }
     void addValue(T value)

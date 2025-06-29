@@ -50,7 +50,7 @@ add_executable(${TestExec}
     tests/main-tests.cpp
     tests/OperatorTests.cpp
     src/Engine/Operator/Attribute.cpp
-    # src/Engine/Operator/Primitive.cpp
+    src/Engine/Operator/Geometry.cpp
 )
 find_package(Catch2 3 REQUIRED)
 target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain)
