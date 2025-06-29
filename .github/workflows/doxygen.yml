@@ -1,0 +1,24 @@
+name: Build & Deploy Doxygen
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  doxygen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Doxygen
+        run: sudo apt-get update && sudo apt-get install -y doxygen
+      - name: Build docs
+        run: |
+          doxygen Doxyfile
+          # ensure nojekyll so assets like underscore-files aren’t ignored
+          touch .nojekyll
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/html
+          publish_branch: gh-pages
