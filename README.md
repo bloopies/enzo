@@ -4,6 +4,7 @@
   <a href="https://github.com/ParkerBritt?tab=repositories&q=&type=&language=c%2B%2B&sort="><img src="https://parkerbritt.com/badge?label=C%2B%2B&icon=cplusplus&color=00599C"></a>
   <a href="https://www.opengl.org/"><img src="https://parkerbritt.com/badge?label=opengl&icon=opengl&color=5586A4"></a>
   <a href="https://www.qt.io/"><img src="https://parkerbritt.com/badge?label=qt&icon=qt&color=41CD52"></a>
+  <br><img src="https://parkerbritt.com/jenkins_badge?job=HDK_attributeconnectivity">
 </div>
 
 Enzo is a node based 3D DCC tool.
