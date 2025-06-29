@@ -15,9 +15,6 @@ jobs:
       - name: Generate Doxygen docs
         uses: mattnotmitt/doxygen-action@v1.12.0
 
-      - name: Disable Jekyll
-        run: touch docs/html/.nojekyll
-
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
