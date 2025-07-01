@@ -1,5 +1,5 @@
 <div  align="center">
-  <img width=250 src="static/icons/icon-main-white.png">
+  <img width=180 src="static/icons/icon-main-white.png">
 </div>
 <h1 align="center">Enzo DCC</h1>
 
