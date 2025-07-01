@@ -1,14 +1,15 @@
-#include "gui/viewport/ViewportGLWidget.h"
-#include "gui/viewport/GLMesh.h"
+#include "gui/viewport/ViewportGLWidget.h" #include "gui/viewport/GLMesh.h"
 #include <glm/mat4x4.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <memory>
 #include <qtimer.h>
+#include "Engine/Operator/Geometry.h"
 
 void ViewportGLWidget::initializeGL()
 {
+    using namespace enzo;
     initializeOpenGLFunctions();
 
     glEnable(GL_DEPTH_TEST);
@@ -16,13 +17,13 @@ void ViewportGLWidget::initializeGL()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_MULTISAMPLE);
 
-    triangleMesh_ = std::make_unique<GLMesh>();
+    auto geo = std::make_unique<enzo::geo::Geometry>();
+    triangleMesh_ = meshFromGeo(geo);
     gridMesh_ = std::make_unique<GLGrid>();
 
     QSurfaceFormat fmt = context()->format();
     std::cout << "format: " << (fmt.renderableType() == QSurfaceFormat::OpenGLES ? "GLES" : "Desktop") << "\n";
     std::cout << "format: " << (fmt.renderableType() == QSurfaceFormat::OpenGL ? "true" : "false") << "\n";
-    std::cout << "hello\n";
 
     // init loop
     QTimer* loopTimer = new QTimer(this);
@@ -136,3 +137,10 @@ void ViewportGLWidget::paintGL()
 
 
 }
+
+std::unique_ptr<GLMesh> ViewportGLWidget::meshFromGeo(std::unique_ptr<enzo::geo::Geometry>& geometry)
+{
+    auto mesh = std::make_unique<GLMesh>();
+    return mesh; 
+}
+

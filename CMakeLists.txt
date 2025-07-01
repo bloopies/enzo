@@ -40,6 +40,9 @@ qt_add_executable(${AppExec}
     src/gui/network/FloatingEdgeGraphic.cpp
     src/gui/network/DisplayFlagButton.cpp
     src/gui/network/NodeIconGraphic.cpp
+
+    src/Engine/Operator/Attribute.cpp
+    src/Engine/Operator/Geometry.cpp
 )
 
 target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm)

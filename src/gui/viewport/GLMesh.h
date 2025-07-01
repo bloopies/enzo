@@ -1,4 +1,5 @@
 #pragma once
+#include <GL/gl.h>
 #include <QOpenGLFunctions_3_2_Core>
 
 class GLMesh
@@ -7,7 +8,11 @@ class GLMesh
 public:
     GLMesh();
     GLuint vao;
-    GLuint vbo;
+    GLuint vertexBuffer;
+    GLuint indexBuffer;
+
+    std::vector<GLfloat> vertexPosData;
+    std::vector<GLint> indexData;
 
     void init();
     void initBuffers();
