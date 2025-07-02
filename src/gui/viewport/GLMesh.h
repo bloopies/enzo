@@ -18,6 +18,7 @@ public:
     void init();
     void initBuffers();
     void setPosBuffer(std::vector<enzo::bt::Vector3> data);
+    void setIndexBuffer(std::vector<int> data);
     void bind();
     void unbind();
     void draw();

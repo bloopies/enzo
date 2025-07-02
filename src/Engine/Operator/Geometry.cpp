@@ -9,6 +9,7 @@ using namespace enzo;
 geo::Geometry::Geometry()
 {
     addVector3Attribute(ga::AttrOwner::POINT, "P");
+    addIntAttribute(ga::AttrOwner::VERTEX, "point");
 }
 
 ga::AttributeHandle<int> geo::Geometry::addIntAttribute(ga::AttributeOwner owner, std::string name)
