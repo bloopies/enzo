@@ -1,4 +1,5 @@
 #pragma once
+#include "Engine/Types.h"
 #include <GL/gl.h>
 #include <QOpenGLFunctions_3_2_Core>
 
@@ -16,6 +17,7 @@ public:
 
     void init();
     void initBuffers();
+    void setPosBuffer(std::vector<enzo::bt::Vector3> data);
     void bind();
     void unbind();
     void draw();

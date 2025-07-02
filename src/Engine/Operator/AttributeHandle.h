@@ -53,13 +53,19 @@ public:
         // TODO:make this private (primitive friend classes only)
         data_->push_back(value);
     }
-    T getValue(uint pos)
+
+    std::vector<T> getData() const
+    {
+        return *data_;
+    }
+
+    T getValue(uint pos) const
     {
         // TODO:protect against invalid positions
         // TODO: cast types
         return data_->at(pos);
     }
-    std::string getName()
+    std::string getName() const
     {
         return name_;
     }

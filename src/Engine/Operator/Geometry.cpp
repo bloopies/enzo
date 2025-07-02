@@ -8,17 +8,24 @@
 using namespace enzo;
 geo::Geometry::Geometry()
 {
-
+    addVector3Attribute(ga::AttrOwner::POINT, "P");
 }
 
 ga::AttributeHandle<int> geo::Geometry::addIntAttribute(ga::AttributeOwner owner, std::string name)
 {
     auto newAttribute = std::make_shared<ga::Attribute>(name, ga::AttrType::intT);
-    getOwnerVector(owner).push_back(newAttribute);
+    getAttributeStore(owner).push_back(newAttribute);
     return ga::AttributeHandle<int>(newAttribute);
 }
 
-std::vector<std::shared_ptr<ga::Attribute>>& geo::Geometry::getOwnerVector(ga::AttributeOwner& owner)
+ga::AttributeHandle<bt::Vector3> geo::Geometry::addVector3Attribute(ga::AttributeOwner owner, std::string name)
+{
+    auto newAttribute = std::make_shared<ga::Attribute>(name, ga::AttrType::vectorT);
+    getAttributeStore(owner).push_back(newAttribute);
+    return ga::AttributeHandle<bt::Vector3>(newAttribute);
+}
+
+std::vector<std::shared_ptr<ga::Attribute>>& geo::Geometry::getAttributeStore(ga::AttributeOwner& owner)
 {
     switch(owner)
     {
@@ -42,7 +49,7 @@ std::vector<std::shared_ptr<ga::Attribute>>& geo::Geometry::getOwnerVector(ga::A
 
 std::shared_ptr<ga::Attribute> geo::Geometry::getAttribByName(ga::AttributeOwner owner, std::string name)
 {
-    auto& vector = getOwnerVector(owner);
+    auto& vector = getAttributeStore(owner);
     for(auto it=vector.begin(); it!=vector.end(); ++it)
     {
         if((*it)->getName()==name)

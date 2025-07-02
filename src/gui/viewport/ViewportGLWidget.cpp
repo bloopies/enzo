@@ -1,4 +1,6 @@
 #include "gui/viewport/ViewportGLWidget.h"
+#include "Engine/Operator/AttributeHandle.h"
+#include "Engine/Types.h"
 #include "gui/viewport/GLMesh.h"
 #include <glm/mat4x4.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
@@ -141,7 +143,25 @@ void ViewportGLWidget::paintGL()
 
 std::unique_ptr<GLMesh> ViewportGLWidget::meshFromGeo(std::unique_ptr<enzo::geo::Geometry>& geometry)
 {
+    using namespace enzo;
+
     auto mesh = std::make_unique<GLMesh>();
+        
+    std::shared_ptr<ga::Attribute> PAttr = geometry->getAttribByName(ga::AttrOwner::POINT, "P");
+    ga::AttributeHandleVector3 PAttrHandle = ga::AttributeHandleVector3(PAttr);
+    PAttrHandle.addValue(bt::Vector3(-0.5f, -0.5f, 0.0f));
+    PAttrHandle.addValue(bt::Vector3(0.5f, -0.5f, 0.0f));
+    PAttrHandle.addValue(bt::Vector3(0.0f,  0.5f, 0.0f));
+    PAttrHandle.addValue(bt::Vector3(0.5f, 0.5f, 0.0f));
+
+    mesh->setPosBuffer(PAttrHandle.getData());
+    // mesh->setPosBuffer(std::vector<bt::Vector3>{
+    //     bt::Vector3(-0.5f, -0.5f, 0.0f),
+    //     bt::Vector3(0.5f, -0.5f, 0.0f),
+    //     bt::Vector3(0.0f,  0.5f, 0.0f),
+    //     bt::Vector3(0.5f, 0.5f, 0.0f),
+    // });
+
     return mesh; 
 }
 

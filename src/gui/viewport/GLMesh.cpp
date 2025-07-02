@@ -15,6 +15,17 @@ void GLMesh::init()
 
     initBuffers();
 
+    vertexPosData = {
+        -0.5f, -0.5f, 0.0f,
+         0.5f, -0.5f, 0.0f,
+         0.0f,  0.5f, 0.0f,
+         0.5f, 0.5f, 0.0f
+    };
+
+    // store data in the buffer
+    glBufferData(GL_ARRAY_BUFFER, vertexPosData.size()*sizeof(GLfloat), vertexPosData.data(), GL_STATIC_DRAW);
+
+
     // unbind vertex array
     glBindVertexArray(0);
 }
@@ -22,12 +33,6 @@ void GLMesh::init()
 void GLMesh::initBuffers()
 {
 
-    vertexPosData = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f,
-         0.5f, 0.5f, 0.0f
-    };
 
     indexData =
     {
@@ -38,8 +43,6 @@ void GLMesh::initBuffers()
     glGenBuffers(1, &vertexBuffer);
     // set purpose
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    // store data in the buffer
-    glBufferData(GL_ARRAY_BUFFER, vertexPosData.size()*sizeof(GLfloat), vertexPosData.data(), GL_STATIC_DRAW);
 
     // gives the shader a way to read buffer data 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), (void*)0);
@@ -51,6 +54,20 @@ void GLMesh::initBuffers()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData.size()*sizeof(GLint), indexData.data(), GL_STATIC_DRAW);
 
 }
+
+void GLMesh::setPosBuffer(std::vector<enzo::bt::Vector3> data)
+{
+    vertexPosData.clear();
+    for(auto vector : data)
+    {
+        vertexPosData.push_back(vector.x());
+        vertexPosData.push_back(vector.y());
+        vertexPosData.push_back(vector.z());
+    }
+
+    glBufferData(GL_ARRAY_BUFFER, vertexPosData.size()*sizeof(GLfloat), vertexPosData.data(), GL_STATIC_DRAW);
+}
+
 
 void GLMesh::bind()
 {
