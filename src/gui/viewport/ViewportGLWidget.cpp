@@ -149,10 +149,11 @@ std::unique_ptr<GLMesh> ViewportGLWidget::meshFromGeo(std::unique_ptr<enzo::geo:
         
     std::shared_ptr<ga::Attribute> PAttr = geometry->getAttribByName(ga::AttrOwner::POINT, "P");
     ga::AttributeHandleVector3 PAttrHandle = ga::AttributeHandleVector3(PAttr);
-    PAttrHandle.addValue(bt::Vector3(-0.5f, -0.5f, 0.0f));
-    PAttrHandle.addValue(bt::Vector3(0.5f, -0.5f, 0.0f));
-    PAttrHandle.addValue(bt::Vector3(0.0f,  0.5f, 0.0f));
-    PAttrHandle.addValue(bt::Vector3(0.5f, 0.5f, 0.0f));
+    PAttrHandle.addValue(bt::Vector3(1.0f, -1.0f, 0.0f));
+    PAttrHandle.addValue(bt::Vector3(-1.0f, -1.0f, 0.0f));
+    PAttrHandle.addValue(bt::Vector3(-1.0f, 1.0f, 0.0f));
+    PAttrHandle.addValue(bt::Vector3(0.0f, 2.0f, 0.0f));
+    PAttrHandle.addValue(bt::Vector3(1.0f, 1.0f, 0.0f));
 
     mesh->setPosBuffer(PAttrHandle.getData());
     // mesh->setPosBuffer(std::vector<bt::Vector3>{

@@ -15,15 +15,21 @@ void GLMesh::init()
 
     initBuffers();
 
-    vertexPosData = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f,
-         0.5f, 0.5f, 0.0f
-    };
+    std::vector<int> foo = {0,1,2,3,4};
+    for(int i=1;i+1<foo.size();++i)
+    {
+        indexData.push_back(foo.at(0));
+        indexData.push_back(foo.at(i));
+        indexData.push_back(foo.at(i+1));
+    }
+    // indexData =
+    // {
+    //     0, 1, 2, 1, 2, 3
+    // };
 
     // store data in the buffer
     glBufferData(GL_ARRAY_BUFFER, vertexPosData.size()*sizeof(GLfloat), vertexPosData.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData.size()*sizeof(GLint), indexData.data(), GL_STATIC_DRAW);
 
 
     // unbind vertex array
@@ -32,12 +38,6 @@ void GLMesh::init()
 
 void GLMesh::initBuffers()
 {
-
-
-    indexData =
-    {
-        0, 1, 2, 1, 2, 3
-    };
 
     // create buffer of vertices
     glGenBuffers(1, &vertexBuffer);
@@ -51,7 +51,6 @@ void GLMesh::initBuffers()
 
     glGenBuffers(1, &indexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData.size()*sizeof(GLint), indexData.data(), GL_STATIC_DRAW);
 
 }
 
