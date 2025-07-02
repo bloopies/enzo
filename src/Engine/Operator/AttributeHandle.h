@@ -5,6 +5,7 @@
 #include <optional>
 #include <vector>
 #include "Engine/Operator/Attribute.h"
+#include "Engine/Types.h"
 
 #include <iostream>
 
@@ -23,13 +24,23 @@ public:
         // get attribute data pointer
         // TODO: check types match
         // TODO: add the other types
+
+        // int
         if constexpr (std::is_same<int, T>::value)
         {
             data_=attribute->intStore_;
         }
+
+        // float
         else if constexpr (std::is_same<float, T>::value)
         {
             data_=attribute->floatStore_;
+        }
+
+        // vector 3
+        else if constexpr (std::is_same<enzo::bt::Vector3, T>::value)
+        {
+            data_=attribute->vector3Store_;
         }
         else
         {
@@ -75,5 +86,6 @@ private:
 
 using AttributeHandleInt = AttributeHandle<int>;
 using AttributeHandleFloat = AttributeHandle<float>;
+using AttributeHandleVector3 = AttributeHandle<enzo::bt::Vector3>;
 
 }

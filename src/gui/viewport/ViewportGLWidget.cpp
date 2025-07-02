@@ -1,4 +1,5 @@
-#include "gui/viewport/ViewportGLWidget.h" #include "gui/viewport/GLMesh.h"
+#include "gui/viewport/ViewportGLWidget.h"
+#include "gui/viewport/GLMesh.h"
 #include <glm/mat4x4.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/matrix_transform.hpp>

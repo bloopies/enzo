@@ -19,6 +19,9 @@ ga::Attribute::Attribute(std::string name, ga::AttributeType type)
         case(AttrType::floatT):
             floatStore_=std::make_shared<std::vector<float>>();
             break;
+        case(AttrType::vectorT):
+            vector3Store_=std::make_shared<std::vector<enzo::bt::Vector3>>();
+            break;
         default:
             throw std::runtime_error("Type " + std::to_string(static_cast<int>(type_)) + " was not properly accounted for");
 

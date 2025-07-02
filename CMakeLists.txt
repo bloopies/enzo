@@ -19,6 +19,9 @@ qt_standard_project_setup()
 # glm
 find_package(glm REQUIRED)
 
+# eigen (math)
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+
 
 
 qt_add_executable(${AppExec}
@@ -45,7 +48,7 @@ qt_add_executable(${AppExec}
     src/Engine/Operator/Geometry.cpp
 )
 
-target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm)
+target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen)
 target_include_directories(${AppExec} PUBLIC src)
 
 # tests
@@ -56,5 +59,5 @@ add_executable(${TestExec}
     src/Engine/Operator/Geometry.cpp
 )
 find_package(Catch2 3 REQUIRED)
-target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain)
+target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen)
 target_include_directories(${TestExec} PUBLIC src)

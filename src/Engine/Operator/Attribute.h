@@ -45,6 +45,7 @@ namespace enzo{
             // data stores
             std::shared_ptr<std::vector<int>> intStore_;
             std::shared_ptr<std::vector<float>> floatStore_;
+            std::shared_ptr<std::vector<enzo::bt::Vector3>> vector3Store_;
         };
 
 

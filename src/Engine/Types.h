@@ -1,4 +1,5 @@
 #pragma once
+#include <Eigen/Dense>
 
 namespace enzo
 {
@@ -21,5 +22,11 @@ namespace enzo
         };
         using AttrType = AttributeType;
         using AttrOwner = AttributeOwner;
+    }
+    // basic types types
+    namespace bt
+    {
+        using Vector3 = Eigen::Vector3d;
+        using Vector4 = Eigen::Vector4d;
     }
 }
