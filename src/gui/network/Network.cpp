@@ -1,4 +1,5 @@
 #include "gui/network/Network.h"
+#include "Engine/Types.h"
 #include "gui/network/DisplayFlagButton.h"
 #include "gui/network/NodeEdgeGraphic.h"
 #include "gui/network/NetworkGraphicsView.h"
@@ -6,12 +7,15 @@
 #include "gui/network/NodeGraphic.h"
 #include "gui/network/FloatingEdgeGraphic.h"
 #include "gui/network/SocketGraphic.h"
+#include "Engine/Network/NetworkManager.h"
 #include <qboxlayout.h>
 #include <QPushButton>
 #include <QGraphicsItem>
 #include <QMouseEvent>
 #include <qgraphicsitem.h>
 #include <qnamespace.h>
+
+using namespace enzo;
 
 Network::Network(QWidget* parent)
 : QWidget(parent)
@@ -28,42 +32,6 @@ Network::Network(QWidget* parent)
 
     scene_ = new NetworkGraphicsScene();
     view_ = new NetworkGraphicsView(this, this, scene_);
-
-    // QPen greenPen = QPen(Qt::green);
-    // greenPen.setWidth(6);
-
-    // auto* rect1 = scene_->addRect(50, 50, 100, 100, greenPen);
-    // rect1->setFlag(QGraphicsItem::ItemIsMovable);
-
-    // auto* rect2 = scene_->addRect(80, 120, 100, 100, greenPen);
-    // rect2->setFlag(QGraphicsItem::ItemIsMovable);
-
-    // auto* rect3 = scene_->addRect(80, -120, 100, 100, greenPen);
-    // rect3->setFlag(QGraphicsItem::ItemIsMovable);
-
-    NodeGraphic* node1 = new NodeGraphic();
-    node1->setPos(-50, -50);
-    scene_->addItem(node1);
-    
-    NodeGraphic* node2 = new NodeGraphic();
-    node2->setPos(50, 50);
-    scene_->addItem(node2);
-
-    NodeGraphic* node3 = new NodeGraphic();
-    node3->setPos(50, 200);
-    scene_->addItem(node3);
-
-    NodeGraphic* node4 = new NodeGraphic();
-    node4->setPos(50, -200);
-    scene_->addItem(node4);
-
-
-
-    // scene_->addItem(new NodeEdgeGraphic(node1->getOutput(0), node2->getInput(0)));
-
-    // node1->addEdge(edge1);
-    // node2->addEdge(edge1);
-
 
 
     mainLayout_->addWidget(view_);
@@ -247,25 +215,41 @@ void Network::keyPressEvent(QKeyEvent *event)
     // get pos
     QPoint globalPos = QCursor::pos();
     QPoint widgetPos = mapFromGlobal(globalPos);
+    QPointF viewPos = view_->mapToScene(widgetPos);
+    
 
     QList<QGraphicsItem*> hoverItems = view_->items(widgetPos);
 
     // edge detection
-    if(
-        event->key() == Qt::Key_Control
-    )
+    switch(event->key())
     {
-        QGraphicsItem* hoverItem = itemOfType<NodeEdgeGraphic>(hoverItems);
-        if(hoverItem!=nullptr)
+
+        case( Qt::Key_Control):
         {
-            highlightEdge(hoverItem, true);
+            QGraphicsItem* hoverItem = itemOfType<NodeEdgeGraphic>(hoverItems);
+            if(hoverItem!=nullptr)
+            {
+                highlightEdge(hoverItem, true);
+            }
+            break;
         }
+        case(Qt::Key_Escape):
+        {
+            destroyFloatingEdge();
+            break;
+        }
+        case(Qt::Key_Tab):
+        {
+            nt::NetworkManager* nm = nt::NetworkManager::getInstance();
+            if(nt::OpId id = nm->addOperator())
+            {
+                NodeGraphic* newNode = new NodeGraphic(id);
+                newNode->setPos(viewPos);
+                scene_->addItem(newNode);
+            }
 
-    }
-
-    if(event->key() == Qt::Key_Escape)
-    {
-        destroyFloatingEdge();
+            break;
+        }
     }
 }
 

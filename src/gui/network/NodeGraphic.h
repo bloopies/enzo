@@ -1,6 +1,7 @@
 #pragma once
 #include <QGraphicsItem>
 #include <QPainter>
+#include "Engine/Types.h"
 #include "gui/network/DisplayFlagButton.h"
 #include "gui/network/SocketGraphic.h"
 #include "gui/network/NodeIconGraphic.h"
@@ -11,7 +12,7 @@ class NodeGraphic
 : public QGraphicsItem
 {
 public:
-    NodeGraphic(QGraphicsItem *parent = nullptr);
+    NodeGraphic(enzo::nt::OpId id, QGraphicsItem *parent = nullptr);
     QRectF boundingRect() const override;
     
     SocketGraphic* getInput(int indx) const;
@@ -36,6 +37,7 @@ private:
     void initIcon();
     void initFonts();
 
+    enzo::nt::OpId opId_;
     std::vector<SocketGraphic*> inputs_;
     std::vector<SocketGraphic*> outputs_;
 

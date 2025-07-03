@@ -46,6 +46,8 @@ qt_add_executable(${AppExec}
 
     src/Engine/Operator/Attribute.cpp
     src/Engine/Operator/Geometry.cpp
+    src/Engine/Operator/GeometryOperator.cpp
+    src/Engine/Network/NetworkManager.cpp
 )
 
 target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen)

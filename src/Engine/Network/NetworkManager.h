@@ -8,8 +8,16 @@ namespace enzo::nt {
 class NetworkManager
 {
 public:
-    bool addOperator();
+    OpId addOperator();
+    // delete copy constructor
+    NetworkManager(const NetworkManager& obj) = delete;
+
+    static NetworkManager* getInstance();
+
 private:
+    static NetworkManager* instancePtr_;
+    NetworkManager() {};
+
     std::unordered_map<enzo::nt::OpId, std::unique_ptr<enzo::nt::GeometryOperator>> gopStore_;
     enzo::nt::OpId maxOpId_=0;
 

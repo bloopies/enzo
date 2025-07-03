@@ -12,8 +12,8 @@
 #include <QGraphicsSvgItem>
 #include "gui/network/NodeIconGraphic.h"
 
-NodeGraphic::NodeGraphic(QGraphicsItem *parent)
-: QGraphicsItem(parent)
+NodeGraphic::NodeGraphic(enzo::nt::OpId id, QGraphicsItem *parent)
+: QGraphicsItem(parent), opId_{id}
 {
     socketSize_ = 3;
     titlePadding_=1;

@@ -4,7 +4,8 @@
 
 TEST_CASE("network")
 {
-    enzo::nt::NetworkManager networkManager;
-    networkManager.addOperator();
+    using namespace enzo;
+    nt::NetworkManager* nm = nt::NetworkManager::getInstance();
+    nm->addOperator();
 }
 
