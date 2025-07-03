@@ -55,8 +55,12 @@ target_include_directories(${AppExec} PUBLIC src)
 add_executable(${TestExec}
     tests/main-tests.cpp
     tests/OperatorTests.cpp
+    tests/NetworkTests.cpp
+
     src/Engine/Operator/Attribute.cpp
     src/Engine/Operator/Geometry.cpp
+    src/Engine/Operator/GeometryOperator.cpp
+    src/Engine/Network/NetworkManager.cpp
 )
 find_package(Catch2 3 REQUIRED)
 target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen)

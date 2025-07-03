@@ -29,4 +29,8 @@ namespace enzo
         using Vector3 = Eigen::Vector3d;
         using Vector4 = Eigen::Vector4d;
     }
+    namespace nt
+    {
+        using OpId = uint64_t;
+    }
 }
