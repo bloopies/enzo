@@ -14,6 +14,9 @@ public:
 
     static NetworkManager* getInstance();
 
+    bool isValidOp(nt::OpId opId);
+    GeometryOperator& getGeoOperator(nt::OpId opId);
+
 private:
     static NetworkManager* instancePtr_;
     NetworkManager() {};

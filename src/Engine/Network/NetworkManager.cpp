@@ -23,5 +23,21 @@ enzo::nt::NetworkManager* enzo::nt::NetworkManager::getInstance()
     return instancePtr_;
 }
 
+enzo::nt::GeometryOperator& enzo::nt::NetworkManager::getGeoOperator(nt::OpId opId)
+{
+    return *gopStore_.at(opId);
+}
+
+bool enzo::nt::NetworkManager::isValidOp(nt::OpId opId)
+{
+    auto it = gopStore_.find(opId);
+    if( it == gopStore_.end() || it->second==nullptr )
+    {
+        return false;
+    }
+    return true;
+}
+
+
 enzo::nt::NetworkManager* enzo::nt::NetworkManager::instancePtr_ = nullptr;
 
