@@ -1,4 +1,5 @@
 #pragma once
+#include "Engine/Types.h"
 #include <QGraphicsItem>
 #include <QPainter>
 #include <unordered_set>
@@ -14,27 +15,28 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
-    enum class SocketType {
-        Input,
-        Output
-    };
 
-    SocketGraphic(SocketGraphic::SocketType type, QGraphicsItem *parent = nullptr);
-    SocketType getIO();
+    SocketGraphic(enzo::nt::SocketIOType type, enzo::nt::OpId opId, unsigned int socketIndex, QGraphicsItem *parent = nullptr);
+    enzo::nt::SocketIOType getIO();
     void addEdge(NodeEdgeGraphic* edge);
     void removeEdge(NodeEdgeGraphic* edge);
     void posChanged(QPointF pos);
     QPainterPath shape() const override;
+    enzo::nt::OpId getOpId() const;
+
+    unsigned int getIndex() const;
 
 private:
     int socketSize_ = 1;
+    unsigned int socketIndex_;
     QBrush brushInactive_;
     QBrush brushActive_;
     bool hovered_=false;
-    SocketType type_;
+    enzo::nt::SocketIOType type_;
     std::unordered_set<NodeEdgeGraphic*> edges_;
     qreal paddingScale_=20;
     QRectF boundRect_;
+    enzo::nt::OpId opId_;
 
     void initBoundingBox();
 protected:

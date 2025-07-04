@@ -5,6 +5,8 @@
 #include <qnamespace.h>
 #include <stdexcept>
 #include <string>
+#include "Engine/Network/NetworkManager.h"
+#include "Engine/Operator/GeometryOperator.h"
 #include "gui/network/DisplayFlagButton.h"
 #include "gui/network/SocketGraphic.h"
 #include <QGraphicsScene>
@@ -76,13 +78,22 @@ void NodeGraphic::initFlagButtons()
 
 void NodeGraphic::initSockets()
 {
-    auto* socketInput = new SocketGraphic(SocketGraphic::SocketType::Input, this);
-    socketInput->setPos(getSocketPosition(0, SocketGraphic::SocketType::Input));
-    inputs_.push_back(socketInput);
+    auto nm = enzo::nt::NetworkManager::getInstance();
+    enzo::nt::GeometryOperator& op = nm->getGeoOperator(opId_);
+    for(int i=0, max=op.getMaxInputs(); i<max; ++i)
+    {
+        auto* socketInput = new SocketGraphic(enzo::nt::SocketIOType::Input, opId_, i, this);
+        socketInput->setPos(getSocketPosition(i, enzo::nt::SocketIOType::Input));
+        inputs_.push_back(socketInput);
+    }
 
-    auto* socketOutput = new SocketGraphic(SocketGraphic::SocketType::Output, this);
-    socketOutput->setPos(getSocketPosition(0, SocketGraphic::SocketType::Output));
-    outputs_.push_back(socketOutput);
+    for(int i=0, max=op.getMaxOutputs(); i<max; ++i)
+    {
+        auto* socketOutput = new SocketGraphic(enzo::nt::SocketIOType::Output, opId_, i, this);
+        socketOutput->setPos(getSocketPosition(i, enzo::nt::SocketIOType::Output));
+        outputs_.push_back(socketOutput);
+    }
+
 }
 
 // void setInputEdge(NodeEdgeGraphic* edge, int indx)
@@ -183,23 +194,30 @@ void NodeGraphic::updatePositions(QPointF pos)
     // but for now I'm just going based on order
     for(int socketIndex=0; socketIndex<inputs_.size(); ++socketIndex)
     {
-        inputs_[socketIndex]->posChanged(getSocketScenePosition(socketIndex, SocketGraphic::SocketType::Input));
+        inputs_[socketIndex]->posChanged(getSocketScenePosition(socketIndex, enzo::nt::SocketIOType::Input));
     }
     for(int socketIndex=0; socketIndex<outputs_.size(); ++socketIndex)
     {
-        outputs_[socketIndex]->posChanged(getSocketScenePosition(socketIndex, SocketGraphic::SocketType::Output));
+        outputs_[socketIndex]->posChanged(getSocketScenePosition(socketIndex, enzo::nt::SocketIOType::Output));
     }
 }
 
-QPointF NodeGraphic::getSocketPosition(int socketIndex, SocketGraphic::SocketType socketType)
+QPointF NodeGraphic::getSocketPosition(int socketIndex, enzo::nt::SocketIOType socketType)
 {
+    auto nm = enzo::nt::NetworkManager::getInstance();
+    enzo::nt::GeometryOperator& op = nm->getGeoOperator(opId_);
+    int maxSocketNumber = socketType==enzo::nt::SocketIOType::Input ? op.getMaxInputs() : op.getMaxOutputs();
+    float socketSpread = socketSize_*1.5*maxSocketNumber;
+
     float xPos, yPos;
     xPos = bodyRect_.center().x();
-    yPos = socketType == SocketGraphic::SocketType::Input ? bodyRect_.top() : bodyRect_.bottom();
+    yPos = socketType == enzo::nt::SocketIOType::Input ? bodyRect_.top() : bodyRect_.bottom();
+
+    xPos += ((socketIndex/static_cast<float>(maxSocketNumber-1))-0.5)*2*socketSpread;
 
     return QPointF(xPos, yPos);
 }
-QPointF NodeGraphic::getSocketScenePosition(int socketIndex, SocketGraphic::SocketType socketType)
+QPointF NodeGraphic::getSocketScenePosition(int socketIndex, enzo::nt::SocketIOType socketType)
 {
     return this->pos()+getSocketPosition(socketIndex, socketType);
 }

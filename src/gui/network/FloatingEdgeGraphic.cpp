@@ -32,8 +32,8 @@ void FloatingEdgeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsIte
     painter->setPen(pen);
     // painter->drawLine(socket1_->scenePos(),floatPos_);
 
-    QPointF pos1 = socket1_->getIO()==SocketGraphic::SocketType::Input ? socket1_->scenePos() : floatPos_;
-    QPointF pos2 = socket1_->getIO()==SocketGraphic::SocketType::Input ? floatPos_ : socket1_->scenePos();
+    QPointF pos1 = socket1_->getIO()==enzo::nt::SocketIOType::Input ? socket1_->scenePos() : floatPos_;
+    QPointF pos2 = socket1_->getIO()==enzo::nt::SocketIOType::Input ? floatPos_ : socket1_->scenePos();
     float dist = std::sqrt(std::pow(pos1.x()-pos2.x(),2)+std::pow(pos1.y()-pos2.y(),2));
     std::cout << "dist: " << dist << "\n";
     float cubicStrength = dist*0.5;

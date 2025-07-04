@@ -17,8 +17,8 @@ public:
     
     SocketGraphic* getInput(int indx) const;
     SocketGraphic* getOutput(int indx) const;
-    QPointF getSocketPosition(int socketIndex, SocketGraphic::SocketType socketType);
-    QPointF getSocketScenePosition(int socketIndex, SocketGraphic::SocketType socketType);
+    QPointF getSocketPosition(int socketIndex, enzo::nt::SocketIOType socketType);
+    QPointF getSocketScenePosition(int socketIndex, enzo::nt::SocketIOType socketType);
     QRectF getBodyRect();
 
     // void addEdge(NodeEdgeGraphic* edge);

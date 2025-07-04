@@ -32,5 +32,10 @@ namespace enzo
     namespace nt
     {
         using OpId = uint64_t;
+
+        enum class SocketIOType {
+            Input,
+            Output
+        };
     }
 }

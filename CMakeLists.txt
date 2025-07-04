@@ -47,6 +47,7 @@ qt_add_executable(${AppExec}
     src/Engine/Operator/Attribute.cpp
     src/Engine/Operator/Geometry.cpp
     src/Engine/Operator/GeometryOperator.cpp
+    src/Engine/Operator/GeometryConnection.cpp
     src/Engine/Network/NetworkManager.cpp
 )
 
@@ -63,6 +64,7 @@ add_executable(${TestExec}
     src/Engine/Operator/Geometry.cpp
     src/Engine/Operator/GeometryOperator.cpp
     src/Engine/Network/NetworkManager.cpp
+    src/Engine/Operator/GeometryConnection.cpp
 )
 find_package(Catch2 3 REQUIRED)
 target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen)

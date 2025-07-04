@@ -1,4 +1,6 @@
 #include "gui/network/Network.h"
+#include "Engine/Operator/GeometryConnection.h"
+#include "Engine/Operator/GeometryOperator.h"
 #include "Engine/Types.h"
 #include "gui/network/DisplayFlagButton.h"
 #include "gui/network/NodeEdgeGraphic.h"
@@ -8,6 +10,7 @@
 #include "gui/network/FloatingEdgeGraphic.h"
 #include "gui/network/SocketGraphic.h"
 #include "Engine/Network/NetworkManager.h"
+#include <memory>
 #include <qboxlayout.h>
 #include <QPushButton>
 #include <QGraphicsItem>
@@ -126,14 +129,27 @@ void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
     }
     // second click
     // connect to opposite type
-    else if (socket->getIO()!=startSocket_->getIO())
+    else if (
+        socket->getIO()!=startSocket_->getIO() &&
+        startSocket_->getOpId()!=socket->getOpId()
+    )
     {
-        auto inputSocket = startSocket_->getIO()==SocketGraphic::SocketType::Input ? startSocket_ : socket;
-        auto outputSocket = socket->getIO()==SocketGraphic::SocketType::Output ? socket : startSocket_;
 
-        NodeEdgeGraphic* newEdge = new NodeEdgeGraphic(inputSocket, outputSocket);
+        // order sockets in relation to data flow
+        // the input node is the node the data flows from
+        auto inputNodeSocket = socket->getIO()==enzo::nt::SocketIOType::Output ? socket : startSocket_;
+        // the output node is the node the data flows to
+        auto outputNodeSocket = startSocket_->getIO()==enzo::nt::SocketIOType::Input ? startSocket_ : socket;
 
-        newEdge->setPos(inputSocket->scenePos(), outputSocket->scenePos());
+        std::cout << "CONNECTING opid: " << inputNodeSocket->getOpId() << " -> " << outputNodeSocket->getOpId() << "\n";
+
+
+        nt::connectOperators(inputNodeSocket->getOpId(), inputNodeSocket->getIndex(), outputNodeSocket->getOpId(), outputNodeSocket->getIndex());
+
+
+        NodeEdgeGraphic* newEdge = new NodeEdgeGraphic(outputNodeSocket, inputNodeSocket);
+
+        newEdge->setPos(outputNodeSocket->scenePos(), inputNodeSocket->scenePos());
         scene_->addItem(newEdge);
         destroyFloatingEdge();
     }

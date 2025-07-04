@@ -4,8 +4,8 @@
 #include <qgraphicsitem.h>
 #include "gui/network/NodeEdgeGraphic.h"
 
-SocketGraphic::SocketGraphic(SocketGraphic::SocketType type, QGraphicsItem *parent)
-: QGraphicsItem(parent), type_{type}
+SocketGraphic::SocketGraphic(enzo::nt::SocketIOType type, enzo::nt::OpId opId, unsigned int socketIndex, QGraphicsItem *parent)
+: QGraphicsItem(parent), type_{type}, opId_{opId}, socketIndex_{socketIndex}
 {
     brushActive_ = QBrush("white");
     brushInactive_ = QBrush("#9f9f9f");
@@ -13,6 +13,12 @@ SocketGraphic::SocketGraphic(SocketGraphic::SocketType type, QGraphicsItem *pare
     setAcceptHoverEvents(true);
     initBoundingBox();
 }
+
+unsigned int SocketGraphic::getIndex() const
+{
+    return socketIndex_;
+}
+
 
 void SocketGraphic::addEdge(NodeEdgeGraphic* edge)
 {
@@ -51,11 +57,11 @@ void SocketGraphic::posChanged(QPointF pos)
     for(auto* edge : edges_)
     {
         // edge->setPos(startSocket_->scenePos(), socket->scenePos());
-        if(type_==SocketType::Input)
+        if(type_==enzo::nt::SocketIOType::Input)
         {
             edge->setStartPos(pos);
         }
-        else if(type_==SocketType::Output)
+        else if(type_==enzo::nt::SocketIOType::Output)
         {
             edge->setEndPos(pos);
         }
@@ -63,6 +69,10 @@ void SocketGraphic::posChanged(QPointF pos)
 }
 
 
+enzo::nt::OpId SocketGraphic::getOpId() const
+{
+    return opId_;
+}
 
 QRectF SocketGraphic::boundingRect() const
 {
@@ -71,16 +81,16 @@ QRectF SocketGraphic::boundingRect() const
 
 QPainterPath SocketGraphic::shape() const{
     QPainterPath path;
-    QPointF startPt(boundRect_.center().x(), type_==SocketType::Input ? boundRect_.top() : boundRect_.bottom());
+    QPointF startPt(boundRect_.center().x(), type_==enzo::nt::SocketIOType::Input ? boundRect_.top() : boundRect_.bottom());
     path.moveTo(startPt);
-    path.arcTo(boundRect_, 0, type_==SocketType::Input ? 180 : -180);
+    path.arcTo(boundRect_, 0, type_==enzo::nt::SocketIOType::Input ? 180 : -180);
     path.lineTo(boundRect_.right(), boundRect_.center().y());
     path.closeSubpath();
 
     return path;
 }
 
-SocketGraphic::SocketType SocketGraphic::getIO() { return type_; }
+enzo::nt::SocketIOType SocketGraphic::getIO() { return type_; }
 
 
 void SocketGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
