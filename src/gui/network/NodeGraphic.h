@@ -64,10 +64,10 @@ private:
 
     DisplayFlagButton* displayFlagButton_;
 
-    void updatePositions(QPointF pos);
+    void updatePositions();
 protected:
-        // QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
-        void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
+        QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) override;
+        // void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
         // void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 };

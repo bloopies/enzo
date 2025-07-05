@@ -20,6 +20,12 @@ public:
     void mouseMoved(QMouseEvent *event);
     QSize sizeHint() const override { return QSize(-1, -1); }
 
+    enum class State
+    {
+        DEFAULT,
+        MOVING_NODE
+    };
+
 private:
     QLayout* mainLayout_;
     NetworkGraphicsScene* scene_;
@@ -29,9 +35,11 @@ private:
     SocketGraphic* startSocket_=nullptr;
 
     QGraphicsItem* prevHoverItem_=nullptr;
-    // QPointer<QGraphicsItem> prevHoverItem_=nullptr;
-    // std::shared_ptr<QGraphicsItem> prevHoverItem_=nullptr;
-    // QList<QGraphicsItem*> prevHoverItems_;
+    // nodes currently being moved
+    std::vector<QGraphicsItem*> moveNodeBuffer;
+    QPointF nodeMoveDelta_;
+
+    State state_=State::DEFAULT;
 
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
@@ -40,6 +48,8 @@ private:
 
     void highlightEdge(QGraphicsItem* edge, bool state);
     void leftMousePressed(QMouseEvent* event);
+
+    void moveNodes(QPointF pos);
 
     template<typename T>
     bool isType(QGraphicsItem* item)

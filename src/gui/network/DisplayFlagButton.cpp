@@ -14,7 +14,8 @@ DisplayFlagButton::DisplayFlagButton(QGraphicsItem *parent)
 
     disabledBrush_ = QBrush(disabledColor_);
     enabledBrush_ = QBrush(enabledColor_);
-    hoveredBrush_ = QBrush(hoveredColor_);
+    hoveredEnabledBrush_ = QBrush("#1391ff");
+    hoveredDisabledBrush_ = QBrush(hoveredColor_);
 
 
 
@@ -32,17 +33,15 @@ void DisplayFlagButton::paint(QPainter *painter, const QStyleOptionGraphicsItem 
     painter->setPen(Qt::NoPen);
     // painter->setBrush(QBrush(disabledColor_));
     QBrush usedBrush;
-    if(hovered_)
+    if(enabled_)
     {
-        usedBrush = hoveredBrush_;
-    }
-    else if(enabled_)
-    {
-        usedBrush = enabledBrush_;
+        if(hovered_) { usedBrush = hoveredEnabledBrush_; }
+        else { usedBrush = enabledBrush_; }
     }
     else
     {
-        usedBrush = disabledColor_;
+        if(hovered_) { usedBrush = hoveredDisabledBrush_; }
+        else { usedBrush = disabledBrush_; }
     }
     painter->setBrush(usedBrush);
     constexpr float roundRad = 3;

@@ -16,7 +16,8 @@ private:
     QColor hoveredColor_=QColor("#666666");
     QBrush disabledBrush_;
     QBrush enabledBrush_;
-    QBrush hoveredBrush_;
+    QBrush hoveredDisabledBrush_;
+    QBrush hoveredEnabledBrush_;
     bool hovered_=false;
     bool enabled_=false;
 protected:

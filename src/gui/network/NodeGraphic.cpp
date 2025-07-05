@@ -26,7 +26,7 @@ NodeGraphic::NodeGraphic(enzo::nt::OpId id, QGraphicsItem *parent)
     bodyRect_ = QRect(-width*0.5f, -height*0.5f, width, height);
     iconScale_=height*0.55;
 
-    setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+    setFlag(QGraphicsItem::ItemSendsGeometryChanges);
 
     initFonts();
     initIcon();
@@ -176,11 +176,11 @@ void NodeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
  
 }
 
-void NodeGraphic::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    QGraphicsItem::mouseMoveEvent(event);
-    updatePositions(event->scenePos());
-}
+// void NodeGraphic::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+// {
+//     QGraphicsItem::mouseMoveEvent(event);
+//     updatePositions(event->scenePos());
+// }
 
 // void NodeGraphic::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 // {
@@ -188,10 +188,8 @@ void NodeGraphic::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 //     QGraphicsItem::mouseReleaseEvent(event);
 // }
 
-void NodeGraphic::updatePositions(QPointF pos)
+void NodeGraphic::updatePositions()
 {
-    // NOTE: in the future I might store socket ids as internal member variables,
-    // but for now I'm just going based on order
     for(int socketIndex=0; socketIndex<inputs_.size(); ++socketIndex)
     {
         inputs_[socketIndex]->posChanged(getSocketScenePosition(socketIndex, enzo::nt::SocketIOType::Input));
@@ -229,18 +227,13 @@ QRectF NodeGraphic::getBodyRect()
 
 
 
-// QVariant NodeGraphic::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
-// {
-//     if (change == ItemPositionChange && scene()) {
-//         for(auto socket : inputs_)
-//         {
-//             socket->posChanged(value.toPointF());
-//         }
-//         for(auto socket : outputs_)
-//         {
-//             socket->posChanged(value.toPointF());
-//         }
-//     };
+QVariant NodeGraphic::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+{
+    QVariant returnVal = QGraphicsItem::itemChange(change, value);
 
-//     return QGraphicsItem::itemChange(change, value);
-// }
+    if (change == ItemPositionHasChanged) {
+        updatePositions();
+    };
+    
+    return returnVal;
+}

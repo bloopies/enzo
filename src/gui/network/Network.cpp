@@ -106,8 +106,14 @@ void Network::leftMousePressed(QMouseEvent *event)
     // display flag
     else if(QGraphicsItem* clickedDisplayFlag = itemOfType<DisplayFlagButton>(clickedItems))
     {
-        std::cout << "HERE\n";
         static_cast<DisplayFlagButton*>(clickedDisplayFlag)->setEnabled(true);
+    }
+    else if(QGraphicsItem* clickedNode = itemOfType<NodeGraphic>(clickedItems))
+    {
+        nodeMoveDelta_=clickedNode->pos()-view_->mapToScene(event->pos());
+        state_=State::MOVING_NODE;
+        moveNodeBuffer.clear();
+        moveNodeBuffer.push_back(clickedNode);
     }
 
 }
@@ -179,6 +185,12 @@ void Network::mouseMoved(QMouseEvent *event)
 
     QList<QGraphicsItem*> hoverItems = view_->items(event->pos());
 
+    if(state_==State::MOVING_NODE)
+    {
+        moveNodes(nodeMoveDelta_+view_->mapToScene(event->pos()));
+        return;
+    }
+
     if(floatingEdge_)
     {
         if(QGraphicsItem* hoverSocket = itemOfType<SocketGraphic>(hoverItems); hoverSocket && hoverSocket!=startSocket_)
@@ -193,7 +205,6 @@ void Network::mouseMoved(QMouseEvent *event)
         return;
     }
 
-    // QGraphicsItem* hoverItem = view_->itemAt(event->pos());
     QGraphicsItem* hoverEdge = itemOfType<NodeEdgeGraphic>(hoverItems);
 
     // set node edge color
@@ -219,6 +230,15 @@ void Network::mouseMoved(QMouseEvent *event)
         highlightEdge(prevHoverItem, false);
     }
 
+}
+
+void Network::moveNodes(QPointF pos)
+{
+
+    for(auto node : moveNodeBuffer)
+    {
+        node->setPos(pos);
+    }
 }
 
 
@@ -311,8 +331,16 @@ void Network::mouseReleaseEvent(QMouseEvent *event)
     // std::cout << "----\nMOUSE RELEASED\n---\n";
     QList<QGraphicsItem*> hoverItems = view_->items(event->pos());
     QGraphicsItem* hoverSocket = itemOfType<SocketGraphic>(hoverItems);
-    if(floatingEdge_ && hoverSocket)
+    if(event->button() == Qt::LeftButton)
     {
-        socketClicked(static_cast<SocketGraphic*>(hoverSocket), event);
+        if(state_==State::MOVING_NODE)
+        {
+            moveNodeBuffer.clear();
+            state_=State::DEFAULT;
+        }
+        else if(floatingEdge_ && hoverSocket)
+        {
+            socketClicked(static_cast<SocketGraphic*>(hoverSocket), event);
+        }
     }
 }
