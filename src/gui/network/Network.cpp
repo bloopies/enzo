@@ -97,7 +97,12 @@ void Network::leftMousePressed(QMouseEvent *event)
     // socket logic
     else if(clickedSocket)
     {
-        socketClicked(static_cast<SocketGraphic*>(clickedSocket), event);
+        // find closest socket
+        clickedSocket = closestItemOfType<SocketGraphic>(clickedItems, view_->mapToScene(event->pos()));
+        if(clickedSocket)
+        {
+            socketClicked(static_cast<SocketGraphic*>(clickedSocket), event);
+        }
     }
     // floating edge
     else if(floatingEdge_)
@@ -202,7 +207,14 @@ void Network::mouseMoved(QMouseEvent *event)
 
     if(floatingEdge_)
     {
-        if(QGraphicsItem* hoverSocket = itemOfType<SocketGraphic>(hoverItems); hoverSocket && hoverSocket!=startSocket_)
+        if(
+            SocketGraphic* hoverSocket = static_cast<SocketGraphic*>(closestItemOfType<SocketGraphic>(hoverItems, view_->mapToScene(event->pos())));
+            hoverSocket &&
+            hoverSocket!=startSocket_ &&
+            hoverSocket->getIO()!=startSocket_->getIO() &&
+            hoverSocket->getOpId()!=startSocket_->getOpId()
+            
+        )
         {
             floatingEdge_->setFloatPos(hoverSocket->scenePos());
         }
@@ -363,7 +375,11 @@ void Network::mouseReleaseEvent(QMouseEvent *event)
         }
         else if(floatingEdge_ && hoverSocket)
         {
-            socketClicked(static_cast<SocketGraphic*>(hoverSocket), event);
+            hoverSocket = closestItemOfType<SocketGraphic>(hoverItems, view_->mapToScene(event->pos()));
+            if(hoverSocket)
+            {
+                socketClicked(static_cast<SocketGraphic*>(hoverSocket), event);
+            }
         }
     }
 }

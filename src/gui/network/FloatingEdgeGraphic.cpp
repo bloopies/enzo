@@ -35,7 +35,6 @@ void FloatingEdgeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsIte
     QPointF pos1 = socket1_->getIO()==enzo::nt::SocketIOType::Input ? socket1_->scenePos() : floatPos_;
     QPointF pos2 = socket1_->getIO()==enzo::nt::SocketIOType::Input ? floatPos_ : socket1_->scenePos();
     float dist = std::sqrt(std::pow(pos1.x()-pos2.x(),2)+std::pow(pos1.y()-pos2.y(),2));
-    std::cout << "dist: " << dist << "\n";
     float cubicStrength = dist*0.5;
     cubicStrength = std::clamp(cubicStrength, 0.0f, 40.0f);
     QPainterPath path;

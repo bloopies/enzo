@@ -1,7 +1,9 @@
 #pragma once
 #include <QWidget>
+#include <iterator>
 #include <memory>
 #include <qgraphicsitem.h>
+#include <qpoint.h>
 #include <typeinfo>
 #include "Engine/Network/NetworkManager.h"
 #include "Engine/Types.h"
@@ -80,6 +82,39 @@ private:
             }
         }
         return nullptr;
+    }
+
+    template<typename T>
+    QGraphicsItem* closestItemOfType(QList<QGraphicsItem*> items, QPointF centerPos)
+    {
+        std::vector <QGraphicsItem*> filteredItems;
+        for(QGraphicsItem* item : items)
+        {
+            if(item && typeid(*item)==typeid(T))
+            {
+                filteredItems.push_back(item);
+            }
+        }
+
+        if(filteredItems.size()==0) return nullptr;
+        if(filteredItems.size()==1) return filteredItems.at(0);
+
+        QGraphicsItem* closestItem=filteredItems.at(0);
+        float closestDist=QLineF(closestItem->scenePos(), centerPos).length();
+
+        for(size_t i=1; i<filteredItems.size(); ++i)
+        {
+            QGraphicsItem* item = filteredItems.at(i);
+            auto currentDist = QLineF(item->scenePos(), centerPos).length();
+            if(currentDist < closestDist)
+            {
+                closestItem = item;
+                closestDist = currentDist;
+            }
+
+        }
+
+        return closestItem;
     }
 
 protected:
