@@ -9,6 +9,8 @@ class NetworkManager
 {
 public:
     OpId addOperator();
+    void setDisplayOp(OpId opId);
+    std::optional<OpId> getDisplayOp();
     // delete copy constructor
     NetworkManager(const NetworkManager& obj) = delete;
 
@@ -22,7 +24,11 @@ private:
     NetworkManager() {};
 
     std::unordered_map<enzo::nt::OpId, std::unique_ptr<enzo::nt::GeometryOperator>> gopStore_;
+
+    // the highest operator id currently stored
     enzo::nt::OpId maxOpId_=0;
+
+    std::optional<OpId> displayOp_=std::nullopt;
 
 };
 }

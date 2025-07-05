@@ -35,6 +35,7 @@ Network::Network(QWidget* parent)
 
     scene_ = new NetworkGraphicsScene();
     view_ = new NetworkGraphicsView(this, this, scene_);
+    nm_ = enzo::nt::NetworkManager::getInstance();
 
 
     mainLayout_->addWidget(view_);
@@ -106,6 +107,14 @@ void Network::leftMousePressed(QMouseEvent *event)
     // display flag
     else if(QGraphicsItem* clickedDisplayFlag = itemOfType<DisplayFlagButton>(clickedItems))
     {
+        NodeGraphic* clickedNode = static_cast<NodeGraphic*>(itemOfType<NodeGraphic>(clickedItems));
+        enzo::nt::OpId opId = clickedNode->getOpId();
+        if(auto prevDisplayOpId = nm_->getDisplayOp(); prevDisplayOpId)
+        {
+            NodeGraphic* prevDisplayNode = nodeStore_.at(*prevDisplayOpId);
+            prevDisplayNode->setDisplayFlag(false);
+        }
+        nm_->setDisplayOp(opId);
         static_cast<DisplayFlagButton*>(clickedDisplayFlag)->setEnabled(true);
     }
     else if(QGraphicsItem* clickedNode = itemOfType<NodeGraphic>(clickedItems))
@@ -276,18 +285,32 @@ void Network::keyPressEvent(QKeyEvent *event)
         }
         case(Qt::Key_Tab):
         {
-            nt::NetworkManager* nm = nt::NetworkManager::getInstance();
-            if(nt::OpId id = nm->addOperator())
+            if(auto newNode = createNode())
             {
-                NodeGraphic* newNode = new NodeGraphic(id);
                 newNode->setPos(viewPos);
-                scene_->addItem(newNode);
             }
 
             break;
         }
     }
 }
+
+NodeGraphic* Network::createNode()
+{
+    if(nt::OpId id = nm_->addOperator())
+    {
+        NodeGraphic* newNode = new NodeGraphic(id);
+        scene_->addItem(newNode);
+        nodeStore_.emplace(id, newNode);
+        
+        return newNode;
+    }
+    else
+    {
+        return nullptr;
+    }
+}
+
 
 void Network::highlightEdge(QGraphicsItem* edge, bool state)
 {

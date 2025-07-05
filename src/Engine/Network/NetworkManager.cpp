@@ -38,6 +38,15 @@ bool enzo::nt::NetworkManager::isValidOp(nt::OpId opId)
     return true;
 }
 
+void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
+{
+    displayOp_=opId;
+}
+
+std::optional<enzo::nt::OpId> enzo::nt::NetworkManager::getDisplayOp()
+{
+    return displayOp_;
+}
 
 enzo::nt::NetworkManager* enzo::nt::NetworkManager::instancePtr_ = nullptr;
 

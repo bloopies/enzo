@@ -7,6 +7,7 @@
 #include <string>
 #include "Engine/Network/NetworkManager.h"
 #include "Engine/Operator/GeometryOperator.h"
+#include "Engine/Types.h"
 #include "gui/network/DisplayFlagButton.h"
 #include "gui/network/SocketGraphic.h"
 #include <QGraphicsScene>
@@ -219,6 +220,17 @@ QPointF NodeGraphic::getSocketScenePosition(int socketIndex, enzo::nt::SocketIOT
 {
     return this->pos()+getSocketPosition(socketIndex, socketType);
 }
+
+enzo::nt::OpId NodeGraphic::getOpId() const
+{
+    return opId_;
+}
+
+void NodeGraphic::setDisplayFlag(bool state)
+{
+    displayFlagButton_->setEnabled(state);
+}
+
 
 QRectF NodeGraphic::getBodyRect()
 {
