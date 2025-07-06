@@ -3,6 +3,8 @@
 #include "Engine/Types.h"
 #include <iostream>
 #include <memory>
+#include <stack>
+#include <algorithm>
 
 enzo::nt::OpId enzo::nt::NetworkManager::addOperator()
 {
@@ -41,7 +43,37 @@ bool enzo::nt::NetworkManager::isValidOp(nt::OpId opId)
 void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
 {
     displayOp_=opId;
+    getTraversalGraph(opId);
 }
+
+void enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId)
+{
+    std::cout << "COOKING: " << opId << "\n";
+}
+
+std::vector<enzo::nt::OpId> enzo::nt::NetworkManager::getTraversalGraph(enzo::nt::OpId opId)
+{
+    std::stack<enzo::nt::OpId> traversalBuffer;
+    std::vector<enzo::nt::OpId> traversalGraph;
+    traversalBuffer.push(opId);
+
+    while(traversalBuffer.size()!=0)
+    {
+        enzo::nt::OpId currentOp = traversalBuffer.top();
+        std::cout << "cooking node: " << currentOp << "\n";
+        traversalBuffer.pop();
+        auto inputConnections = getGeoOperator(currentOp).getInputConnections();
+        for(auto connection : inputConnections)
+        {
+            traversalBuffer.push(connection->getInputOpId());
+            traversalGraph.push_back(connection->getInputOpId());
+        }
+    }
+
+    std::reverse(traversalGraph.begin(), traversalGraph.end());
+    return traversalGraph;
+}
+
 
 std::optional<enzo::nt::OpId> enzo::nt::NetworkManager::getDisplayOp()
 {

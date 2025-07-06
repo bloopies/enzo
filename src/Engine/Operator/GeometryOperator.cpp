@@ -11,16 +11,16 @@ void enzo::nt::connectOperators(enzo::nt::OpId inputOpId, unsigned int inputInde
     // get network manager
     auto nm = enzo::nt::NetworkManager::getInstance();
 
-    auto inputOp = nm->getGeoOperator(inputOpId);
-    auto outputOp = nm->getGeoOperator(outputOpId);
+    auto& inputOp = nm->getGeoOperator(inputOpId);
+    auto& outputOp = nm->getGeoOperator(outputOpId);
 
     auto newConnection = std::make_shared<nt::GeometryConnection>(inputOpId, inputIndex, outputOpId, outputIndex); 
 
     // set output on the upper operator
-    outputOp.addOutputConnection(newConnection);
+    inputOp.addOutputConnection(newConnection);
 
     // set input on the lower operator
-    inputOp.addInputConnection(newConnection);
+    outputOp.addInputConnection(newConnection);
 }
 
 nt::GeometryOperator::GeometryOperator()
@@ -30,30 +30,13 @@ nt::GeometryOperator::GeometryOperator()
     maxOutputs_=4;
 }
 
-// bool nt::GeometryOperator::setInput(unsigned int inputNumber, nt::OpId opId)
-// {
-//     if(inputNumber>=maxInputs_)
-//     {
-//         return false;
-//     }
-//     inputIds_[inputNumber] = opId;
-
-//     return true;
-// }
-// bool nt::GeometryOperator::setOutput(unsigned int outputNumber, nt::OpId opId)
-// {
-
-//     if(outputNumber>=maxOutputs_)
-//     {
-//         return false;
-//     }
-//     inputIds_[outputNumber] = opId;
-//     return true;
-// }
 
 void nt::GeometryOperator::addInputConnection(std::shared_ptr<nt::GeometryConnection> connection)
 {
+    std::cout << "Input connection added\nConnecting ops " << connection->getInputOpId() << " -> " << connection->getOutputOpId() << "\n";
+    std::cout << "Connecting index " << connection->getInputIndex() << " -> " << connection->getOutputIndex() << "\n";
     inputConnections_.push_back(connection); 
+    std::cout << "size: " << inputConnections_.size() << "\n";
 }
 
 void nt::GeometryOperator::addOutputConnection(std::shared_ptr<nt::GeometryConnection> connection)
@@ -61,7 +44,30 @@ void nt::GeometryOperator::addOutputConnection(std::shared_ptr<nt::GeometryConne
     std::cout << "Output connection added\nConnecting ops " << connection->getInputOpId() << " -> " << connection->getOutputOpId() << "\n";
     std::cout << "Connecting index " << connection->getInputIndex() << " -> " << connection->getOutputIndex() << "\n";
     outputConnections_.push_back(connection); 
+    std::cout << "size: " << outputConnections_.size() << "\n";
 }
+
+std::vector<std::shared_ptr<const nt::GeometryConnection>> nt::GeometryOperator::getInputConnections() const
+{
+    std::vector<std::shared_ptr<const nt::GeometryConnection>> inputConnections;
+    std::cout << "input connections size: " << inputConnections_.size() <<"\n";
+    for(std::shared_ptr<nt::GeometryConnection> connection : inputConnections_)
+    {
+        inputConnections.push_back(connection);
+    }
+    return inputConnections;
+}
+
+std::vector<std::shared_ptr<const nt::GeometryConnection>> nt::GeometryOperator::getOutputConnections() const
+{
+    std::vector<std::shared_ptr<const nt::GeometryConnection>> outputConnections;
+    for(std::shared_ptr<nt::GeometryConnection> connection : outputConnections_)
+    {
+        outputConnections.push_back(connection);
+    }
+    return outputConnections;
+}
+
 
 
 // std::optional<nt::OpId> nt::GeometryOperator::getInput(unsigned int inputNumber) const

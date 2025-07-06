@@ -72,10 +72,8 @@ private:
     template<typename T>
     QGraphicsItem* itemOfType(QList<QGraphicsItem*> items)
     {
-        // std::cout << "count: " << items.size() << "\n";
         for(QGraphicsItem* item : items)
         {
-            std::cout << "item: " << typeid(*item).name() << "\n";
             if(item && typeid(*item)==typeid(T))
             {
                 return item;

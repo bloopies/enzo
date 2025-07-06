@@ -11,13 +11,15 @@ class GeometryOperator
 {
 public:
     GeometryOperator();
-    // bool setInput(unsigned int inputNumber, nt::OpId opId);
-    // bool setOutput(unsigned int outputNumber, nt::OpId opId);
-    // std::optional<nt::OpId> getInput(unsigned int inputNumber) const;
-    // std::optional<nt::OpId> getOutput(unsigned int outputNumber) const;
+
+    // disable copying
+    GeometryOperator(const GeometryOperator&)            = delete;
+    GeometryOperator& operator=(const GeometryOperator&) = delete;
 
     void addInputConnection(std::shared_ptr<nt::GeometryConnection> connection);
     void addOutputConnection(std::shared_ptr<nt::GeometryConnection> connection);
+    std::vector<std::shared_ptr<const GeometryConnection>> getInputConnections() const;
+    std::vector<std::shared_ptr<const GeometryConnection>> getOutputConnections() const;
 
 
 

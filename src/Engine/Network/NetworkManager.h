@@ -25,6 +25,9 @@ private:
 
     std::unordered_map<enzo::nt::OpId, std::unique_ptr<enzo::nt::GeometryOperator>> gopStore_;
 
+    void cookOp(enzo::nt::OpId opId);
+    std::vector<enzo::nt::OpId> getTraversalGraph(enzo::nt::OpId opId);
+
     // the highest operator id currently stored
     enzo::nt::OpId maxOpId_=0;
 

@@ -101,9 +101,6 @@ QRectF NodeEdgeGraphic::boundingRect() const
 }
 
 QPainterPath NodeEdgeGraphic::shape() const{
-    // FIX: shape not changing with node position
-    std::cout << "setting shape to: " << socket1_->scenePos().x() << " " << socket2_->scenePos().x() <<"\n";
-
     QPainterPathStroker stroker;
     stroker.setWidth(padding_);
     return stroker.createStroke(path_);

@@ -17,8 +17,8 @@ TEST_CASE("network")
     {
         auto newConnection = std::make_shared<nt::GeometryConnection>(newOpId, 1, newOpId2, 3); 
 
-        auto inputOp = nm->getGeoOperator(newOpId);
-        auto outputOp = nm->getGeoOperator(newOpId2);
+        auto& inputOp = nm->getGeoOperator(newOpId);
+        auto& outputOp = nm->getGeoOperator(newOpId2);
 
         // set output on the upper operator
         outputOp.addOutputConnection(newConnection);
