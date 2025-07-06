@@ -17,6 +17,7 @@
 #include <QMouseEvent>
 #include <qgraphicsitem.h>
 #include <qnamespace.h>
+#include <QLine>
 
 using namespace enzo;
 
@@ -82,6 +83,7 @@ void Network::leftMousePressed(QMouseEvent *event)
 {
     std::cout << "LEFT MOUSE PRESSED\n";
     Qt::KeyboardModifiers mods = event->modifiers();
+    leftMouseStart = event->pos();
 
     // QGraphicsItem* itemClicked = view_->itemAt(event->pos());
     QList<QGraphicsItem*> clickedItems = view_->items(event->pos());
@@ -108,19 +110,6 @@ void Network::leftMousePressed(QMouseEvent *event)
     else if(floatingEdge_)
     {
         destroyFloatingEdge();
-    }
-    // display flag
-    else if(QGraphicsItem* clickedDisplayFlag = itemOfType<DisplayFlagButton>(clickedItems))
-    {
-        NodeGraphic* clickedNode = static_cast<NodeGraphic*>(itemOfType<NodeGraphic>(clickedItems));
-        enzo::nt::OpId opId = clickedNode->getOpId();
-        if(auto prevDisplayOpId = nm_->getDisplayOp(); prevDisplayOpId)
-        {
-            NodeGraphic* prevDisplayNode = nodeStore_.at(*prevDisplayOpId);
-            prevDisplayNode->setDisplayFlag(false);
-        }
-        nm_->setDisplayOp(opId);
-        static_cast<DisplayFlagButton*>(clickedDisplayFlag)->setEnabled(true);
     }
     else if(QGraphicsItem* clickedNode = itemOfType<NodeGraphic>(clickedItems))
     {
@@ -368,6 +357,23 @@ void Network::mouseReleaseEvent(QMouseEvent *event)
     QGraphicsItem* hoverSocket = itemOfType<SocketGraphic>(hoverItems);
     if(event->button() == Qt::LeftButton)
     {
+        // display flag
+        if(
+            QGraphicsItem* clickedDisplayFlag = itemOfType<DisplayFlagButton>(hoverItems);
+            clickedDisplayFlag &&
+            QLineF(event->pos(), leftMouseStart).length()<5.0f
+        )
+        {
+            NodeGraphic* clickedNode = static_cast<NodeGraphic*>(itemOfType<NodeGraphic>(hoverItems));
+            enzo::nt::OpId opId = clickedNode->getOpId();
+            if(auto prevDisplayOpId = nm_->getDisplayOp(); prevDisplayOpId)
+            {
+                NodeGraphic* prevDisplayNode = nodeStore_.at(*prevDisplayOpId);
+                prevDisplayNode->setDisplayFlag(false);
+            }
+            nm_->setDisplayOp(opId);
+            static_cast<DisplayFlagButton*>(clickedDisplayFlag)->setEnabled(true);
+        }
         if(state_==State::MOVING_NODE)
         {
             moveNodeBuffer.clear();

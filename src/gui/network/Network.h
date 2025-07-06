@@ -50,6 +50,7 @@ private:
     QPointF nodeMoveDelta_;
 
     State state_=State::DEFAULT;
+    QPointF leftMouseStart;
 
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
