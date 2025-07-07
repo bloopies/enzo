@@ -54,7 +54,7 @@ public:
         data_->push_back(value);
     }
 
-    std::vector<T> getData() const
+    std::vector<T> getAllValues() const
     {
         return *data_;
     }

@@ -10,6 +10,7 @@ geo::Geometry::Geometry()
 {
     addVector3Attribute(ga::AttrOwner::POINT, "P");
     addIntAttribute(ga::AttrOwner::VERTEX, "point");
+    addIntAttribute(ga::AttrOwner::PRIMITIVE, "vertexCount");
 }
 
 ga::AttributeHandle<int> geo::Geometry::addIntAttribute(ga::AttributeOwner owner, std::string name)

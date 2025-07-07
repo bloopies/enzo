@@ -156,7 +156,8 @@ std::unique_ptr<GLMesh> ViewportGLWidget::meshFromGeo(enzo::geo::Geometry& geome
     PAttrHandle.addValue(bt::Vector3(0.0f, 2.0f, 0.0f));
     PAttrHandle.addValue(bt::Vector3(1.0f, 1.0f, 0.0f));
 
-    mesh->setPosBuffer(PAttrHandle.getData());
+
+    mesh->setPosBuffer(PAttrHandle.getAllValues());
 
     std::shared_ptr<ga::Attribute> pointAttr = geometry.getAttribByName(ga::AttrOwner::VERTEX, "point");
     ga::AttributeHandleInt pointAttrHandle = ga::AttributeHandleInt(pointAttr);
@@ -165,7 +166,13 @@ std::unique_ptr<GLMesh> ViewportGLWidget::meshFromGeo(enzo::geo::Geometry& geome
     pointAttrHandle.addValue(2);
     pointAttrHandle.addValue(3);
     pointAttrHandle.addValue(4);
-    mesh->setIndexBuffer(pointAttrHandle.getData());
+
+    std::shared_ptr<ga::Attribute> vertexCountAttr = geometry.getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount");
+    ga::AttributeHandleInt vertexCountHandle = ga::AttributeHandleInt(vertexCountAttr);
+    vertexCountHandle.addValue(5);
+
+    mesh->setIndexBuffer(pointAttrHandle.getAllValues(), vertexCountHandle.getAllValues());
+
 
 
     return mesh; 
@@ -177,10 +184,13 @@ void ViewportGLWidget::geometryChanged(enzo::geo::Geometry& geometry)
     std::shared_ptr<ga::Attribute> PAttr = geometry.getAttribByName(ga::AttrOwner::POINT, "P");
     ga::AttributeHandleVector3 PAttrHandle = ga::AttributeHandleVector3(PAttr);
 
-    triangleMesh_->setPosBuffer(PAttrHandle.getData());
+    triangleMesh_->setPosBuffer(PAttrHandle.getAllValues());
 
     std::shared_ptr<ga::Attribute> pointAttr = geometry.getAttribByName(ga::AttrOwner::VERTEX, "point");
     ga::AttributeHandleInt pointAttrHandle = ga::AttributeHandleInt(pointAttr);
 
-    triangleMesh_->setIndexBuffer(pointAttrHandle.getData());
+    std::shared_ptr<ga::Attribute> vertexCountAttr = geometry.getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount");
+    ga::AttributeHandleInt vertexCountHandle = ga::AttributeHandleInt(vertexCountAttr);
+
+    triangleMesh_->setIndexBuffer(pointAttrHandle.getAllValues(), vertexCountHandle.getAllValues());
 }

@@ -61,18 +61,33 @@ void GLMesh::setPosBuffer(std::vector<enzo::bt::Vector3> data)
     unbind();
 }
 
-void GLMesh::setIndexBuffer(std::vector<int> data)
+void GLMesh::setIndexBuffer(std::vector<int> pointIndices, std::vector<int> primVertexCounts)
 {
     bind();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
     indexData.clear();
-    std::cout << "index data\n-------\n";
-    for(int i=1;i+1<data.size();++i)
+    std::cout << "index pointIndices\n-------\n";
+    size_t startIndex = 1;
+
+    // create triangle fan from potentially ngon inputs
+    std::cout << "size: " << primVertexCounts.size() << "\n";
+    for(size_t primNum=0; primNum<primVertexCounts.size(); ++primNum)
     {
-        indexData.push_back(data.at(0));
-        indexData.push_back(data.at(i));
-        indexData.push_back(data.at(i+1));
-        std::cout << data.at(0) << " " << data.at(i) << " " << data.at(i+1) << "\n";
+        int primVertexCount = primVertexCounts[primNum];
+
+        std::cout << "startIndex: " << startIndex << "\n";
+        std::cout << "prim vertex count: " << primVertexCount << "\n";
+
+        for(size_t pointIndex=startIndex; pointIndex+2<startIndex+primVertexCount; ++pointIndex)
+        {
+            indexData.push_back(pointIndices.at(startIndex-1));
+            indexData.push_back(pointIndices.at(pointIndex));
+            indexData.push_back(pointIndices.at(pointIndex+1));
+
+            std::cout << pointIndices.at(0) << " " << pointIndices.at(pointIndex) << " " << pointIndices.at(pointIndex+1) << "\n";
+        }
+
+        startIndex += primVertexCount;
     }
 
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData.size()*sizeof(GLint), indexData.data(), GL_STATIC_DRAW);
