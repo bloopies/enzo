@@ -1,5 +1,8 @@
 #include "Engine/Network/NetworkManager.h"
+#include "Engine/Operator/Geometry.h"
 #include "Engine/Operator/GeometryOperator.h"
+#include "Engine/Operator/Attribute.h"
+#include "Engine/Operator/AttributeHandle.h"
 #include "Engine/Types.h"
 #include <iostream>
 #include <memory>
@@ -43,15 +46,46 @@ bool enzo::nt::NetworkManager::isValidOp(nt::OpId opId)
 void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
 {
     displayOp_=opId;
-    getTraversalGraph(opId);
+    std::vector<enzo::nt::OpId> dependencyGraph = getDependencyGraph(opId);
+    enzo::geo::Geometry prevGeometry;
+
+    std::shared_ptr<ga::Attribute> PAttr = prevGeometry.getAttribByName(ga::AttrOwner::POINT, "P");
+    ga::AttributeHandleVector3 PAttrHandle = ga::AttributeHandleVector3(PAttr);
+    PAttrHandle.addValue(bt::Vector3(1.0f, -1.0f, 0.0f));
+    PAttrHandle.addValue(bt::Vector3(-1.0f, -1.0f, 0.0f));
+    PAttrHandle.addValue(bt::Vector3(-1.0f, 1.0f, 0.0f));
+    PAttrHandle.addValue(bt::Vector3(0.0f, 2.0f, 0.0f));
+    PAttrHandle.addValue(bt::Vector3(1.0f, 1.0f, 0.0f));
+
+    std::shared_ptr<ga::Attribute> pointAttr = prevGeometry.getAttribByName(ga::AttrOwner::VERTEX, "point");
+    ga::AttributeHandleInt pointAttrHandle = ga::AttributeHandleInt(pointAttr);
+    pointAttrHandle.addValue(0);
+    pointAttrHandle.addValue(1);
+    pointAttrHandle.addValue(2);
+    pointAttrHandle.addValue(3);
+    pointAttrHandle.addValue(4);
+
+    for(enzo::nt::OpId opId : dependencyGraph)
+    {
+        prevGeometry = cookOp(opId, prevGeometry);
+    }
+    updateDisplay(prevGeometry);
 }
 
-void enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId)
+enzo::geo::Geometry enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId, enzo::geo::Geometry inputGeometry)
 {
-    std::cout << "COOKING: " << opId << "\n";
+    std::shared_ptr<ga::Attribute> PAttr = inputGeometry.getAttribByName(ga::AttrOwner::POINT, "P");
+    ga::AttributeHandleVector3 PAttrHandle = ga::AttributeHandleVector3(PAttr);
+    for(int i=0; i<5; ++i)
+    {
+        enzo::bt::Vector3 vector = PAttrHandle.getValue(i);
+        vector.y()+=1;
+        PAttrHandle.setValue(i, vector);
+    }
+    return inputGeometry;
 }
 
-std::vector<enzo::nt::OpId> enzo::nt::NetworkManager::getTraversalGraph(enzo::nt::OpId opId)
+std::vector<enzo::nt::OpId> enzo::nt::NetworkManager::getDependencyGraph(enzo::nt::OpId opId)
 {
     std::stack<enzo::nt::OpId> traversalBuffer;
     std::vector<enzo::nt::OpId> traversalGraph;

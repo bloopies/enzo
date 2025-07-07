@@ -114,6 +114,7 @@ void Network::leftMousePressed(QMouseEvent *event)
     else if(QGraphicsItem* clickedNode = itemOfType<NodeGraphic>(clickedItems))
     {
         nodeMoveDelta_=clickedNode->pos()-view_->mapToScene(event->pos());
+        std::cout << "move delta: " << nodeMoveDelta_.x() << " " << nodeMoveDelta_.y() << "\n";
         state_=State::MOVING_NODE;
         moveNodeBuffer.clear();
         moveNodeBuffer.push_back(clickedNode);
@@ -190,7 +191,7 @@ void Network::mouseMoved(QMouseEvent *event)
 
     if(state_==State::MOVING_NODE)
     {
-        moveNodes(nodeMoveDelta_+view_->mapToScene(event->pos()));
+        moveNodes(view_->mapToScene(event->pos())+nodeMoveDelta_);
         return;
     }
 

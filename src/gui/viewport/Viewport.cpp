@@ -27,6 +27,11 @@ Viewport::Viewport(QWidget *parent, Qt::WindowFlags f)
 
 }
 
+void Viewport::geometryChanged(enzo::geo::Geometry& geometry)
+{
+    openGLWidget_->geometryChanged(geometry);
+}
+
 void Viewport::resizeEvent(QResizeEvent *event)
 {
     QPainterPath path;

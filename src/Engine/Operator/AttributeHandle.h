@@ -59,11 +59,18 @@ public:
         return *data_;
     }
 
-    T getValue(uint pos) const
+    T getValue(size_t pos) const
     {
         // TODO:protect against invalid positions
         // TODO: cast types
         return data_->at(pos);
+    }
+
+    void setValue(size_t pos, const T& value)
+    {
+        // TODO:protect against invalid positions
+        // TODO: cast types
+        (*data_)[pos] = value;
     }
     std::string getName() const
     {

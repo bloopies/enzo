@@ -46,12 +46,15 @@ void GLMesh::initBuffers()
 void GLMesh::setPosBuffer(std::vector<enzo::bt::Vector3> data)
 {
     bind();
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     vertexPosData.clear();
+    std::cout << "pos data\n-------\n";
     for(auto vector : data)
     {
         vertexPosData.push_back(vector.x());
         vertexPosData.push_back(vector.y());
         vertexPosData.push_back(vector.z());
+        std::cout << vector.x() << " " << vector.y() << " " << vector.z() << "\n";
     }
 
     glBufferData(GL_ARRAY_BUFFER, vertexPosData.size()*sizeof(GLfloat), vertexPosData.data(), GL_STATIC_DRAW);
@@ -61,12 +64,15 @@ void GLMesh::setPosBuffer(std::vector<enzo::bt::Vector3> data)
 void GLMesh::setIndexBuffer(std::vector<int> data)
 {
     bind();
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
     indexData.clear();
+    std::cout << "index data\n-------\n";
     for(int i=1;i+1<data.size();++i)
     {
         indexData.push_back(data.at(0));
         indexData.push_back(data.at(i));
         indexData.push_back(data.at(i+1));
+        std::cout << data.at(0) << " " << data.at(i) << " " << data.at(i+1) << "\n";
     }
 
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData.size()*sizeof(GLint), indexData.data(), GL_STATIC_DRAW);

@@ -18,10 +18,13 @@ public:
     std::unique_ptr<GLMesh> triangleMesh_ ;
     std::unique_ptr<GLGrid> gridMesh_ ;
 
-    std::unique_ptr<GLMesh> meshFromGeo(std::unique_ptr<enzo::geo::Geometry>& geometry);
+    std::unique_ptr<GLMesh> meshFromGeo(enzo::geo::Geometry& geometry);
 
 protected:
     void initializeGL() override;
     void resizeGL(int w, int h) override;
     void paintGL() override;
+
+public slots:
+    void geometryChanged(enzo::geo::Geometry& geometry);
 };

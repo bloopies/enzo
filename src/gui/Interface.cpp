@@ -1,4 +1,5 @@
 #include "gui/Interface.h"
+#include "Engine/Network/NetworkManager.h"
 #include "gui/viewport/Viewport.h"
 #include "gui/network/Network.h"
 #include <qpushbutton.h>
@@ -42,9 +43,7 @@ EnzoUI::EnzoUI()
 
     mainLayout_->addWidget(viewportSplitter_);
 
-    QTimer::singleShot(100, this, [=] {
-    std::cout << "Viewport size: " << viewport->width() << " x " << viewport->height() << std::endl;
-    std::cout << "Network size: " << network->width() << " x " << network->height() << std::endl;
-});
+    // connect signals
+    connect(enzo::nt::NetworkManager::getInstance(), &enzo::nt::NetworkManager::updateDisplay, viewport, &Viewport::geometryChanged);
 
 }

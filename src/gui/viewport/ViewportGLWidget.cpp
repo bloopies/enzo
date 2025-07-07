@@ -20,8 +20,9 @@ void ViewportGLWidget::initializeGL()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_MULTISAMPLE);
 
-    auto geo = std::make_unique<enzo::geo::Geometry>();
-    triangleMesh_ = meshFromGeo(geo);
+    enzo::geo::Geometry geo = enzo::geo::Geometry();
+    // triangleMesh_ = meshFromGeo(geo);
+    triangleMesh_ = std::make_unique<GLMesh>();
     gridMesh_ = std::make_unique<GLGrid>();
 
     QSurfaceFormat fmt = context()->format();
@@ -141,13 +142,13 @@ void ViewportGLWidget::paintGL()
 
 }
 
-std::unique_ptr<GLMesh> ViewportGLWidget::meshFromGeo(std::unique_ptr<enzo::geo::Geometry>& geometry)
+std::unique_ptr<GLMesh> ViewportGLWidget::meshFromGeo(enzo::geo::Geometry& geometry)
 {
     using namespace enzo;
 
     auto mesh = std::make_unique<GLMesh>();
         
-    std::shared_ptr<ga::Attribute> PAttr = geometry->getAttribByName(ga::AttrOwner::POINT, "P");
+    std::shared_ptr<ga::Attribute> PAttr = geometry.getAttribByName(ga::AttrOwner::POINT, "P");
     ga::AttributeHandleVector3 PAttrHandle = ga::AttributeHandleVector3(PAttr);
     PAttrHandle.addValue(bt::Vector3(1.0f, -1.0f, 0.0f));
     PAttrHandle.addValue(bt::Vector3(-1.0f, -1.0f, 0.0f));
@@ -157,7 +158,7 @@ std::unique_ptr<GLMesh> ViewportGLWidget::meshFromGeo(std::unique_ptr<enzo::geo:
 
     mesh->setPosBuffer(PAttrHandle.getData());
 
-    std::shared_ptr<ga::Attribute> pointAttr = geometry->getAttribByName(ga::AttrOwner::VERTEX, "point");
+    std::shared_ptr<ga::Attribute> pointAttr = geometry.getAttribByName(ga::AttrOwner::VERTEX, "point");
     ga::AttributeHandleInt pointAttrHandle = ga::AttributeHandleInt(pointAttr);
     pointAttrHandle.addValue(0);
     pointAttrHandle.addValue(1);
@@ -170,3 +171,16 @@ std::unique_ptr<GLMesh> ViewportGLWidget::meshFromGeo(std::unique_ptr<enzo::geo:
     return mesh; 
 }
 
+void ViewportGLWidget::geometryChanged(enzo::geo::Geometry& geometry)
+{
+    using namespace enzo;
+    std::shared_ptr<ga::Attribute> PAttr = geometry.getAttribByName(ga::AttrOwner::POINT, "P");
+    ga::AttributeHandleVector3 PAttrHandle = ga::AttributeHandleVector3(PAttr);
+
+    triangleMesh_->setPosBuffer(PAttrHandle.getData());
+
+    std::shared_ptr<ga::Attribute> pointAttr = geometry.getAttribByName(ga::AttrOwner::VERTEX, "point");
+    ga::AttributeHandleInt pointAttrHandle = ga::AttributeHandleInt(pointAttr);
+
+    triangleMesh_->setIndexBuffer(pointAttrHandle.getData());
+}

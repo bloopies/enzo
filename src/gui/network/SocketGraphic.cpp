@@ -52,8 +52,6 @@ void SocketGraphic::initBoundingBox()
 
 void SocketGraphic::posChanged(QPointF pos)
 {
-    std::cout << "socket pos changed\n";
-    // 
     for(auto* edge : edges_)
     {
         // edge->setPos(startSocket_->scenePos(), socket->scenePos());

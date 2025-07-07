@@ -67,5 +67,5 @@ add_executable(${TestExec}
     src/Engine/Operator/GeometryConnection.cpp
 )
 find_package(Catch2 3 REQUIRED)
-target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen)
+target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core )
 target_include_directories(${TestExec} PUBLIC src)
