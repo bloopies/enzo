@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/Operator/GeometryConnection.h"
+#include "Engine/Operator/GeometryOpDef.h"
 #include "Engine/Types.h"
 #include <optional>
 #include <memory>
@@ -15,6 +16,8 @@ public:
     // disable copying
     GeometryOperator(const GeometryOperator&)            = delete;
     GeometryOperator& operator=(const GeometryOperator&) = delete;
+
+    void cookOp();
 
     void addInputConnection(std::shared_ptr<nt::GeometryConnection> connection);
     void addOutputConnection(std::shared_ptr<nt::GeometryConnection> connection);
@@ -33,6 +36,6 @@ private:
     std::vector<std::shared_ptr<nt::GeometryConnection>> outputConnections_;
     unsigned int maxInputs_;
     unsigned int maxOutputs_;
-
+    enzo::nt::GeometryOpDef* opDef_;
 };
 }

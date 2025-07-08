@@ -75,6 +75,7 @@ void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
 
     // --------
 
+    std::cout << "size: " << dependencyGraph.size() << "\n";
     for(enzo::nt::OpId opId : dependencyGraph)
     {
         prevGeometry = cookOp(opId, prevGeometry);
@@ -86,7 +87,9 @@ enzo::geo::Geometry enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId, enzo::
 {
     std::shared_ptr<ga::Attribute> PAttr = inputGeometry.getAttribByName(ga::AttrOwner::POINT, "P");
     ga::AttributeHandleVector3 PAttrHandle = ga::AttributeHandleVector3(PAttr);
-    
+
+    enzo::nt::GeometryOperator& op = getGeoOperator(opId);
+    op.cookOp();
 
     for(int i=0; i<PAttrHandle.getAllValues().size(); ++i)
     {

@@ -28,8 +28,13 @@ nt::GeometryOperator::GeometryOperator()
     // TODO: drive by geometry definition
     maxInputs_=4;
     maxOutputs_=4;
+    opDef_ = new enzo::nt::GeometryOpDef();
 }
 
+void enzo::nt::GeometryOperator::cookOp()
+{
+    opDef_->cookOp();
+}
 
 void nt::GeometryOperator::addInputConnection(std::shared_ptr<nt::GeometryConnection> connection)
 {
