@@ -59,6 +59,11 @@ public:
         return *data_;
     }
 
+    size_t getSize()
+    {
+        return data_->size();
+    }
+
     T getValue(size_t pos) const
     {
         // TODO:protect against invalid positions

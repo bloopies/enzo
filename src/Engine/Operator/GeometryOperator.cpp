@@ -23,12 +23,13 @@ void enzo::nt::connectOperators(enzo::nt::OpId inputOpId, unsigned int inputInde
     outputOp.addInputConnection(newConnection);
 }
 
-nt::GeometryOperator::GeometryOperator()
+nt::GeometryOperator::GeometryOperator(enzo::nt::OpId opId)
+: opId_{opId}
 {
     // TODO: drive by geometry definition
     maxInputs_=4;
     maxOutputs_=4;
-    opDef_ = new enzo::nt::GeometryOpDef();
+    opDef_ = new enzo::nt::GeometryOpDef(opId_);
 }
 
 void enzo::nt::GeometryOperator::cookOp()

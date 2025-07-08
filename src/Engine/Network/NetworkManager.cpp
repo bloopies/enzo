@@ -8,11 +8,13 @@
 #include <memory>
 #include <stack>
 #include <algorithm>
+#include <string>
 
 enzo::nt::OpId enzo::nt::NetworkManager::addOperator()
 {
 
-    gopStore_.emplace(++maxOpId_, std::make_unique<GeometryOperator>());
+    maxOpId_++;
+    gopStore_.emplace(maxOpId_, std::make_unique<GeometryOperator>(maxOpId_));
     std::cout << "adding operator " << maxOpId_ << "\n";
 
     return maxOpId_;
@@ -30,6 +32,10 @@ enzo::nt::NetworkManager* enzo::nt::NetworkManager::getInstance()
 
 enzo::nt::GeometryOperator& enzo::nt::NetworkManager::getGeoOperator(nt::OpId opId)
 {
+    if(opId>gopStore_.size())
+    {
+        throw std::out_of_range("OpId: " + std::to_string(opId) + " > max opId: " + std::to_string(maxOpId_) + "\n");
+    }
     return *gopStore_.at(opId);
 }
 
@@ -78,27 +84,16 @@ void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
     std::cout << "size: " << dependencyGraph.size() << "\n";
     for(enzo::nt::OpId dependencyOpId : dependencyGraph)
     {
-        prevGeometry = cookOp(dependencyOpId, prevGeometry);
+        cookOp(dependencyOpId);
     }
     enzo::nt::GeometryOperator& displayOp = getGeoOperator(opId);
     updateDisplay(displayOp.getOutputGeo(0));
 }
 
-enzo::geo::Geometry enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId, enzo::geo::Geometry inputGeometry)
+void enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId)
 {
-    std::shared_ptr<ga::Attribute> PAttr = inputGeometry.getAttribByName(ga::AttrOwner::POINT, "P");
-    ga::AttributeHandleVector3 PAttrHandle = ga::AttributeHandleVector3(PAttr);
-
     enzo::nt::GeometryOperator& op = getGeoOperator(opId);
     op.cookOp();
-
-    for(int i=0; i<PAttrHandle.getAllValues().size(); ++i)
-    {
-        enzo::bt::Vector3 vector = PAttrHandle.getValue(i);
-        vector.y()+=1;
-        PAttrHandle.setValue(i, vector);
-    }
-    return inputGeometry;
 }
 
 std::vector<enzo::nt::OpId> enzo::nt::NetworkManager::getDependencyGraph(enzo::nt::OpId opId)

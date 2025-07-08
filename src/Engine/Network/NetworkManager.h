@@ -29,7 +29,7 @@ private:
 
     std::unordered_map<enzo::nt::OpId, std::unique_ptr<enzo::nt::GeometryOperator>> gopStore_;
 
-    enzo::geo::Geometry cookOp(enzo::nt::OpId opId, enzo::geo::Geometry inputGeometry);
+    void cookOp(enzo::nt::OpId opId);
     std::vector<enzo::nt::OpId> getDependencyGraph(enzo::nt::OpId opId);
 
     // the highest operator id currently stored

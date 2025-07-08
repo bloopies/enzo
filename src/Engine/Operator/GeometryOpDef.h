@@ -1,12 +1,13 @@
 #pragma once
 #include "Engine/Operator/Geometry.h"
+#include "Engine/Types.h"
 
 namespace enzo::nt
 {
 class GeometryOpDef
 {
 public:
-    GeometryOpDef();
+    GeometryOpDef(enzo::nt::OpId opId);
     void cookOp();
     geo::Geometry& getOutputGeo(unsigned outputIndex);
 private:
@@ -15,10 +16,12 @@ private:
     unsigned int maxInputs_;
     unsigned int maxOutputs_;
 protected:
+    enzo::nt::OpId opId_;
     const enzo::geo::Geometry& getInputGeoView(unsigned int inputIndex);
     enzo::geo::Geometry cloneInputGeo(unsigned int inputIndex);
     bool outputRequested(unsigned int outputIndex);
     
+    // TODO: std::move geometry instead of copying
     void setOutputGeometry(unsigned int outputIndex, enzo::geo::Geometry geometry);
 };
 }
