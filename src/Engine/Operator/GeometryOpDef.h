@@ -8,6 +8,7 @@ class GeometryOpDef
 public:
     GeometryOpDef();
     void cookOp();
+    geo::Geometry& getOutputGeo(unsigned outputIndex);
 private:
     std::vector<enzo::geo::Geometry> outputGeometry_;
     unsigned int minInputs_;

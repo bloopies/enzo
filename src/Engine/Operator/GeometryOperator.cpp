@@ -36,6 +36,11 @@ void enzo::nt::GeometryOperator::cookOp()
     opDef_->cookOp();
 }
 
+geo::Geometry& enzo::nt::GeometryOperator::getOutputGeo(unsigned outputIndex)
+{
+    return opDef_->getOutputGeo(outputIndex);
+}
+
 void nt::GeometryOperator::addInputConnection(std::shared_ptr<nt::GeometryConnection> connection)
 {
     std::cout << "Input connection added\nConnecting ops " << connection->getInputOpId() << " -> " << connection->getOutputOpId() << "\n";

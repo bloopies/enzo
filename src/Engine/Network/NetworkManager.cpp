@@ -52,35 +52,36 @@ void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
     // ----
     // create geometry start
     // ----
-    std::shared_ptr<ga::Attribute> PAttr = prevGeometry.getAttribByName(ga::AttrOwner::POINT, "P");
-    ga::AttributeHandleVector3 PAttrHandle(PAttr);
-    std::vector<bt::Vector3> pts={
-        {-1,-1,-1},{1,-1,-1},{1,-1,1},{-1,-1,1},
-        {-1,1,-1},{1,1,-1},{1,1,1},{-1,1,1},
-        {0,2,-1},{0,2,1}
-    };
-    for(auto& p:pts) PAttrHandle.addValue(p);
+    // std::shared_ptr<ga::Attribute> PAttr = prevGeometry.getAttribByName(ga::AttrOwner::POINT, "P");
+    // ga::AttributeHandleVector3 PAttrHandle(PAttr);
+    // std::vector<bt::Vector3> pts={
+    //     {-1,-1,-1},{1,-1,-1},{1,-1,1},{-1,-1,1},
+    //     {-1,1,-1},{1,1,-1},{1,1,1},{-1,1,1},
+    //     {0,2,-1},{0,2,1}
+    // };
+    // for(auto& p:pts) PAttrHandle.addValue(p);
 
-    std::shared_ptr<ga::Attribute> pointAttr = prevGeometry.getAttribByName(ga::AttrOwner::VERTEX, "point");
-    ga::AttributeHandleInt pointAttrHandle(pointAttr);
-    std::vector<std::vector<int>> faces={
-        {3,2,6,9,7},{0,1,5,8,4},{0,3,7,4},{1,2,6,5},
-        {0,1,2,3},{4,7,9},{4,9,8},{5,6,9},{5,9,8}
-    };
-    for(auto& f:faces) for(int i:f) pointAttrHandle.addValue(i);
+    // std::shared_ptr<ga::Attribute> pointAttr = prevGeometry.getAttribByName(ga::AttrOwner::VERTEX, "point");
+    // ga::AttributeHandleInt pointAttrHandle(pointAttr);
+    // std::vector<std::vector<int>> faces={
+    //     {3,2,6,9,7},{0,1,5,8,4},{0,3,7,4},{1,2,6,5},
+    //     {0,1,2,3},{4,7,9},{4,9,8},{5,6,9},{5,9,8}
+    // };
+    // for(auto& f:faces) for(int i:f) pointAttrHandle.addValue(i);
 
-    std::shared_ptr<ga::Attribute> vertexCountAttr = prevGeometry.getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount");
-    ga::AttributeHandleInt vertexCountHandle(vertexCountAttr);
-    for(auto& f:faces) vertexCountHandle.addValue(f.size());
+    // std::shared_ptr<ga::Attribute> vertexCountAttr = prevGeometry.getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount");
+    // ga::AttributeHandleInt vertexCountHandle(vertexCountAttr);
+    // for(auto& f:faces) vertexCountHandle.addValue(f.size());
 
     // --------
 
     std::cout << "size: " << dependencyGraph.size() << "\n";
-    for(enzo::nt::OpId opId : dependencyGraph)
+    for(enzo::nt::OpId dependencyOpId : dependencyGraph)
     {
-        prevGeometry = cookOp(opId, prevGeometry);
+        prevGeometry = cookOp(dependencyOpId, prevGeometry);
     }
-    updateDisplay(prevGeometry);
+    enzo::nt::GeometryOperator& displayOp = getGeoOperator(opId);
+    updateDisplay(displayOp.getOutputGeo(0));
 }
 
 enzo::geo::Geometry enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId, enzo::geo::Geometry inputGeometry)
@@ -103,8 +104,9 @@ enzo::geo::Geometry enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId, enzo::
 std::vector<enzo::nt::OpId> enzo::nt::NetworkManager::getDependencyGraph(enzo::nt::OpId opId)
 {
     std::stack<enzo::nt::OpId> traversalBuffer;
-    std::vector<enzo::nt::OpId> traversalGraph;
+    std::vector<enzo::nt::OpId> dependencyGraph;
     traversalBuffer.push(opId);
+    dependencyGraph.push_back(opId);
 
     while(traversalBuffer.size()!=0)
     {
@@ -115,12 +117,12 @@ std::vector<enzo::nt::OpId> enzo::nt::NetworkManager::getDependencyGraph(enzo::n
         for(auto connection : inputConnections)
         {
             traversalBuffer.push(connection->getInputOpId());
-            traversalGraph.push_back(connection->getInputOpId());
+            dependencyGraph.push_back(connection->getInputOpId());
         }
     }
 
-    std::reverse(traversalGraph.begin(), traversalGraph.end());
-    return traversalGraph;
+    std::reverse(dependencyGraph.begin(), dependencyGraph.end());
+    return dependencyGraph;
 }
 
 

@@ -1,6 +1,8 @@
 #include "Engine/Operator/GeometryOpDef.h"
 #include <stdexcept>
 #include <iostream>
+#include "Engine/Types.h"
+#include "Engine/Operator/AttributeHandle.h"
 
 bool enzo::nt::GeometryOpDef::outputRequested(unsigned int outputIndex)
 {
@@ -38,6 +40,16 @@ enzo::nt::GeometryOpDef::GeometryOpDef()
     outputGeometry_ = std::vector<enzo::geo::Geometry>(4, enzo::geo::Geometry());
 }
 
+enzo::geo::Geometry& enzo::nt::GeometryOpDef::getOutputGeo(unsigned outputIndex)
+{
+    if(outputIndex>maxOutputs_)
+    {
+        throw std::runtime_error("Cannot set output geometry to index > maxOutputs");
+    }
+
+    return outputGeometry_.at(outputIndex);
+}
+
 void enzo::nt::GeometryOpDef::cookOp()
 {
     using namespace enzo;
@@ -47,6 +59,33 @@ void enzo::nt::GeometryOpDef::cookOp()
     {
         // copy input geometry
         geo::Geometry geo = cloneInputGeo(0);
+
+        // ----
+        // create geometry start
+        // ----
+        std::shared_ptr<ga::Attribute> PAttr = geo.getAttribByName(ga::AttrOwner::POINT, "P");
+        ga::AttributeHandleVector3 PAttrHandle(PAttr);
+        std::vector<bt::Vector3> pts={
+            {-1,-1,-1},{1,-1,-1},{1,-1,1},{-1,-1,1},
+            {-1,1,-1},{1,1,-1},{1,1,1},{-1,1,1},
+            {0,2,-1},{0,2,1}
+        };
+        for(auto& p:pts) PAttrHandle.addValue(p);
+
+        std::shared_ptr<ga::Attribute> pointAttr = geo.getAttribByName(ga::AttrOwner::VERTEX, "point");
+        ga::AttributeHandleInt pointAttrHandle(pointAttr);
+        std::vector<std::vector<int>> faces={
+            {3,2,6,9,7},{0,1,5,8,4},{0,3,7,4},{1,2,6,5},
+            {0,1,2,3},{4,7,9},{4,9,8},{5,6,9},{5,9,8}
+        };
+        for(auto& f:faces) for(int i:f) pointAttrHandle.addValue(i);
+
+        std::shared_ptr<ga::Attribute> vertexCountAttr = geo.getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount");
+        ga::AttributeHandleInt vertexCountHandle(vertexCountAttr);
+        for(auto& f:faces) vertexCountHandle.addValue(f.size());
+
+        // --------
+
 
         // set output geometry
         setOutputGeometry(0, geo);
