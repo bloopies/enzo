@@ -17,24 +17,31 @@ public:
 
     static NetworkManager* getInstance();
 
+    // functions
     static OpId addOperator();
-    void setDisplayOp(OpId opId);
     static std::optional<OpId> getDisplayOp();
     static bool isValidOp(nt::OpId opId);
     static GeometryOperator& getGeoOperator(nt::OpId opId);
+    void setDisplayOp(OpId opId);
+
+    #ifdef UNIT_TEST
+        static void _reset();
+    #endif
 
 private:
     static NetworkManager* instancePtr_;
     NetworkManager() {};
 
-    static std::unordered_map<enzo::nt::OpId, std::unique_ptr<enzo::nt::GeometryOperator>> gopStore_;
-
+    // functions
     static void cookOp(enzo::nt::OpId opId);
     static std::vector<enzo::nt::OpId> getDependencyGraph(enzo::nt::OpId opId);
 
+    // variables
+    // store for geometry operators
+    static std::unordered_map<enzo::nt::OpId, std::unique_ptr<enzo::nt::GeometryOperator>> gopStore_;
     // the highest operator id currently stored
     inline static enzo::nt::OpId maxOpId_=0;
-
+    // operator selected for displaying in the viewport
     inline static std::optional<OpId> displayOp_=std::nullopt;
 signals:
     void updateDisplay(enzo::geo::Geometry& geometry);

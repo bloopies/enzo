@@ -100,6 +100,18 @@ std::optional<enzo::nt::OpId> enzo::nt::NetworkManager::getDisplayOp()
     return displayOp_;
 }
 
+#ifdef UNIT_TEST
+void enzo::nt::NetworkManager::_reset()
+{
+    delete instancePtr_;
+    instancePtr_ = nullptr;
+
+    gopStore_.clear();
+    maxOpId_=0;
+    displayOp_.reset();
+}
+#endif
+
 enzo::nt::NetworkManager* enzo::nt::NetworkManager::instancePtr_ = nullptr;
 std::unordered_map<enzo::nt::OpId, std::unique_ptr<enzo::nt::GeometryOperator>> enzo::nt::NetworkManager::gopStore_;
 

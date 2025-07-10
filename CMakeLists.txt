@@ -79,4 +79,5 @@ add_executable(${TestExec}
     src/Engine/Operator/GeometryOpDef.cpp
 )
 target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core )
+target_compile_definitions(${TestExec} PRIVATE UNIT_TEST)
 target_include_directories(${TestExec} PUBLIC src)
