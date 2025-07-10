@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 # set exec names
 set(AppExec enzoGui)
 set(TestExec tests)
+set(BenchExec bench)
 set(CMAKE_AUTORCC ON)
 
 # setup project
@@ -81,3 +82,19 @@ add_executable(${TestExec}
 target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core )
 target_compile_definitions(${TestExec} PRIVATE UNIT_TEST)
 target_include_directories(${TestExec} PUBLIC src)
+
+# benchmarks
+add_executable(${BenchExec}
+    tests/Benchmarks.cpp
+
+    src/Engine/Operator/Attribute.cpp
+    src/Engine/Operator/Geometry.cpp
+    src/Engine/Operator/GeometryOperator.cpp
+    src/Engine/Network/NetworkManager.cpp
+    src/Engine/Operator/GeometryConnection.cpp
+    src/Engine/Operator/GeometryOpDef.cpp
+)
+target_link_libraries(${BenchExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core )
+target_compile_definitions(${BenchExec} PRIVATE UNIT_TEST)
+target_include_directories(${BenchExec} PUBLIC src)
+
