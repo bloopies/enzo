@@ -1,7 +1,7 @@
-#include "gui/viewport/ViewportGLWidget.h"
+#include "Gui/Viewport/ViewportGLWidget.h"
 #include "Engine/Operator/AttributeHandle.h"
 #include "Engine/Types.h"
-#include "gui/viewport/GLMesh.h"
+#include "Gui/Viewport/GLMesh.h"
 #include <glm/mat4x4.hpp>
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/gtc/matrix_transform.hpp>

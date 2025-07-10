@@ -3,9 +3,9 @@
 #include <QOpenGLWidget>
 #include <iostream>
 #include <QOpenGLFunctions_3_2_Core>
-#include "gui/viewport/GLCamera.h"
-#include "gui/viewport/GLMesh.h"
-#include "gui/viewport/GLGrid.h"
+#include "Gui/Viewport/GLCamera.h"
+#include "Gui/Viewport/GLMesh.h"
+#include "Gui/Viewport/GLGrid.h"
 #include "Engine/Operator/Geometry.h"
 
 class ViewportGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_2_Core

@@ -1,4 +1,4 @@
-#include "gui/network/NodeIconGraphic.h"
+#include "Gui/Network/NodeIconGraphic.h"
 #include <qgraphicssvgitem.h>
 #include <QBrush>
 #include <QPainter>

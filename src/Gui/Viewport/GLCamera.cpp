@@ -1,4 +1,4 @@
-#include "gui/viewport/GLCamera.h"
+#include "Gui/Viewport/GLCamera.h"
 #include <glm/ext/quaternion_geometric.hpp>
 #include <glm/fwd.hpp>
 #include <glm/geometric.hpp>

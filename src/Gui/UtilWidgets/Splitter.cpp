@@ -1,4 +1,4 @@
-#include <gui/UtilWidgets/Splitter.h>
+#include <Gui/UtilWidgets/Splitter.h>
 
 Splitter::Splitter(QWidget *parent)
 : QSplitter(parent)

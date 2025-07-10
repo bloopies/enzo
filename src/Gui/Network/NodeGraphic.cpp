@@ -1,4 +1,4 @@
-#include "gui/network/NodeGraphic.h"
+#include "Gui/Network/NodeGraphic.h"
 #include <QTextDocument>
 #include <iostream>
 #include <qgraphicsitem.h>
@@ -8,12 +8,12 @@
 #include "Engine/Network/NetworkManager.h"
 #include "Engine/Operator/GeometryOperator.h"
 #include "Engine/Types.h"
-#include "gui/network/DisplayFlagButton.h"
-#include "gui/network/SocketGraphic.h"
+#include "Gui/Network/DisplayFlagButton.h"
+#include "Gui/Network/SocketGraphic.h"
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSvgItem>
-#include "gui/network/NodeIconGraphic.h"
+#include "Gui/Network/NodeIconGraphic.h"
 
 NodeGraphic::NodeGraphic(enzo::nt::OpId id, QGraphicsItem *parent)
 : QGraphicsItem(parent), opId_{id}

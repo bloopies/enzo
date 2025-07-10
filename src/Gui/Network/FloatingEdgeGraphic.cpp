@@ -1,6 +1,6 @@
-#include "gui/network/FloatingEdgeGraphic.h"
+#include "Gui/Network/FloatingEdgeGraphic.h"
 #include <QTextDocument>
-#include "gui/network/SocketGraphic.h"
+#include "Gui/Network/SocketGraphic.h"
 #include <iostream>
 #include <qgraphicsitem.h>
 #include <algorithm>

@@ -1,8 +1,8 @@
-#include "gui/network/NetworkGraphicsView.h"
+#include "Gui/Network/NetworkGraphicsView.h"
 #include <QGraphicsItem>
-#include "gui/network/Network.h"
-#include "gui/network/NetworkGraphicsScene.h"
-#include "gui/network/SocketGraphic.h"
+#include "Gui/Network/Network.h"
+#include "Gui/Network/NetworkGraphicsScene.h"
+#include "Gui/Network/SocketGraphic.h"
 #include <iostream>
 #include <QMouseEvent>
 #include <QScrollBar>

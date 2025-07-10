@@ -1,7 +1,7 @@
 #pragma once
 #include <qboxlayout.h>
 #include <qwidget.h>
-#include "gui/viewport/ViewportGLWidget.h"
+#include "Gui/Viewport/ViewportGLWidget.h"
 
 class Viewport
 : public QWidget

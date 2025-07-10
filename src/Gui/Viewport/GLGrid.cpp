@@ -1,4 +1,4 @@
-#include "gui/viewport/GLGrid.h"
+#include "Gui/Viewport/GLGrid.h"
 #include <glm/ext/vector_float3.hpp>
 #include <iostream>
 

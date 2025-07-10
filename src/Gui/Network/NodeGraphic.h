@@ -2,10 +2,10 @@
 #include <QGraphicsItem>
 #include <QPainter>
 #include "Engine/Types.h"
-#include "gui/network/DisplayFlagButton.h"
-#include "gui/network/SocketGraphic.h"
-#include "gui/network/NodeIconGraphic.h"
-#include "gui/network/NodeEdgeGraphic.h"
+#include "Gui/Network/DisplayFlagButton.h"
+#include "Gui/Network/SocketGraphic.h"
+#include "Gui/Network/NodeIconGraphic.h"
+#include "Gui/Network/NodeEdgeGraphic.h"
 #include <iostream>
 
 class NodeGraphic

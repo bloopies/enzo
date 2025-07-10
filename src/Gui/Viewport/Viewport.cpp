@@ -1,5 +1,5 @@
-#include "gui/viewport/Viewport.h"
-#include "gui/viewport/GLCamera.h"
+#include "Gui/Viewport/Viewport.h"
+#include "Gui/Viewport/GLCamera.h"
 #include <glm/common.hpp>
 #include <qboxlayout.h>
 #include <qevent.h>

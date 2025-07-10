@@ -1,5 +1,5 @@
-#include "gui/network/DisplayFlagButton.h"
-#include "gui/network/NodeGraphic.h"
+#include "Gui/Network/DisplayFlagButton.h"
+#include "Gui/Network/NodeGraphic.h"
 #include <QPainter>
 #include <qgraphicsitem.h>
 #include <qnamespace.h>

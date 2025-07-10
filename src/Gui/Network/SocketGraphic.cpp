@@ -1,8 +1,8 @@
-#include "gui/network/SocketGraphic.h"
+#include "Gui/Network/SocketGraphic.h"
 #include <QTextDocument>
 #include <iostream>
 #include <qgraphicsitem.h>
-#include "gui/network/NodeEdgeGraphic.h"
+#include "Gui/Network/NodeEdgeGraphic.h"
 
 SocketGraphic::SocketGraphic(enzo::nt::SocketIOType type, enzo::nt::OpId opId, unsigned int socketIndex, QGraphicsItem *parent)
 : QGraphicsItem(parent), type_{type}, opId_{opId}, socketIndex_{socketIndex}

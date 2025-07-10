@@ -1,4 +1,4 @@
-#include "gui/viewport/GLMesh.h"
+#include "Gui/Viewport/GLMesh.h"
 #include <GL/gl.h>
 #include <iostream>
 

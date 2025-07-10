@@ -1,4 +1,4 @@
-#include "gui/network/NetworkGraphicsScene.h"
+#include "Gui/Network/NetworkGraphicsScene.h"
 #include <QGraphicsScene>
 #include <QGraphicsSceneWheelEvent>
 #include <iostream>

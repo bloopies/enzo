@@ -1,11 +1,11 @@
-#include "gui/Interface.h"
+#include "Gui/Interface.h"
 #include "Engine/Network/NetworkManager.h"
-#include "gui/viewport/Viewport.h"
-#include "gui/network/Network.h"
+#include "Gui/Viewport/Viewport.h"
+#include "Gui/Network/Network.h"
 #include <qpushbutton.h>
 #include <qsplitter.h>
 #include <QTimer>
-#include <gui/UtilWidgets/Splitter.h>
+#include <Gui/UtilWidgets/Splitter.h>
 
 EnzoUI::EnzoUI()
 {

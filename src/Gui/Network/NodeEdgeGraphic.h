@@ -1,6 +1,6 @@
 #pragma once
 #include <QGraphicsItem>
-#include "gui/network/SocketGraphic.h"
+#include "Gui/Network/SocketGraphic.h"
 
 #include <QPainter>
 

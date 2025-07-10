@@ -26,23 +26,23 @@ find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 qt_add_executable(${AppExec}
     static/resources.qrc
-    src/gui/main.cpp
-    src/gui/Interface.cpp
-    src/gui/UtilWidgets/Splitter.cpp
-    src/gui/viewport/Viewport.cpp
-    src/gui/viewport/ViewportGLWidget.cpp
-    src/gui/viewport/GLCamera.cpp
-    src/gui/viewport/GLMesh.cpp
-    src/gui/viewport/GLGrid.cpp
-    src/gui/network/NetworkGraphicsView.cpp
-    src/gui/network/NetworkGraphicsScene.cpp
-    src/gui/network/Network.cpp
-    src/gui/network/NodeGraphic.cpp
-    src/gui/network/SocketGraphic.cpp
-    src/gui/network/NodeEdgeGraphic.cpp
-    src/gui/network/FloatingEdgeGraphic.cpp
-    src/gui/network/DisplayFlagButton.cpp
-    src/gui/network/NodeIconGraphic.cpp
+    src/Gui/main.cpp
+    src/Gui/Interface.cpp
+    src/Gui/UtilWidgets/Splitter.cpp
+    src/Gui/Viewport/Viewport.cpp
+    src/Gui/Viewport/ViewportGLWidget.cpp
+    src/Gui/Viewport/GLCamera.cpp
+    src/Gui/Viewport/GLMesh.cpp
+    src/Gui/Viewport/GLGrid.cpp
+    src/Gui/Network/NetworkGraphicsView.cpp
+    src/Gui/Network/NetworkGraphicsScene.cpp
+    src/Gui/Network/Network.cpp
+    src/Gui/Network/NodeGraphic.cpp
+    src/Gui/Network/SocketGraphic.cpp
+    src/Gui/Network/NodeEdgeGraphic.cpp
+    src/Gui/Network/FloatingEdgeGraphic.cpp
+    src/Gui/Network/DisplayFlagButton.cpp
+    src/Gui/Network/NodeIconGraphic.cpp
 
     src/Engine/Operator/Attribute.cpp
     src/Engine/Operator/Geometry.cpp
