@@ -23,6 +23,9 @@ find_package(glm REQUIRED)
 # eigen (math)
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
+# tbb
+find_package(TBB REQUIRED COMPONENTS TBB::tbb)
+
 
 
 qt_add_executable(${AppExec}
@@ -53,7 +56,7 @@ qt_add_executable(${AppExec}
     src/Engine/Network/NetworkManager.cpp
 )
 
-target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen)
+target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen TBB::tbb)
 target_include_directories(${AppExec} PUBLIC src)
 
 # tests
@@ -79,7 +82,7 @@ add_executable(${TestExec}
     src/Engine/Operator/GeometryConnection.cpp
     src/Engine/Operator/GeometryOpDef.cpp
 )
-target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core )
+target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb)
 target_compile_definitions(${TestExec} PRIVATE UNIT_TEST)
 target_include_directories(${TestExec} PUBLIC src)
 

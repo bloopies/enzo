@@ -23,6 +23,7 @@
 - qt6 (base & svg)
 - glm
 - catch2
+- oneTBB
 
 
 > [!IMPORTANT]
