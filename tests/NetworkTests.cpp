@@ -5,10 +5,38 @@
 #include "Engine/Types.h"
 #include <iostream>
 
-TEST_CASE("network")
+struct NMReset 
+{
+    NMReset()
+    {
+        enzo::nt::NetworkManager::_reset();
+    }
+    ~NMReset()
+    {
+        enzo::nt::NetworkManager::_reset();
+    }
+
+};
+
+TEST_CASE_METHOD(NMReset, "network fixture separation start")
 {
     using namespace enzo;
-    nt::NetworkManager::_reset();
+    nt::OpId newOpId = nt::NetworkManager::addOperator();
+    REQUIRE(newOpId==1);
+    REQUIRE(nt::NetworkManager::isValidOp(1));
+    
+}
+
+TEST_CASE_METHOD(NMReset, "network fixture separation end")
+{
+    using namespace enzo;
+    REQUIRE_FALSE(nt::NetworkManager::isValidOp(1));
+
+}
+
+TEST_CASE_METHOD(NMReset, "network")
+{
+    using namespace enzo;
     nt::OpId newOpId = nt::NetworkManager::addOperator();
     nt::OpId newOpId2 = nt::NetworkManager::addOperator();
 
@@ -29,15 +57,18 @@ TEST_CASE("network")
     }
 }
 
-TEST_CASE("reset")
+TEST_CASE_METHOD(NMReset, "reset")
 {
     using namespace enzo;
     nt::OpId newOpId = nt::NetworkManager::addOperator();
-    nt::NetworkManager::_reset();
-    nt::OpId newOpId2 = nt::NetworkManager::addOperator();
 
+    nt::NetworkManager::_reset();
 
     REQUIRE_FALSE(nt::NetworkManager::isValidOp(newOpId));
+
+    nt::OpId newOpId2 = nt::NetworkManager::addOperator();
     REQUIRE(nt::NetworkManager::isValidOp(newOpId2));
+
+
 }
 

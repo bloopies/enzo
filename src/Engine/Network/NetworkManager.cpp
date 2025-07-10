@@ -103,6 +103,7 @@ std::optional<enzo::nt::OpId> enzo::nt::NetworkManager::getDisplayOp()
 #ifdef UNIT_TEST
 void enzo::nt::NetworkManager::_reset()
 {
+    std::cout << "resetting network manager\n";
     delete instancePtr_;
     instancePtr_ = nullptr;
 
