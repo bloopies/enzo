@@ -79,8 +79,7 @@ void NodeGraphic::initFlagButtons()
 
 void NodeGraphic::initSockets()
 {
-    auto nm = enzo::nt::NetworkManager::getInstance();
-    enzo::nt::GeometryOperator& op = nm->getGeoOperator(opId_);
+    enzo::nt::GeometryOperator& op = enzo::nt::NetworkManager::getGeoOperator(opId_);
     for(int i=0, max=op.getMaxInputs(); i<max; ++i)
     {
         auto* socketInput = new SocketGraphic(enzo::nt::SocketIOType::Input, opId_, i, this);
@@ -203,8 +202,7 @@ void NodeGraphic::updatePositions()
 
 QPointF NodeGraphic::getSocketPosition(int socketIndex, enzo::nt::SocketIOType socketType)
 {
-    auto nm = enzo::nt::NetworkManager::getInstance();
-    enzo::nt::GeometryOperator& op = nm->getGeoOperator(opId_);
+    enzo::nt::GeometryOperator& op = enzo::nt::NetworkManager::getGeoOperator(opId_);
     int maxSocketNumber = socketType==enzo::nt::SocketIOType::Input ? op.getMaxInputs() : op.getMaxOutputs();
     float socketSpread = socketSize_*1.5*maxSocketNumber;
 

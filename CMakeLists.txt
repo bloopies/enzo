@@ -56,6 +56,16 @@ target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets 
 target_include_directories(${AppExec} PUBLIC src)
 
 # tests
+Include(FetchContent)
+
+FetchContent_Declare(
+  Catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+  GIT_TAG        v3.8.1 # or a later release
+)
+
+FetchContent_MakeAvailable(Catch2)
+
 add_executable(${TestExec}
     tests/main-tests.cpp
     tests/OperatorTests.cpp
@@ -68,6 +78,5 @@ add_executable(${TestExec}
     src/Engine/Operator/GeometryConnection.cpp
     src/Engine/Operator/GeometryOpDef.cpp
 )
-find_package(Catch2 3 REQUIRED)
 target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core )
 target_include_directories(${TestExec} PUBLIC src)

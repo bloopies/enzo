@@ -22,8 +22,7 @@ const enzo::geo::Geometry& enzo::nt::GeometryOpDef::getInputGeoView(unsigned int
 enzo::geo::Geometry enzo::nt::GeometryOpDef::cloneInputGeo(unsigned int inputIndex)
 {
     // TODO: implement
-    enzo::nt::NetworkManager* nm = nt::NetworkManager::getInstance();
-    enzo::nt::GeometryOperator& selfOp = nm->getGeoOperator(opId_);
+    enzo::nt::GeometryOperator& selfOp = nt::NetworkManager::getGeoOperator(opId_);
     std::vector<std::shared_ptr<const nt::GeometryConnection>> inputConnections = selfOp.getInputConnections();
     if(inputConnections.size()==0)
     {
@@ -31,7 +30,7 @@ enzo::geo::Geometry enzo::nt::GeometryOpDef::cloneInputGeo(unsigned int inputInd
         return enzo::geo::Geometry();
     }
     std::shared_ptr<const nt::GeometryConnection> inputConnection = inputConnections.at(inputIndex);
-    return nm->getGeoOperator(inputConnection->getInputOpId()).getOutputGeo(inputConnection->getInputIndex());
+    return nt::NetworkManager::getGeoOperator(inputConnection->getInputOpId()).getOutputGeo(inputConnection->getInputIndex());
 }
 
 void enzo::nt::GeometryOpDef::setOutputGeometry(unsigned int outputIndex, enzo::geo::Geometry geometry)

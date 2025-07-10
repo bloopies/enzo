@@ -37,8 +37,6 @@ private:
     NetworkGraphicsScene* scene_;
     NetworkGraphicsView* view_;
 
-    enzo::nt::NetworkManager* nm_;
-
     std::unordered_map<enzo::nt::OpId, NodeGraphic*> nodeStore_;
 
     FloatingEdgeGraphic* floatingEdge_=nullptr;

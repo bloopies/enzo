@@ -8,11 +8,8 @@ using namespace enzo;
 
 void enzo::nt::connectOperators(enzo::nt::OpId inputOpId, unsigned int inputIndex, enzo::nt::OpId outputOpId, unsigned int outputIndex)
 {
-    // get network manager
-    auto nm = enzo::nt::NetworkManager::getInstance();
-
-    auto& inputOp = nm->getGeoOperator(inputOpId);
-    auto& outputOp = nm->getGeoOperator(outputOpId);
+    auto& inputOp = nt::NetworkManager::getGeoOperator(inputOpId);
+    auto& outputOp = nt::NetworkManager::getGeoOperator(outputOpId);
 
     auto newConnection = std::make_shared<nt::GeometryConnection>(inputOpId, inputIndex, outputOpId, outputIndex); 
 

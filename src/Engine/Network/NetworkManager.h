@@ -12,30 +12,30 @@ class NetworkManager
 {
     Q_OBJECT
 public:
-    OpId addOperator();
-    void setDisplayOp(OpId opId);
-    std::optional<OpId> getDisplayOp();
     // delete copy constructor
     NetworkManager(const NetworkManager& obj) = delete;
 
     static NetworkManager* getInstance();
 
-    bool isValidOp(nt::OpId opId);
-    GeometryOperator& getGeoOperator(nt::OpId opId);
+    static OpId addOperator();
+    void setDisplayOp(OpId opId);
+    static std::optional<OpId> getDisplayOp();
+    static bool isValidOp(nt::OpId opId);
+    static GeometryOperator& getGeoOperator(nt::OpId opId);
 
 private:
     static NetworkManager* instancePtr_;
     NetworkManager() {};
 
-    std::unordered_map<enzo::nt::OpId, std::unique_ptr<enzo::nt::GeometryOperator>> gopStore_;
+    static std::unordered_map<enzo::nt::OpId, std::unique_ptr<enzo::nt::GeometryOperator>> gopStore_;
 
-    void cookOp(enzo::nt::OpId opId);
-    std::vector<enzo::nt::OpId> getDependencyGraph(enzo::nt::OpId opId);
+    static void cookOp(enzo::nt::OpId opId);
+    static std::vector<enzo::nt::OpId> getDependencyGraph(enzo::nt::OpId opId);
 
     // the highest operator id currently stored
-    enzo::nt::OpId maxOpId_=0;
+    inline static enzo::nt::OpId maxOpId_=0;
 
-    std::optional<OpId> displayOp_=std::nullopt;
+    inline static std::optional<OpId> displayOp_=std::nullopt;
 signals:
     void updateDisplay(enzo::geo::Geometry& geometry);
 

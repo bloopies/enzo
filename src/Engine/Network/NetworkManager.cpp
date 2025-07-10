@@ -54,34 +54,8 @@ void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
     displayOp_=opId;
     std::vector<enzo::nt::OpId> dependencyGraph = getDependencyGraph(opId);
     enzo::geo::Geometry prevGeometry;
-
-    // ----
-    // create geometry start
-    // ----
-    // std::shared_ptr<ga::Attribute> PAttr = prevGeometry.getAttribByName(ga::AttrOwner::POINT, "P");
-    // ga::AttributeHandleVector3 PAttrHandle(PAttr);
-    // std::vector<bt::Vector3> pts={
-    //     {-1,-1,-1},{1,-1,-1},{1,-1,1},{-1,-1,1},
-    //     {-1,1,-1},{1,1,-1},{1,1,1},{-1,1,1},
-    //     {0,2,-1},{0,2,1}
-    // };
-    // for(auto& p:pts) PAttrHandle.addValue(p);
-
-    // std::shared_ptr<ga::Attribute> pointAttr = prevGeometry.getAttribByName(ga::AttrOwner::VERTEX, "point");
-    // ga::AttributeHandleInt pointAttrHandle(pointAttr);
-    // std::vector<std::vector<int>> faces={
-    //     {3,2,6,9,7},{0,1,5,8,4},{0,3,7,4},{1,2,6,5},
-    //     {0,1,2,3},{4,7,9},{4,9,8},{5,6,9},{5,9,8}
-    // };
-    // for(auto& f:faces) for(int i:f) pointAttrHandle.addValue(i);
-
-    // std::shared_ptr<ga::Attribute> vertexCountAttr = prevGeometry.getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount");
-    // ga::AttributeHandleInt vertexCountHandle(vertexCountAttr);
-    // for(auto& f:faces) vertexCountHandle.addValue(f.size());
-
-    // --------
-
     std::cout << "size: " << dependencyGraph.size() << "\n";
+
     for(enzo::nt::OpId dependencyOpId : dependencyGraph)
     {
         cookOp(dependencyOpId);
@@ -127,4 +101,5 @@ std::optional<enzo::nt::OpId> enzo::nt::NetworkManager::getDisplayOp()
 }
 
 enzo::nt::NetworkManager* enzo::nt::NetworkManager::instancePtr_ = nullptr;
+std::unordered_map<enzo::nt::OpId, std::unique_ptr<enzo::nt::GeometryOperator>> enzo::nt::NetworkManager::gopStore_;
 
