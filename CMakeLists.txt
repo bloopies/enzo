@@ -54,6 +54,8 @@ qt_add_executable(${AppExec}
     src/Engine/Operator/GeometryConnection.cpp
     src/Engine/Operator/GeometryOpDef.cpp
     src/Engine/Network/NetworkManager.cpp
+
+    src/Engine/Operator/GOP_test.cpp
 )
 
 target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen TBB::tbb)
@@ -81,6 +83,7 @@ add_executable(${TestExec}
     src/Engine/Network/NetworkManager.cpp
     src/Engine/Operator/GeometryConnection.cpp
     src/Engine/Operator/GeometryOpDef.cpp
+    src/Engine/Operator/GOP_test.cpp
 )
 target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb)
 target_compile_definitions(${TestExec} PRIVATE UNIT_TEST)
@@ -96,6 +99,7 @@ add_executable(${BenchExec}
     src/Engine/Network/NetworkManager.cpp
     src/Engine/Operator/GeometryConnection.cpp
     src/Engine/Operator/GeometryOpDef.cpp
+    src/Engine/Operator/GOP_test.cpp
 )
 target_link_libraries(${BenchExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core  TBB::tbb)
 target_compile_definitions(${BenchExec} PRIVATE UNIT_TEST)

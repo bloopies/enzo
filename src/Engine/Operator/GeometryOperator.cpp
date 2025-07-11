@@ -2,6 +2,7 @@
 #include <memory>
 #include "Engine/Network/NetworkManager.h"
 #include <optional>
+#include "Engine/Operator/GOP_test.h"
 #include <iostream>
 
 using namespace enzo;
@@ -20,13 +21,12 @@ void enzo::nt::connectOperators(enzo::nt::OpId inputOpId, unsigned int inputInde
     outputOp.addInputConnection(newConnection);
 }
 
-nt::GeometryOperator::GeometryOperator(enzo::nt::OpId opId)
-: opId_{opId}
+nt::GeometryOperator::GeometryOperator(enzo::nt::OpId opId, std::unique_ptr<enzo::nt::GeometryOpDef> opDef)
+: opId_{opId}, opDef_(std::move(opDef))
 {
     // TODO: drive by geometry definition
     maxInputs_=4;
     maxOutputs_=4;
-    opDef_ = new enzo::nt::GeometryOpDef(opId_);
 }
 
 void enzo::nt::GeometryOperator::cookOp()

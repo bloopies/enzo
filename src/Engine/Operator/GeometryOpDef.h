@@ -8,7 +8,7 @@ class GeometryOpDef
 {
 public:
     GeometryOpDef(enzo::nt::OpId opId);
-    void cookOp();
+    virtual void cookOp() = 0;
     geo::Geometry& getOutputGeo(unsigned outputIndex);
 private:
     std::vector<enzo::geo::Geometry> outputGeometry_;
