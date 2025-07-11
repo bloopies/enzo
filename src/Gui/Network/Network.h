@@ -55,7 +55,7 @@ private:
     void destroyFloatingEdge();
     void deleteEdge(QGraphicsItem* edge);
 
-    NodeGraphic* createNode();
+    NodeGraphic* createNode(enzo::nt::opConstructor ctorFunc);
 
     void highlightEdge(QGraphicsItem* edge, bool state);
     void leftMousePressed(QMouseEvent* event);

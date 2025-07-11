@@ -1,5 +1,4 @@
 #include "Engine/Network/NetworkManager.h"
-#include "Engine/Operator/GOP_test.h"
 #include "Engine/Operator/Geometry.h"
 #include "Engine/Operator/GeometryOperator.h"
 #include "Engine/Operator/Attribute.h"
@@ -11,11 +10,11 @@
 #include <algorithm>
 #include <string>
 
-enzo::nt::OpId enzo::nt::NetworkManager::addOperator()
+enzo::nt::OpId enzo::nt::NetworkManager::addOperator(nt::opConstructor ctorFunc)
 {
 
     maxOpId_++;
-    gopStore_.emplace(maxOpId_, std::make_unique<GeometryOperator>(maxOpId_, &GOP_test::ctor));
+    gopStore_.emplace(maxOpId_, std::make_unique<GeometryOperator>(maxOpId_, ctorFunc));
     std::cout << "adding operator " << maxOpId_ << "\n";
 
     return maxOpId_;

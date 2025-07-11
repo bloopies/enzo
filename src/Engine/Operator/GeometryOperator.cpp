@@ -21,7 +21,7 @@ void enzo::nt::connectOperators(enzo::nt::OpId inputOpId, unsigned int inputInde
     outputOp.addInputConnection(newConnection);
 }
 
-nt::GeometryOperator::GeometryOperator(enzo::nt::OpId opId, enzo::nt::GeometryOpDef* (*ctorFunc)(enzo::nt::OpId))
+nt::GeometryOperator::GeometryOperator(enzo::nt::OpId opId, nt::opConstructor ctorFunc)
 : opId_{opId}, opDef_(ctorFunc(opId))
 {
     // TODO: drive by geometry definition

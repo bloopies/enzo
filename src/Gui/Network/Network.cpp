@@ -18,6 +18,8 @@
 #include <qgraphicsitem.h>
 #include <qnamespace.h>
 #include <QLine>
+#include "Engine/Operator/GOP_test.h"
+#include "Engine/Operator/GOP_transform.h"
 
 using namespace enzo;
 
@@ -286,7 +288,16 @@ void Network::keyPressEvent(QKeyEvent *event)
         }
         case(Qt::Key_Tab):
         {
-            if(auto newNode = createNode())
+            if(auto newNode = createNode(&GOP_test::ctor))
+            {
+                newNode->setPos(viewPos);
+            }
+
+            break;
+        }
+        case(Qt::Key_F):
+        {
+            if(auto newNode = createNode(&GOP_transform::ctor))
             {
                 newNode->setPos(viewPos);
             }
@@ -296,9 +307,9 @@ void Network::keyPressEvent(QKeyEvent *event)
     }
 }
 
-NodeGraphic* Network::createNode()
+NodeGraphic* Network::createNode(nt::opConstructor ctorFunc)
 {
-    if(nt::OpId id = nt::NetworkManager::addOperator())
+    if(nt::OpId id = nt::NetworkManager::addOperator(ctorFunc))
     {
         NodeGraphic* newNode = new NodeGraphic(id);
         scene_->addItem(newNode);

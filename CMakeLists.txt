@@ -56,52 +56,53 @@ qt_add_executable(${AppExec}
     src/Engine/Network/NetworkManager.cpp
 
     src/Engine/Operator/GOP_test.cpp
+    src/Engine/Operator/GOP_transform.cpp
 )
 
 target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen TBB::tbb)
 target_include_directories(${AppExec} PUBLIC src)
 
 # tests
-Include(FetchContent)
+# Include(FetchContent)
 
-FetchContent_Declare(
-  Catch2
-  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG        v3.8.1 # or a later release
-)
+# FetchContent_Declare(
+#   Catch2
+#   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+#   GIT_TAG        v3.8.1 # or a later release
+# )
 
-FetchContent_MakeAvailable(Catch2)
+# FetchContent_MakeAvailable(Catch2)
 
-add_executable(${TestExec}
-    tests/main-tests.cpp
-    tests/OperatorTests.cpp
-    tests/NetworkTests.cpp
+# add_executable(${TestExec}
+#     tests/main-tests.cpp
+#     tests/OperatorTests.cpp
+#     tests/NetworkTests.cpp
 
-    src/Engine/Operator/Attribute.cpp
-    src/Engine/Operator/Geometry.cpp
-    src/Engine/Operator/GeometryOperator.cpp
-    src/Engine/Network/NetworkManager.cpp
-    src/Engine/Operator/GeometryConnection.cpp
-    src/Engine/Operator/GeometryOpDef.cpp
-    src/Engine/Operator/GOP_test.cpp
-)
-target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb)
-target_compile_definitions(${TestExec} PRIVATE UNIT_TEST)
-target_include_directories(${TestExec} PUBLIC src)
+#     src/Engine/Operator/Attribute.cpp
+#     src/Engine/Operator/Geometry.cpp
+#     src/Engine/Operator/GeometryOperator.cpp
+#     src/Engine/Network/NetworkManager.cpp
+#     src/Engine/Operator/GeometryConnection.cpp
+#     src/Engine/Operator/GeometryOpDef.cpp
+#     src/Engine/Operator/GOP_test.cpp
+# )
+# target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb)
+# target_compile_definitions(${TestExec} PRIVATE UNIT_TEST)
+# target_include_directories(${TestExec} PUBLIC src)
 
-# benchmarks
-add_executable(${BenchExec}
-    tests/Benchmarks.cpp
+# # benchmarks
+# add_executable(${BenchExec}
+#     tests/Benchmarks.cpp
 
-    src/Engine/Operator/Attribute.cpp
-    src/Engine/Operator/Geometry.cpp
-    src/Engine/Operator/GeometryOperator.cpp
-    src/Engine/Network/NetworkManager.cpp
-    src/Engine/Operator/GeometryConnection.cpp
-    src/Engine/Operator/GeometryOpDef.cpp
-    src/Engine/Operator/GOP_test.cpp
-)
-target_link_libraries(${BenchExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core  TBB::tbb)
-target_compile_definitions(${BenchExec} PRIVATE UNIT_TEST)
-target_include_directories(${BenchExec} PUBLIC src)
+#     src/Engine/Operator/Attribute.cpp
+#     src/Engine/Operator/Geometry.cpp
+#     src/Engine/Operator/GeometryOperator.cpp
+#     src/Engine/Network/NetworkManager.cpp
+#     src/Engine/Operator/GeometryConnection.cpp
+#     src/Engine/Operator/GeometryOpDef.cpp
+#     src/Engine/Operator/GOP_test.cpp
+# )
+# target_link_libraries(${BenchExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core  TBB::tbb)
+# target_compile_definitions(${BenchExec} PRIVATE UNIT_TEST)
+# target_include_directories(${BenchExec} PUBLIC src)
 

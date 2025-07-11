@@ -4,6 +4,7 @@
 
 namespace enzo::nt
 {
+
 class GeometryOpDef
 {
 public:
@@ -24,4 +25,6 @@ protected:
     // TODO: std::move geometry instead of copying
     void setOutputGeometry(unsigned int outputIndex, enzo::geo::Geometry geometry);
 };
+
+using opConstructor = GeometryOpDef* (*)(enzo::nt::OpId);
 }

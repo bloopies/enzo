@@ -18,7 +18,7 @@ public:
     static NetworkManager* getInstance();
 
     // functions
-    static OpId addOperator();
+    static OpId addOperator(nt::opConstructor ctorFunc);
     static std::optional<OpId> getDisplayOp();
     static bool isValidOp(nt::OpId opId);
     static GeometryOperator& getGeoOperator(nt::OpId opId);
