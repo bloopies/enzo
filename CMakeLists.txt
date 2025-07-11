@@ -97,7 +97,7 @@ add_executable(${BenchExec}
     src/Engine/Operator/GeometryConnection.cpp
     src/Engine/Operator/GeometryOpDef.cpp
 )
-target_link_libraries(${BenchExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core )
+target_link_libraries(${BenchExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core  TBB::tbb)
 target_compile_definitions(${BenchExec} PRIVATE UNIT_TEST)
 target_include_directories(${BenchExec} PUBLIC src)
 

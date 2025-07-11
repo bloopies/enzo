@@ -22,21 +22,37 @@ struct NMReset
 TEST_CASE_METHOD(NMReset, "Network Manager")
 {
     using namespace enzo;
-    nt::OpId prevOp = 0;
-    for(int i=0; i<100; ++i){
-        nt::OpId newOp = nt::NetworkManager::addOperator();
-        if(prevOp!=0)
-        {
-            nt::connectOperators(newOp, 0, prevOp, 0);
-        }
+    nt::OpId startOp = nt::NetworkManager::addOperator();
+    nt::OpId prevOp = startOp;
+    std::vector<nt::OpId> prevOps;
 
-        prevOp = newOp;
+    for(int k=0; k<10; k++)
+    {
+        for(int i=0; i<4; ++i)
+        {
+            nt::OpId newOp = nt::NetworkManager::addOperator();
+            prevOps.push_back(newOp);
+            nt::connectOperators(newOp, i, prevOp, 0);
+        }
+        for(int j=0; j<10; j++)
+        {
+            std::vector<nt::OpId> prevOpsBuffer = prevOps;
+            for(int i=0; i<size(prevOpsBuffer); ++i)
+            {
+                prevOps.clear();
+                nt::OpId newOp = nt::NetworkManager::addOperator();
+                prevOps.push_back(newOp);
+                nt::connectOperators(newOp, 0, prevOpsBuffer[i], 0);
+
+                
+            }
+        }
     }
 
     nt::NetworkManager* nm = nt::NetworkManager::getInstance();
     BENCHMARK("Cook 100 Ops")
     {
-        nm->setDisplayOp(prevOp);
+        nm->setDisplayOp(startOp);
     };
     
 

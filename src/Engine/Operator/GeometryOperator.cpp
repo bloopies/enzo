@@ -58,7 +58,6 @@ void nt::GeometryOperator::addOutputConnection(std::shared_ptr<nt::GeometryConne
 std::vector<std::shared_ptr<const nt::GeometryConnection>> nt::GeometryOperator::getInputConnections() const
 {
     std::vector<std::shared_ptr<const nt::GeometryConnection>> inputConnections;
-    std::cout << "input connections size: " << inputConnections_.size() <<"\n";
     for(std::shared_ptr<nt::GeometryConnection> connection : inputConnections_)
     {
         inputConnections.push_back(connection);

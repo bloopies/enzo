@@ -1,10 +1,11 @@
+#include <oneapi/tbb/parallel_for.h>
 #include "Engine/Operator/GeometryOpDef.h"
 #include <stdexcept>
 #include <iostream>
-#include "Engine/Network/NetworkManager.h"
 #include "Engine/Operator/GeometryOperator.h"
 #include "Engine/Types.h"
 #include "Engine/Operator/AttributeHandle.h"
+#include "Engine/Network/NetworkManager.h"
 
 bool enzo::nt::GeometryOpDef::outputRequested(unsigned int outputIndex)
 {
@@ -64,7 +65,7 @@ enzo::geo::Geometry& enzo::nt::GeometryOpDef::getOutputGeo(unsigned outputIndex)
 void enzo::nt::GeometryOpDef::cookOp()
 {
     using namespace enzo;
-    std::cout << "COOKING\n";
+    // std::cout << "COOKING\n";
 
     if(outputRequested(0))
     {
@@ -104,6 +105,18 @@ void enzo::nt::GeometryOpDef::cookOp()
             vector.x()+=2.5;
             PAttrHandle.setValue(i, vector);
         }
+        // ----
+
+        constexpr int N = 10000;
+        std::vector<double> results(N);
+
+        oneapi::tbb::parallel_for(0, N, [&](int i) {
+            double val = 0;
+            for (int j = 0; j < 100; ++j) {
+                val += std::sin(i + j);
+            }
+            results[i] = val;
+        });
 
 
         // set output geometry
