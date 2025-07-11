@@ -21,8 +21,8 @@ void enzo::nt::connectOperators(enzo::nt::OpId inputOpId, unsigned int inputInde
     outputOp.addInputConnection(newConnection);
 }
 
-nt::GeometryOperator::GeometryOperator(enzo::nt::OpId opId, std::unique_ptr<enzo::nt::GeometryOpDef> opDef)
-: opId_{opId}, opDef_(std::move(opDef))
+nt::GeometryOperator::GeometryOperator(enzo::nt::OpId opId, enzo::nt::GeometryOpDef* (*ctorFunc)(enzo::nt::OpId))
+: opId_{opId}, opDef_(ctorFunc(opId))
 {
     // TODO: drive by geometry definition
     maxInputs_=4;

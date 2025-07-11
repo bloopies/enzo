@@ -15,7 +15,7 @@ enzo::nt::OpId enzo::nt::NetworkManager::addOperator()
 {
 
     maxOpId_++;
-    gopStore_.emplace(maxOpId_, std::make_unique<GeometryOperator>(maxOpId_, std::make_unique<GOP_test>(maxOpId_)));
+    gopStore_.emplace(maxOpId_, std::make_unique<GeometryOperator>(maxOpId_, &GOP_test::ctor));
     std::cout << "adding operator " << maxOpId_ << "\n";
 
     return maxOpId_;

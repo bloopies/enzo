@@ -11,7 +11,7 @@ void connectOperators(enzo::nt::OpId inputOpId, unsigned int inputIndex, enzo::n
 class GeometryOperator
 {
 public:
-    GeometryOperator(enzo::nt::OpId opId, std::unique_ptr<enzo::nt::GeometryOpDef> opDef);
+    GeometryOperator(enzo::nt::OpId opId, enzo::nt::GeometryOpDef* (*ctorFunc)(enzo::nt::OpId));
 
     // disable copying
     GeometryOperator(const GeometryOperator&)            = delete;
