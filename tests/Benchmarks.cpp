@@ -4,6 +4,7 @@
 #include "Engine/Network/NetworkManager.h"
 #include "Engine/Operator/GeometryOperator.h"
 #include "Engine/Types.h"
+#include "Engine/Operator/GOP_test.h"
 #include <iostream>
 
 struct NMReset 
@@ -22,7 +23,7 @@ struct NMReset
 TEST_CASE_METHOD(NMReset, "Network Manager")
 {
     using namespace enzo;
-    nt::OpId startOp = nt::NetworkManager::addOperator();
+    nt::OpId startOp = nt::NetworkManager::addOperator(&GOP_test::ctor);
     nt::OpId prevOp = startOp;
     std::vector<nt::OpId> prevOps;
 
@@ -30,7 +31,7 @@ TEST_CASE_METHOD(NMReset, "Network Manager")
     {
         for(int i=0; i<4; ++i)
         {
-            nt::OpId newOp = nt::NetworkManager::addOperator();
+            nt::OpId newOp = nt::NetworkManager::addOperator(&GOP_test::ctor);
             prevOps.push_back(newOp);
             nt::connectOperators(newOp, i, prevOp, 0);
         }
@@ -40,7 +41,7 @@ TEST_CASE_METHOD(NMReset, "Network Manager")
             for(int i=0; i<size(prevOpsBuffer); ++i)
             {
                 prevOps.clear();
-                nt::OpId newOp = nt::NetworkManager::addOperator();
+                nt::OpId newOp = nt::NetworkManager::addOperator(GOP_test::ctor);
                 prevOps.push_back(newOp);
                 nt::connectOperators(newOp, 0, prevOpsBuffer[i], 0);
 
