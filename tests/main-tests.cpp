@@ -2,6 +2,8 @@
 #include <oneapi/tbb/parallel_for.h>
 #include <iostream>
 #include <boost/dll/import.hpp>
+#include "Engine/Network/NetworkManager.h"
+#include "Engine/Operator/OperatorTable.h"
 
 TEST_CASE("foo")
 {
@@ -33,10 +35,10 @@ TEST_CASE("boost dll")
         );
     std::cout << "VAR: " << *cpp_var << "\n";
 
-    auto cpp11_func = boost::dll::import_symbol<void(int&&)>(
+    auto cpp11_func = boost::dll::import_symbol<void(void (*addOperator)(enzo::nt::opConstructor))>(
         "build/src/OpDefs/libenzoOps1.so", "newSopOperator"
     );
 
-    cpp11_func(5);
+    cpp11_func(enzo::op::OperatorTable::addOperator);
 
 }

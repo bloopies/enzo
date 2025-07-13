@@ -8,3 +8,5 @@ void enzo::op::OperatorTable::addOperator(nt::opConstructor ctorFunc)
     // ctorFunc(5);
     ctorStore_.push_back(ctorFunc);
 }
+
+std::vector<enzo::nt::opConstructor> enzo::op::OperatorTable::ctorStore_;

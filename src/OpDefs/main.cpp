@@ -8,9 +8,9 @@
 
 extern "C"
 { BOOST_SYMBOL_EXPORT std::string myVar = "hello world";
-    BOOST_SYMBOL_EXPORT void newSopOperator(enzo::op::OperatorTable* table)
+    BOOST_SYMBOL_EXPORT void newSopOperator(void (*addOperator)(enzo::nt::opConstructor))
     {
-        table->addOperator(
+        addOperator(
             &GopTransform::ctor
         );
     }

@@ -8,8 +8,9 @@ namespace enzo::op
 class BOOST_SYMBOL_EXPORT OperatorTable
 {
 public:
-    void addOperator(nt::opConstructor ctorFunc);
+    static void addOperator(nt::opConstructor ctorFunc);
 private:
-    std::vector<nt::opConstructor> ctorStore_;
+    static std::vector<nt::opConstructor> ctorStore_;
 };
 }
+
