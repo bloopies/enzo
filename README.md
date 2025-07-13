@@ -11,7 +11,7 @@
 </div>
 
 <div align="center">
-  Enzo is a node based 3D DCC tool.
+Enzo is a 3D animation software application focused on procedural geometry editing.
 </div>
 <br><br>
 <img src="https://github.com/user-attachments/assets/c1de2a74-fdd3-4d9c-8e8a-3c0183eab173">
