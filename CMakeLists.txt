@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.30)
 
 # set vars
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -18,6 +18,7 @@ set(ENGINE_SOURCES
     src/Engine/Operator/GeometryOperator.cpp
     src/Engine/Operator/GeometryConnection.cpp
     src/Engine/Operator/GeometryOpDef.cpp
+    src/Engine/Operator/OperatorTable.cpp
     src/Engine/Operator/GOP_test.cpp
     src/Engine/Operator/GOP_transform.cpp
     src/Engine/Network/NetworkManager.cpp
@@ -57,6 +58,8 @@ find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 # tbb
 find_package(TBB REQUIRED COMPONENTS TBB::tbb)
 
+find_package(Boost REQUIRED COMPONENTS filesystem system)
+
 
 
 qt_add_executable(${AppExec}
@@ -84,9 +87,12 @@ add_executable(${TestExec}
     tests/OperatorTests.cpp
     tests/NetworkTests.cpp
 )
-target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb)
+target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb Boost::filesystem Boost::system)
 target_compile_definitions(${TestExec} PRIVATE UNIT_TEST)
-target_include_directories(${TestExec} PUBLIC src)
+target_include_directories(${TestExec} PUBLIC
+    src
+    ${BOOST_INCLUDE_DIRS}
+)
 
 # benchmarks
 add_executable(${BenchExec}
@@ -98,3 +104,4 @@ target_link_libraries(${BenchExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen 
 target_compile_definitions(${BenchExec} PRIVATE UNIT_TEST)
 target_include_directories(${BenchExec} PUBLIC src)
 
+add_subdirectory(src/OpDefs)

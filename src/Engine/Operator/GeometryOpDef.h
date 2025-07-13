@@ -1,11 +1,12 @@
 #pragma once
 #include "Engine/Operator/Geometry.h"
 #include "Engine/Types.h"
+#include <boost/config.hpp>
 
 namespace enzo::nt
 {
 
-class GeometryOpDef
+class BOOST_SYMBOL_EXPORT GeometryOpDef
 {
 public:
     GeometryOpDef(enzo::nt::OpId opId);
