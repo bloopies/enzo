@@ -11,11 +11,11 @@ struct NMReset
 {
     NMReset()
     {
-        enzo::nt::NetworkManager::_reset();
+        enzo::nt::nm()._reset();
     }
     ~NMReset()
     {
-        enzo::nt::NetworkManager::_reset();
+        enzo::nt::nm()._reset();
     }
 
 };
@@ -23,7 +23,10 @@ struct NMReset
 TEST_CASE_METHOD(NMReset, "Network Manager")
 {
     using namespace enzo;
-    nt::OpId startOp = nt::NetworkManager::addOperator(&GOP_test::ctor);
+
+    auto& nm = nt::nm();
+
+    nt::OpId startOp = nm.addOperator(&GOP_test::ctor);
     nt::OpId prevOp = startOp;
     std::vector<nt::OpId> prevOps;
 
@@ -31,7 +34,7 @@ TEST_CASE_METHOD(NMReset, "Network Manager")
     {
         for(int i=0; i<4; ++i)
         {
-            nt::OpId newOp = nt::NetworkManager::addOperator(&GOP_test::ctor);
+            nt::OpId newOp = nm.addOperator(&GOP_test::ctor);
             prevOps.push_back(newOp);
             nt::connectOperators(newOp, i, prevOp, 0);
         }
@@ -41,7 +44,7 @@ TEST_CASE_METHOD(NMReset, "Network Manager")
             for(int i=0; i<size(prevOpsBuffer); ++i)
             {
                 prevOps.clear();
-                nt::OpId newOp = nt::NetworkManager::addOperator(GOP_test::ctor);
+                nt::OpId newOp = nm.addOperator(GOP_test::ctor);
                 prevOps.push_back(newOp);
                 nt::connectOperators(newOp, 0, prevOpsBuffer[i], 0);
 
@@ -50,10 +53,9 @@ TEST_CASE_METHOD(NMReset, "Network Manager")
         }
     }
 
-    nt::NetworkManager* nm = nt::NetworkManager::getInstance();
     BENCHMARK("Cook 100 Ops")
     {
-        nm->setDisplayOp(startOp);
+        nm.setDisplayOp(startOp);
     };
     
 

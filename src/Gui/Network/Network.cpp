@@ -310,7 +310,7 @@ void Network::keyPressEvent(QKeyEvent *event)
 
 NodeGraphic* Network::createNode(nt::opConstructor ctorFunc)
 {
-    if(nt::OpId id = nt::NetworkManager::addOperator(ctorFunc))
+    if(nt::OpId id = enzo::nt::nm().addOperator(ctorFunc))
     {
         NodeGraphic* newNode = new NodeGraphic(id);
         scene_->addItem(newNode);
@@ -376,15 +376,15 @@ void Network::mouseReleaseEvent(QMouseEvent *event)
             QLineF(event->pos(), leftMouseStart).length()<5.0f
         )
         {
-            enzo::nt::NetworkManager* nm = enzo::nt::NetworkManager::getInstance();
+            enzo::nt::NetworkManager& nm = enzo::nt::nm();
             NodeGraphic* clickedNode = static_cast<NodeGraphic*>(itemOfType<NodeGraphic>(hoverItems));
             enzo::nt::OpId opId = clickedNode->getOpId();
-            if(auto prevDisplayOpId = nt::NetworkManager::getDisplayOp(); prevDisplayOpId)
+            if(auto prevDisplayOpId = nm.getDisplayOp(); prevDisplayOpId)
             {
                 NodeGraphic* prevDisplayNode = nodeStore_.at(*prevDisplayOpId);
                 prevDisplayNode->setDisplayFlag(false);
             }
-            enzo::nt::NetworkManager::setDisplayOp(opId);
+            nm.setDisplayOp(opId);
             static_cast<DisplayFlagButton*>(clickedDisplayFlag)->setEnabled(true);
         }
         if(state_==State::MOVING_NODE)

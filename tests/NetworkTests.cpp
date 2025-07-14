@@ -11,11 +11,11 @@ struct NMReset
 {
     NMReset()
     {
-        enzo::nt::NetworkManager::_reset();
+        enzo::nt::nm()._reset();
     }
     ~NMReset()
     {
-        enzo::nt::NetworkManager::_reset();
+        enzo::nt::nm()._reset();
     }
 
 };
@@ -23,32 +23,38 @@ struct NMReset
 TEST_CASE_METHOD(NMReset, "network fixture separation start")
 {
     using namespace enzo;
-    nt::OpId newOpId = nt::NetworkManager::addOperator(GOP_test::ctor);
+    auto& nm = nt::nm();
+
+    nt::OpId newOpId = nm.addOperator(GOP_test::ctor);
     REQUIRE(newOpId==1);
-    REQUIRE(nt::NetworkManager::isValidOp(1));
+    REQUIRE(nm.isValidOp(1));
     
 }
 
 TEST_CASE_METHOD(NMReset, "network fixture separation end")
 {
     using namespace enzo;
-    REQUIRE_FALSE(nt::NetworkManager::isValidOp(1));
+    auto& nm = nt::nm();
+
+    REQUIRE_FALSE(nm.isValidOp(1));
 
 }
 
 TEST_CASE_METHOD(NMReset, "network")
 {
     using namespace enzo;
-    nt::OpId newOpId = nt::NetworkManager::addOperator(GOP_test::ctor);
-    nt::OpId newOpId2 = nt::NetworkManager::addOperator(GOP_test::ctor);
+    auto& nm = nt::nm();
 
-    REQUIRE(nt::NetworkManager::isValidOp(newOpId));
-    if(nt::NetworkManager::isValidOp(newOpId))
+    nt::OpId newOpId = nm.addOperator(GOP_test::ctor);
+    nt::OpId newOpId2 = nm.addOperator(GOP_test::ctor);
+
+    REQUIRE(nm.isValidOp(newOpId));
+    if(nm.isValidOp(newOpId))
     {
         auto newConnection = std::make_shared<nt::GeometryConnection>(newOpId, 1, newOpId2, 3); 
 
-        auto& inputOp = nt::NetworkManager::getGeoOperator(newOpId);
-        auto& outputOp = nt::NetworkManager::getGeoOperator(newOpId2);
+        auto& inputOp = nm.getGeoOperator(newOpId);
+        auto& outputOp = nm.getGeoOperator(newOpId2);
 
         // set output on the upper operator
         outputOp.addOutputConnection(newConnection);
@@ -62,14 +68,16 @@ TEST_CASE_METHOD(NMReset, "network")
 TEST_CASE_METHOD(NMReset, "reset")
 {
     using namespace enzo;
-    nt::OpId newOpId = nt::NetworkManager::addOperator(GOP_test::ctor);
+    auto& nm = nt::nm();
 
-    nt::NetworkManager::_reset();
+    nt::OpId newOpId = nm.addOperator(GOP_test::ctor);
 
-    REQUIRE_FALSE(nt::NetworkManager::isValidOp(newOpId));
+    nm._reset();
 
-    nt::OpId newOpId2 = nt::NetworkManager::addOperator(GOP_test::ctor);
-    REQUIRE(nt::NetworkManager::isValidOp(newOpId2));
+    REQUIRE_FALSE(nm.isValidOp(newOpId));
+
+    nt::OpId newOpId2 = nm.addOperator(GOP_test::ctor);
+    REQUIRE(nm.isValidOp(newOpId2));
 
 
 }
