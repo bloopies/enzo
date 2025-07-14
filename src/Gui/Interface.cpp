@@ -44,6 +44,6 @@ EnzoUI::EnzoUI()
     mainLayout_->addWidget(viewportSplitter_);
 
     // connect signals
-    connect(enzo::nt::NetworkManager::getInstance(), &enzo::nt::NetworkManager::updateDisplay, viewport, &Viewport::geometryChanged);
+    connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, viewport, &Viewport::geometryChanged);
 
 }

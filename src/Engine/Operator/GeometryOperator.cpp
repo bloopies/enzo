@@ -9,8 +9,10 @@ using namespace enzo;
 
 void enzo::nt::connectOperators(enzo::nt::OpId inputOpId, unsigned int inputIndex, enzo::nt::OpId outputOpId, unsigned int outputIndex)
 {
-    auto& inputOp = nt::NetworkManager::getGeoOperator(inputOpId);
-    auto& outputOp = nt::NetworkManager::getGeoOperator(outputOpId);
+    auto& nm = nt::nm();
+
+    auto& inputOp = nm.getGeoOperator(inputOpId);
+    auto& outputOp = nm.getGeoOperator(outputOpId);
 
     auto newConnection = std::make_shared<nt::GeometryConnection>(inputOpId, inputIndex, outputOpId, outputIndex); 
 

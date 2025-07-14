@@ -21,23 +21,21 @@ enzo::nt::OpId enzo::nt::NetworkManager::addOperator(nt::opConstructor ctorFunc)
 }
 
 
-enzo::nt::NetworkManager* enzo::nt::NetworkManager::getInstance()
+enzo::nt::NetworkManager& enzo::nt::NetworkManager::getInstance()
 {
-    if(instancePtr_==nullptr)
-    {
-        instancePtr_ = new enzo::nt::NetworkManager();
-    }
-    return instancePtr_;
+    static enzo::nt::NetworkManager instance;
+    return instance;
 }
 
 enzo::nt::GeometryOperator& enzo::nt::NetworkManager::getGeoOperator(nt::OpId opId)
 {
     std::cout << "gop size middle getter: " << gopStore_.size() <<"\n"; // <- size 0
-    if(opId>gopStore_.size())
+    auto it = gopStore_.find(opId);
+    if(it == gopStore_.end())
     {
         throw std::out_of_range("OpId: " + std::to_string(opId) + " > max opId: " + std::to_string(maxOpId_) + "\n");
     }
-    return *gopStore_.at(opId);
+    return *it->second;
 }
 
 bool enzo::nt::NetworkManager::isValidOp(nt::OpId opId)
@@ -64,7 +62,7 @@ void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
     }
     std::cout << "gop size middle: " << gopStore_.size() <<"\n"; // <- size: 1
     enzo::nt::GeometryOperator& displayOp = getGeoOperator(opId);
-    getInstance()->updateDisplay(displayOp.getOutputGeo(0));
+    updateDisplay(displayOp.getOutputGeo(0));
     std::cout << "gop size after: " << gopStore_.size() <<"\n";
 }
 
@@ -108,8 +106,6 @@ std::optional<enzo::nt::OpId> enzo::nt::NetworkManager::getDisplayOp()
 void enzo::nt::NetworkManager::_reset()
 {
     std::cout << "resetting network manager\n";
-    delete instancePtr_;
-    instancePtr_ = nullptr;
 
     gopStore_.clear();
     maxOpId_=0;
@@ -117,6 +113,5 @@ void enzo::nt::NetworkManager::_reset()
 }
 #endif
 
-enzo::nt::NetworkManager* enzo::nt::NetworkManager::instancePtr_ = nullptr;
-std::unordered_map<enzo::nt::OpId, std::unique_ptr<enzo::nt::GeometryOperator>> enzo::nt::NetworkManager::gopStore_;
+// std::unordered_map<enzo::nt::OpId, std::unique_ptr<enzo::nt::GeometryOperator>> enzo::nt::NetworkManager::gopStore_;
 
