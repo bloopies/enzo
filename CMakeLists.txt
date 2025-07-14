@@ -19,6 +19,7 @@ set(ENGINE_SOURCES
     src/Engine/Operator/GeometryConnection.cpp
     src/Engine/Operator/GeometryOpDef.cpp
     src/Engine/Operator/OperatorTable.cpp
+    src/Engine/Operator/Context.cpp
     src/Engine/Operator/GOP_test.cpp
     src/Engine/Network/NetworkManager.cpp
 )

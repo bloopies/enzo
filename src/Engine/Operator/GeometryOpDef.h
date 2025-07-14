@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/Operator/Geometry.h"
+#include "Engine/Operator/Context.h"
 #include "Engine/Types.h"
 #include <boost/config.hpp>
 
