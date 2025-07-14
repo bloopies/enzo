@@ -32,6 +32,7 @@ enzo::nt::NetworkManager* enzo::nt::NetworkManager::getInstance()
 
 enzo::nt::GeometryOperator& enzo::nt::NetworkManager::getGeoOperator(nt::OpId opId)
 {
+    std::cout << "gop size middle getter: " << gopStore_.size() <<"\n"; // <- size 0
     if(opId>gopStore_.size())
     {
         throw std::out_of_range("OpId: " + std::to_string(opId) + " > max opId: " + std::to_string(maxOpId_) + "\n");
@@ -51,6 +52,7 @@ bool enzo::nt::NetworkManager::isValidOp(nt::OpId opId)
 
 void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
 {
+    std::cout << "gop size before: " << gopStore_.size() <<"\n";
     displayOp_=opId;
     std::vector<enzo::nt::OpId> dependencyGraph = getDependencyGraph(opId);
     enzo::geo::Geometry prevGeometry;
@@ -60,8 +62,10 @@ void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
     {
         cookOp(dependencyOpId);
     }
+    std::cout << "gop size middle: " << gopStore_.size() <<"\n"; // <- size: 1
     enzo::nt::GeometryOperator& displayOp = getGeoOperator(opId);
-    updateDisplay(displayOp.getOutputGeo(0));
+    getInstance()->updateDisplay(displayOp.getOutputGeo(0));
+    std::cout << "gop size after: " << gopStore_.size() <<"\n";
 }
 
 void enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId)

@@ -67,7 +67,7 @@ qt_add_executable(${AppExec}
     ${ENGINE_SOURCES}
 )
 
-target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen TBB::tbb)
+target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen TBB::tbb Boost::filesystem Boost::system)
 target_include_directories(${AppExec} PUBLIC src)
 
 # tests

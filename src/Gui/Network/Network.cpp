@@ -1,6 +1,7 @@
 #include "Gui/Network/Network.h"
 #include "Engine/Operator/GeometryConnection.h"
 #include "Engine/Operator/GeometryOperator.h"
+#include "Engine/Operator/OperatorTable.h"
 #include "Engine/Types.h"
 #include "Gui/Network/DisplayFlagButton.h"
 #include "Gui/Network/NodeEdgeGraphic.h"
@@ -297,7 +298,7 @@ void Network::keyPressEvent(QKeyEvent *event)
         }
         case(Qt::Key_F):
         {
-            if(auto newNode = createNode(&GOP_transform::ctor))
+            if(auto newNode = createNode(op::OperatorTable::getOpConstructor(0)))
             {
                 newNode->setPos(viewPos);
             }
@@ -383,7 +384,7 @@ void Network::mouseReleaseEvent(QMouseEvent *event)
                 NodeGraphic* prevDisplayNode = nodeStore_.at(*prevDisplayOpId);
                 prevDisplayNode->setDisplayFlag(false);
             }
-            nm->setDisplayOp(opId);
+            enzo::nt::NetworkManager::setDisplayOp(opId);
             static_cast<DisplayFlagButton*>(clickedDisplayFlag)->setEnabled(true);
         }
         if(state_==State::MOVING_NODE)
