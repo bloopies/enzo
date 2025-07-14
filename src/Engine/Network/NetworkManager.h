@@ -22,7 +22,7 @@ public:
     static std::optional<OpId> getDisplayOp();
     static bool isValidOp(nt::OpId opId);
     static GeometryOperator& getGeoOperator(nt::OpId opId);
-    void setDisplayOp(OpId opId);
+    static void setDisplayOp(OpId opId);
 
     #ifdef UNIT_TEST
         static void _reset();
