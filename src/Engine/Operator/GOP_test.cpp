@@ -2,8 +2,8 @@
 #include "Engine/Operator/AttributeHandle.h"
 #include <oneapi/tbb/parallel_for.h>
 
-GOP_test::GOP_test(enzo::nt::OpId opId)
-: enzo::nt::GeometryOpDef(opId)
+GOP_test::GOP_test(enzo::nt::OpId opId, enzo::nt::NetworkManager& networkManager)
+: enzo::nt::GeometryOpDef(opId, networkManager)
 {
 
 }

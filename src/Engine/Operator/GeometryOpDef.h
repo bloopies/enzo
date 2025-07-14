@@ -3,13 +3,15 @@
 #include "Engine/Types.h"
 #include <boost/config.hpp>
 
+
 namespace enzo::nt
 {
+class NetworkManager;
 
 class BOOST_SYMBOL_EXPORT GeometryOpDef
 {
 public:
-    GeometryOpDef(enzo::nt::OpId opId);
+    GeometryOpDef(enzo::nt::OpId opId, NetworkManager& networkManager);
     virtual void cookOp() = 0;
     geo::Geometry& getOutputGeo(unsigned outputIndex);
 private:
@@ -17,6 +19,7 @@ private:
     unsigned int minInputs_;
     unsigned int maxInputs_;
     unsigned int maxOutputs_;
+    NetworkManager& networkManager_;
 protected:
     enzo::nt::OpId opId_;
     const enzo::geo::Geometry& getInputGeoView(unsigned int inputIndex);
@@ -27,5 +30,5 @@ protected:
     void setOutputGeometry(unsigned int outputIndex, enzo::geo::Geometry geometry);
 };
 
-using opConstructor = GeometryOpDef* (*)(enzo::nt::OpId);
+using opConstructor = GeometryOpDef* (*)(enzo::nt::OpId, enzo::nt::NetworkManager&);
 }

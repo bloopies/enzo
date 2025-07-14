@@ -20,7 +20,6 @@
 #include <qnamespace.h>
 #include <QLine>
 #include "Engine/Operator/GOP_test.h"
-#include "Engine/Operator/GOP_transform.h"
 
 using namespace enzo;
 

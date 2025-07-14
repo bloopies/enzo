@@ -17,8 +17,8 @@ extern "C"
 
 }
 
-GopTransform::GopTransform(enzo::nt::OpId opId)
-: enzo::nt::GeometryOpDef(opId)
+GopTransform::GopTransform(enzo::nt::OpId opId, enzo::nt::NetworkManager& networkManager)
+: enzo::nt::GeometryOpDef(opId, networkManager)
 {
 
 }

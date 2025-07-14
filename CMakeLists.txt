@@ -20,7 +20,6 @@ set(ENGINE_SOURCES
     src/Engine/Operator/GeometryOpDef.cpp
     src/Engine/Operator/OperatorTable.cpp
     src/Engine/Operator/GOP_test.cpp
-    src/Engine/Operator/GOP_transform.cpp
     src/Engine/Network/NetworkManager.cpp
 )
 
