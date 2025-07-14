@@ -5,11 +5,11 @@ class GopTransform
 : public enzo::nt::GeometryOpDef
 {
 public:
-    GopTransform(enzo::nt::OpId opId);
+    GopTransform(enzo::nt::OpId opId, enzo::nt::NetworkManager& networkManager);
     virtual void cookOp();
-    static enzo::nt::GeometryOpDef* ctor(enzo::nt::OpId opId)
+    static enzo::nt::GeometryOpDef* ctor(enzo::nt::OpId opId, enzo::nt::NetworkManager& networkManager)
     {
-        return new GopTransform(opId);
+        return new GopTransform(opId, networkManager);
     }
 
 };
