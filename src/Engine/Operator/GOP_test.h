@@ -5,11 +5,11 @@ class GOP_test
 : public enzo::nt::GeometryOpDef
 {
 public:
-    GOP_test(enzo::nt::OpId opId, enzo::nt::NetworkManager& networkManager);
-    virtual void cookOp();
-    static enzo::nt::GeometryOpDef* ctor(enzo::nt::OpId opId, enzo::nt::NetworkManager& networkManager)
+    GOP_test(enzo::nt::OpId opId);
+    virtual void cookOp(enzo::op::Context context);
+    static enzo::nt::GeometryOpDef* ctor(enzo::nt::OpId opId)
     {
-        return new GOP_test(opId, networkManager);
+        return new GOP_test(opId);
     }
 
 };

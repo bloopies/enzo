@@ -69,7 +69,8 @@ void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
 void enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId)
 {
     enzo::nt::GeometryOperator& op = getGeoOperator(opId);
-    op.cookOp();
+    enzo::op::Context context(opId, enzo::nt::nm());
+    op.cookOp(context);
 }
 
 std::vector<enzo::nt::OpId> enzo::nt::NetworkManager::getDependencyGraph(enzo::nt::OpId opId)

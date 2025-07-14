@@ -17,20 +17,20 @@ extern "C"
 
 }
 
-GopTransform::GopTransform(enzo::nt::OpId opId, enzo::nt::NetworkManager& networkManager)
-: enzo::nt::GeometryOpDef(opId, networkManager)
+GopTransform::GopTransform(enzo::nt::OpId opId)
+: enzo::nt::GeometryOpDef(opId)
 {
 
 }
 
-void GopTransform::cookOp()
+void GopTransform::cookOp(enzo::op::Context context)
 {
     using namespace enzo;
 
     if(outputRequested(0))
     {
         // copy input geometry
-        geo::Geometry geo = cloneInputGeo(0);
+        geo::Geometry geo = context.cloneInputGeo(0);
 
         // ----
         // create geometry start

@@ -2,6 +2,7 @@
 #include <memory>
 #include "Engine/Network/NetworkManager.h"
 #include <optional>
+#include "Engine/Operator/Context.h"
 #include "Engine/Operator/GOP_test.h"
 #include <iostream>
 
@@ -24,16 +25,16 @@ void enzo::nt::connectOperators(enzo::nt::OpId inputOpId, unsigned int inputInde
 }
 
 nt::GeometryOperator::GeometryOperator(enzo::nt::OpId opId, nt::opConstructor ctorFunc)
-: opId_{opId}, opDef_(ctorFunc(opId, nt::nm()))
+: opId_{opId}, opDef_(ctorFunc(opId))
 {
     // TODO: drive by geometry definition
     maxInputs_=4;
     maxOutputs_=4;
 }
 
-void enzo::nt::GeometryOperator::cookOp()
+void enzo::nt::GeometryOperator::cookOp(op::Context context)
 {
-    opDef_->cookOp();
+    opDef_->cookOp(context);
 }
 
 geo::Geometry& enzo::nt::GeometryOperator::getOutputGeo(unsigned outputIndex)

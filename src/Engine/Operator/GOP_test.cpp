@@ -2,13 +2,13 @@
 #include "Engine/Operator/AttributeHandle.h"
 #include <oneapi/tbb/parallel_for.h>
 
-GOP_test::GOP_test(enzo::nt::OpId opId, enzo::nt::NetworkManager& networkManager)
-: enzo::nt::GeometryOpDef(opId, networkManager)
+GOP_test::GOP_test(enzo::nt::OpId opId)
+: enzo::nt::GeometryOpDef(opId)
 {
 
 }
 
-void GOP_test::cookOp()
+void GOP_test::cookOp(enzo::op::Context context)
 {
     using namespace enzo;
     // std::cout << "COOKING\n";
@@ -16,7 +16,7 @@ void GOP_test::cookOp()
     if(outputRequested(0))
     {
         // copy input geometry
-        geo::Geometry geo = cloneInputGeo(0);
+        geo::Geometry geo = context.cloneInputGeo(0);
 
         // ----
         // create geometry start

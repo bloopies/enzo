@@ -17,7 +17,7 @@ public:
     GeometryOperator(const GeometryOperator&)            = delete;
     GeometryOperator& operator=(const GeometryOperator&) = delete;
 
-    void cookOp();
+    void cookOp(op::Context context);
     geo::Geometry& getOutputGeo(unsigned outputIndex);
 
     void addInputConnection(std::shared_ptr<nt::GeometryConnection> connection);
