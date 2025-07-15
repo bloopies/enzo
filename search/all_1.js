@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['dependencies_0',['Dependencies',['../index.html#autotoc_md0',1,'']]],
-  ['docs_1',['Docs',['../index.html#autotoc_md1',1,'']]]
+  ['context_0',['Context',['../classenzo_1_1op_1_1Context.html',1,'enzo::op']]]
 ];
