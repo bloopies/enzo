@@ -25,6 +25,7 @@ public:
     enzo::nt::OpId getOpId() const;
 
     unsigned int getIndex() const;
+    void setHover(bool state);
 
 private:
     int socketSize_ = 1;
@@ -37,6 +38,7 @@ private:
     qreal paddingScale_=20;
     QRectF boundRect_;
     enzo::nt::OpId opId_;
+    bool isHover_ = false;
 
     void initBoundingBox();
 protected:

@@ -10,7 +10,6 @@ SocketGraphic::SocketGraphic(enzo::nt::SocketIOType type, enzo::nt::OpId opId, u
     brushActive_ = QBrush("white");
     brushInactive_ = QBrush("#9f9f9f");
     socketSize_ = 3;
-    setAcceptHoverEvents(true);
     initBoundingBox();
 }
 
@@ -100,6 +99,17 @@ void SocketGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     // painter->drawRect(boundRect_);
 
  
+}
+
+void SocketGraphic::setHover(bool state)
+{
+    bool prevState = hovered_;
+
+    hovered_ = state;
+    if(state!=prevState)
+    {
+        update();
+    }
 }
 
 void SocketGraphic::hoverEnterEvent(QGraphicsSceneHoverEvent *event)

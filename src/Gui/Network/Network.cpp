@@ -190,6 +190,16 @@ void Network::mouseMoved(QMouseEvent *event)
 
     QList<QGraphicsItem*> hoverItems = view_->items(event->pos());
 
+    // handle previous items
+    for(QGraphicsItem* item : prevHoverItems_)
+    {
+        if(isType<SocketGraphic>(item))
+        {
+            static_cast<SocketGraphic*>(item)->setHover(false);
+        }
+    }
+    prevHoverItems_.clear();
+
     if(state_==State::MOVING_NODE)
     {
         moveNodes(view_->mapToScene(event->pos())+nodeMoveDelta_);
@@ -241,7 +251,11 @@ void Network::mouseMoved(QMouseEvent *event)
         std::cout << "unhighlighting\n";
         highlightEdge(prevHoverItem, false);
     }
-
+    if(auto hoverSocket = closestItemOfType<SocketGraphic>(hoverItems, view_->mapToScene(event->pos())))
+    {
+        static_cast<SocketGraphic*>(hoverSocket)->setHover(true);
+        prevHoverItems_.insert(hoverSocket);
+    }
 }
 
 void Network::moveNodes(QPointF pos)
@@ -331,14 +345,10 @@ void Network::highlightEdge(QGraphicsItem* edge, bool state)
     {
         static_cast<NodeEdgeGraphic*>(edge)->setDeleteHighlight(true);
         prevHoverItem_=edge;
-        // NOTE: sloppy fix for color not updating
-        view_->update();
     }
     else
     {
         static_cast<NodeEdgeGraphic*>(edge)->setDeleteHighlight(false);
-        // NOTE: sloppy fix for color not updating
-        view_->update();
     }
 
 }

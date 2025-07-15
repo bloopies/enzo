@@ -43,6 +43,7 @@ private:
     SocketGraphic* startSocket_=nullptr;
 
     QGraphicsItem* prevHoverItem_=nullptr;
+    std::unordered_set<QGraphicsItem*> prevHoverItems_;
     // nodes currently being moved
     std::vector<QGraphicsItem*> moveNodeBuffer;
     QPointF nodeMoveDelta_;
