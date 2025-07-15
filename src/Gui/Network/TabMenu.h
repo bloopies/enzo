@@ -2,6 +2,7 @@
 
 #include <qlineedit.h>
 #include <QLabel>
+#include <qscrollarea.h>
 #include <qwidget.h>
 #include <QVBoxLayout>
 #include <iostream>
@@ -13,17 +14,17 @@ class TabMenu
 {
 public:
     TabMenu(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
-    ~TabMenu()
-    {
-        std::cout << "dtor\n";
-    }
     void showOnMouse(float dx=0, float dy=0);
      
 private:
+    QVBoxLayout* mainLayout_;
     QLineEdit* searchBar_;
+    QScrollArea* nodeScrollArea_;
+    QWidget* nodeHolder_;
+    QVBoxLayout* nodeHolderLayout_;
 protected:
     void focusOutEvent(QFocusEvent *event) override;
     bool event(QEvent *event) override;
-    void resizeEvent(QResizeEvent *event) override;
+    // void resizeEvent(QResizeEvent *event) override;
 };
 }

@@ -111,7 +111,6 @@ private:
         if(filteredItems.size()==0) return nullptr;
         if(filteredItems.size()==1) return filteredItems.at(0);
 
-        std::cout << "\n\n new item " << filteredItems.size()  << "\n";
         QGraphicsItem* closestItem=filteredItems.at(0);
         float closestDist;
         {
@@ -126,7 +125,6 @@ private:
             }
             closestDist = QLineF(itemPos, centerPos).length();
         }
-        std::cout << "currentDist: " << closestDist << "\n";
 
         for(size_t i=1; i<filteredItems.size(); ++i)
         {
@@ -142,7 +140,6 @@ private:
                 itemPos = item->scenePos();
             }
             auto currentDist = QLineF(itemPos, centerPos).length();
-            std::cout << "currentDist: " << currentDist << "\n";
             if(currentDist < closestDist)
             {
                 closestItem = item;
