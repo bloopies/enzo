@@ -38,7 +38,6 @@ private:
     qreal paddingScale_=20;
     QRectF boundRect_;
     enzo::nt::OpId opId_;
-    bool isHover_ = false;
 
     void initBoundingBox();
 protected:

@@ -57,13 +57,10 @@ void Network::deleteEdge(QGraphicsItem* edge)
 {
     std::cout << "----\ndeleting edge\n";
     if(!edge) return;
-    if(prevHoverItem_==edge)
+    if(auto it = prevHoverItems_.find(edge); it != prevHoverItems_.end())
     {
-        prevHoverItem_=nullptr;
+        prevHoverItems_.erase(it);
     }
-    // scene_->removeItem(edge);
-    // scene_->update();
-    // view_->update();
     // NOTE: deleting edge kept giving me segmentation faults
     // I coundn't figure it out so I'm just leaving it for now
     // delete edge;
@@ -86,14 +83,15 @@ void Network::leftMousePressed(QMouseEvent *event)
     Qt::KeyboardModifiers mods = event->modifiers();
     leftMouseStart = event->pos();
 
-    // QGraphicsItem* itemClicked = view_->itemAt(event->pos());
     QList<QGraphicsItem*> clickedItems = view_->items(event->pos());
     QGraphicsItem* clickedSocket = itemOfType<SocketGraphic>(clickedItems);
-    QGraphicsItem* clickedEdge = itemOfType<NodeEdgeGraphic>(clickedItems);
 
 
     // delete edges
-    if(mods & Qt::ControlModifier && clickedEdge)
+    if(
+        QGraphicsItem* clickedEdge = closestItemOfType<NodeEdgeGraphic>(clickedItems, view_->mapToScene(event->pos()));
+        mods & Qt::ControlModifier && clickedEdge
+    )
     {
         deleteEdge(clickedEdge);
     }
@@ -180,9 +178,21 @@ void Network::destroyFloatingEdge()
 
 void Network::mouseMoved(QMouseEvent *event)
 {
-    // cache and reset prev hover item
-    QGraphicsItem* prevHoverItem=prevHoverItem_;
-    prevHoverItem_=nullptr;
+    // cache and reset prev hover items
+    std::unordered_set<QGraphicsItem*> prevHoverItems = prevHoverItems_;
+    prevHoverItems_.clear();
+    // handle previous items
+    for(QGraphicsItem* item : prevHoverItems)
+    {
+        if(isType<SocketGraphic>(item))
+        {
+            static_cast<SocketGraphic*>(item)->setHover(false);
+        }
+        if(isType<NodeEdgeGraphic>(item))
+        {
+            static_cast<NodeEdgeGraphic*>(item)->setDeleteHighlight(false);
+        }
+    }
 
     // modifiers
     Qt::KeyboardModifiers mods = event->modifiers();
@@ -190,15 +200,6 @@ void Network::mouseMoved(QMouseEvent *event)
 
     QList<QGraphicsItem*> hoverItems = view_->items(event->pos());
 
-    // handle previous items
-    for(QGraphicsItem* item : prevHoverItems_)
-    {
-        if(isType<SocketGraphic>(item))
-        {
-            static_cast<SocketGraphic*>(item)->setHover(false);
-        }
-    }
-    prevHoverItems_.clear();
 
     if(state_==State::MOVING_NODE)
     {
@@ -227,7 +228,7 @@ void Network::mouseMoved(QMouseEvent *event)
         return;
     }
 
-    QGraphicsItem* hoverEdge = itemOfType<NodeEdgeGraphic>(hoverItems);
+    QGraphicsItem* hoverEdge = closestItemOfType<NodeEdgeGraphic>(hoverItems, view_->mapToScene(event->pos()));
 
     // set node edge color
     if(ctrlMod && hoverEdge)
@@ -238,20 +239,13 @@ void Network::mouseMoved(QMouseEvent *event)
         }
         else
         {
-            std::cout << "highlighting\n";
-            highlightEdge(hoverEdge, true);
+            static_cast<NodeEdgeGraphic*>(hoverEdge)->setDeleteHighlight(true);
+            prevHoverItems_.insert(hoverEdge);
         }
     }
-    // reset node edge color
-    if(
-        prevHoverItem &&
-        (!ctrlMod || hoverEdge!=prevHoverItem)
-    )
-    {
-        std::cout << "unhighlighting\n";
-        highlightEdge(prevHoverItem, false);
-    }
-    if(auto hoverSocket = closestItemOfType<SocketGraphic>(hoverItems, view_->mapToScene(event->pos())))
+
+    // highlight hovered socket
+    else if(auto hoverSocket = closestItemOfType<SocketGraphic>(hoverItems, view_->mapToScene(event->pos())))
     {
         static_cast<SocketGraphic*>(hoverSocket)->setHover(true);
         prevHoverItems_.insert(hoverSocket);
@@ -291,7 +285,17 @@ void Network::keyPressEvent(QKeyEvent *event)
             QGraphicsItem* hoverItem = itemOfType<NodeEdgeGraphic>(hoverItems);
             if(hoverItem!=nullptr)
             {
-                highlightEdge(hoverItem, true);
+                static_cast<NodeEdgeGraphic*>(hoverItem)->setDeleteHighlight(true);
+
+                // deselect sockets
+                for(auto item : hoverItems)
+                {
+                    if(isType<SocketGraphic>(item))
+                    {
+                        static_cast<SocketGraphic*>(item)->setHover(false);
+                    }
+                }
+                prevHoverItems_.insert(hoverItem);
             }
             break;
         }
@@ -338,36 +342,23 @@ NodeGraphic* Network::createNode(nt::opConstructor ctorFunc)
 }
 
 
-void Network::highlightEdge(QGraphicsItem* edge, bool state)
-{
-    if(!edge || !isType<NodeEdgeGraphic>(edge)) return;
-    if(state)
-    {
-        static_cast<NodeEdgeGraphic*>(edge)->setDeleteHighlight(true);
-        prevHoverItem_=edge;
-    }
-    else
-    {
-        static_cast<NodeEdgeGraphic*>(edge)->setDeleteHighlight(false);
-    }
-
-}
-
-
 void Network::keyReleaseEvent(QKeyEvent *event)
 {
     // modifiers
     Qt::KeyboardModifiers mods = event->modifiers();
     bool ctrlMod = mods & Qt::ControlModifier;
 
-    // edge detection
-    if(
-        prevHoverItem_ &&
-        event->key() == Qt::Key_Control &&
-        isType<NodeEdgeGraphic>(prevHoverItem_)
-    )
+    // handle previous items
+    for(QGraphicsItem* item : prevHoverItems_)
     {
-        highlightEdge(prevHoverItem_, false);
+        if(
+            event->key() == Qt::Key_Control &&
+            isType<NodeEdgeGraphic>(item)
+        )
+        {
+            static_cast<NodeEdgeGraphic*>(item)->setDeleteHighlight(false);
+        }
+
     }
 }
 

@@ -16,6 +16,7 @@
 #include <iostream>
 #include <QPointer>
 #include <unordered_map>
+#include <unordered_set>
 
 class Network
 : public QWidget
@@ -42,7 +43,6 @@ private:
     FloatingEdgeGraphic* floatingEdge_=nullptr;
     SocketGraphic* startSocket_=nullptr;
 
-    QGraphicsItem* prevHoverItem_=nullptr;
     std::unordered_set<QGraphicsItem*> prevHoverItems_;
     // nodes currently being moved
     std::vector<QGraphicsItem*> moveNodeBuffer;
@@ -58,7 +58,6 @@ private:
 
     NodeGraphic* createNode(enzo::nt::opConstructor ctorFunc);
 
-    void highlightEdge(QGraphicsItem* edge, bool state);
     void leftMousePressed(QMouseEvent* event);
 
     void moveNodes(QPointF pos);
@@ -71,6 +70,19 @@ private:
 
     template<typename T>
     QGraphicsItem* itemOfType(QList<QGraphicsItem*> items)
+    {
+        for(QGraphicsItem* item : items)
+        {
+            if(item && typeid(*item)==typeid(T))
+            {
+                return item;
+            }
+        }
+        return nullptr;
+    }
+
+    template<typename T>
+    QGraphicsItem* itemOfType(std::unordered_set<QGraphicsItem*> items)
     {
         for(QGraphicsItem* item : items)
         {
@@ -97,13 +109,38 @@ private:
         if(filteredItems.size()==0) return nullptr;
         if(filteredItems.size()==1) return filteredItems.at(0);
 
+        std::cout << "\n\n new item " << filteredItems.size()  << "\n";
         QGraphicsItem* closestItem=filteredItems.at(0);
-        float closestDist=QLineF(closestItem->scenePos(), centerPos).length();
+        float closestDist;
+        {
+            QPointF itemPos;
+            if constexpr (std::is_base_of<NodeEdgeGraphic, T>::value)
+            {
+                itemPos = static_cast<NodeEdgeGraphic*>(closestItem)->closestPoint(centerPos);
+            }
+            else
+            {
+                itemPos = closestItem->scenePos();
+            }
+            closestDist = QLineF(itemPos, centerPos).length();
+        }
+        std::cout << "currentDist: " << closestDist << "\n";
 
         for(size_t i=1; i<filteredItems.size(); ++i)
         {
             QGraphicsItem* item = filteredItems.at(i);
-            auto currentDist = QLineF(item->scenePos(), centerPos).length();
+
+            QPointF itemPos;
+            if constexpr (std::is_base_of<NodeEdgeGraphic, T>::value)
+            {
+                itemPos = static_cast<NodeEdgeGraphic*>(item)->closestPoint(centerPos);
+            }
+            else
+            {
+                itemPos = item->scenePos();
+            }
+            auto currentDist = QLineF(itemPos, centerPos).length();
+            std::cout << "currentDist: " << currentDist << "\n";
             if(currentDist < closestDist)
             {
                 closestItem = item;

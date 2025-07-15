@@ -71,10 +71,15 @@ void NodeEdgeGraphic::setPos(QPointF pos1, QPointF pos2)
     updatePath();
 }
 
-void NodeEdgeGraphic::setDeleteHighlight(bool enable)
+void NodeEdgeGraphic::setDeleteHighlight(bool state)
 {
-    deleteHighlight_=enable;
-    update();
+    bool stateChanged=deleteHighlight_!=state;
+    deleteHighlight_=state;
+
+    if(stateChanged)
+    {
+        update();
+    }
 }
 
 void NodeEdgeGraphic::setStartPos(QPointF pos)
@@ -105,6 +110,22 @@ QPainterPath NodeEdgeGraphic::shape() const{
     stroker.setWidth(padding_);
     return stroker.createStroke(path_);
 }
+
+QPointF NodeEdgeGraphic::closestPoint(QPointF startPos)
+{
+    QPointF lineVec = pos2_ - pos1_;
+    QPointF pointVec = startPos - pos1_;
+
+    double lineLenSquared = QPointF::dotProduct(lineVec, lineVec);
+    if (lineLenSquared == 0.0)
+        return pos1_;
+
+    double t = QPointF::dotProduct(pointVec, lineVec) / lineLenSquared;
+
+    QPointF closest = pos1_ + t * lineVec;
+    return closest;
+}
+
 
 // void NodeEdgeGraphic::setColor(QColor color)
 // {

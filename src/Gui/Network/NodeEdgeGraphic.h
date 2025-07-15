@@ -21,11 +21,13 @@ public:
     void setStartPos(QPointF pos);
     void setEndPos(QPointF pos);
     void cleanUp();
-    void setDeleteHighlight(bool enable);
+    void setDeleteHighlight(bool state);
     QPen deleteHighlightPen_;
     QPen defaultPen_;
 
     bool deleteHighlight_=false;
+
+    QPointF closestPoint(QPointF startPos);
 
 private:
     SocketGraphic* socket1_;
