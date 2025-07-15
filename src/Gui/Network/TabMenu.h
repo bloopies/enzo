@@ -24,5 +24,6 @@ private:
 protected:
     void focusOutEvent(QFocusEvent *event) override;
     bool event(QEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 };
 }

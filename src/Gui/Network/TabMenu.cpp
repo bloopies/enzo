@@ -8,12 +8,13 @@
 #include <qnamespace.h>
 #include <qwidget.h>
 #include <QEvent>
+#include <QPainterPath>
 
 enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
 : QWidget(parent, f)
 {
     std::cout << "ctor\n";
-    searchBar_ = new QLineEdit("hello world");
+    searchBar_ = new QLineEdit();
     auto box = new QVBoxLayout(this);
     box->addWidget(searchBar_);
 
@@ -28,6 +29,7 @@ void enzo::ui::TabMenu::showOnMouse(float dx, float dy)
     std::cout << "showing\n";
     QPoint cursorPos = mapToParent(mapFromGlobal(QCursor::pos()));
     std::cout << "tab menu pos: " << cursorPos.x() << " " << cursorPos.y() << "\n";
+    searchBar_->clear();
     move(cursorPos + QPoint(dx, dy));
     show();
     setFocus();
@@ -74,3 +76,11 @@ bool enzo::ui::TabMenu::event(QEvent *event)
 
 }
 
+void enzo::ui::TabMenu::resizeEvent(QResizeEvent *event)
+{
+    QPainterPath path;
+    constexpr float radius = 10;
+    path.addRoundedRect(contentsRect(), radius, radius);
+    QRegion region = QRegion(path.toFillPolygon().toPolygon());
+    this->setMask(region);
+}
