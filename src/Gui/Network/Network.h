@@ -17,6 +17,7 @@
 #include <QPointer>
 #include <unordered_map>
 #include <unordered_set>
+#include "Gui/Network/TabMenu.h"
 
 class Network
 : public QWidget
@@ -57,6 +58,7 @@ private:
     void deleteEdge(QGraphicsItem* edge);
 
     NodeGraphic* createNode(enzo::nt::opConstructor ctorFunc);
+    enzo::ui::TabMenu* tabMenu_;
 
     void leftMousePressed(QMouseEvent* event);
 

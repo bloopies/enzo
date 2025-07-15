@@ -20,6 +20,7 @@
 #include <qnamespace.h>
 #include <QLine>
 #include "Engine/Operator/GOP_test.h"
+#include "Gui/Network/TabMenu.h"
 
 using namespace enzo;
 
@@ -32,6 +33,7 @@ Network::Network(QWidget* parent)
     this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 
+    tabMenu_ = new enzo::ui::TabMenu(this);
 
     this->setLayout(mainLayout_); 
 
@@ -305,6 +307,13 @@ void Network::keyPressEvent(QKeyEvent *event)
             break;
         }
         case(Qt::Key_Tab):
+        {
+            std::cout << "here\n";
+            tabMenu_->showOnMouse();
+            std::cout << "here\n";
+            break;
+        }
+        case(Qt::Key_G):
         {
             if(auto newNode = createNode(&GOP_test::ctor))
             {

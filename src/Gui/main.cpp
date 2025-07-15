@@ -5,9 +5,6 @@
 #include <boost/dll/import.hpp>
 
 #include "Interface.h"
-#include "Gui/Network/TabMenu.h"
-#include <iostream>
-#include <QTimer>
 
 int main(int argc, char **argv)
 {
@@ -29,19 +26,8 @@ int main(int argc, char **argv)
 
     QApplication app (argc, argv);
 
-    QPoint cursorPos = QCursor::pos();
-
     EnzoUI interface;
     interface.show();
-
-    enzo::ui::TabMenu tabMenu(&interface);
-    QTimer::singleShot(1000, [&]{
-        QPoint cursorPos = QCursor::pos();
-        std::cout << cursorPos.x() << " " << cursorPos.y() << "\n";
-        tabMenu.showOnMouse();
-    });
-
-
 
     return app.exec();
 }
