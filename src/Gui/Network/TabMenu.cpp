@@ -83,7 +83,6 @@ void enzo::ui::TabMenu::showOnMouse(float dx, float dy)
     setDisabled(false);
     std::cout << "showing\n";
     QPoint cursorPos = mapToParent(mapFromGlobal(QCursor::pos()));
-    std::cout << "tab menu pos: " << cursorPos.x() << " " << cursorPos.y() << "\n";
     searchBar_->clear();
     move(cursorPos + QPoint(dx, dy));
     show();

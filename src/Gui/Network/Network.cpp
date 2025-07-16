@@ -338,6 +338,9 @@ NodeGraphic* Network::createNode(nt::opConstructor ctorFunc)
     if(nt::OpId id = enzo::nt::nm().addOperator(ctorFunc))
     {
         NodeGraphic* newNode = new NodeGraphic(id);
+        QPointF cursorPos = view_->mapToScene(mapFromGlobal(QCursor::pos()));
+        newNode->setPos(cursorPos);
+
         scene_->addItem(newNode);
         nodeStore_.emplace(id, newNode);
         
