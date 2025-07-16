@@ -1,23 +1,5 @@
-#include "Engine/Operator/OperatorTable.h"
 #include "OpDefs/GopTransform.hpp"
-#include <boost/config.hpp>
-#include <boost/dll.hpp>
-#include <string>
 #include "Engine/Operator/AttributeHandle.h"
-#include <iostream>
-
-extern "C"
-{
-    BOOST_SYMBOL_EXPORT void newSopOperator(enzo::op::addOperatorPtr addOperator)
-    {
-        addOperator(
-            "transform",
-            "Transform",
-            &GopTransform::ctor
-        );
-    }
-
-}
 
 GopTransform::GopTransform(enzo::nt::OpId opId)
 : enzo::nt::GeometryOpDef(opId)

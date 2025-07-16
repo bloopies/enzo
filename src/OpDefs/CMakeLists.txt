@@ -8,7 +8,7 @@ find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 
 set(libName enzoOps1)
 add_library(${libName} SHARED
-    main.cpp
+    RegisterPlugin.cpp
     ../Engine/Operator/OperatorTable.cpp
     ../Engine/Operator/GeometryOpDef.cpp
     ../Engine/Operator/GeometryOperator.cpp
@@ -17,6 +17,8 @@ add_library(${libName} SHARED
     ../Engine/Operator/Geometry.cpp
     ../Engine/Operator/Attribute.cpp
     ../Engine/Network/NetworkManager.cpp
+    GopTransform.cpp
+    GopHouse.cpp
 )
 target_link_libraries(${libName} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen TBB::tbb)
 

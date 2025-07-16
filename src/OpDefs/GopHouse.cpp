@@ -1,14 +1,14 @@
-#include "Engine/Operator/GOP_test.h"
+#include "OpDefs/GopHouse.h"
 #include "Engine/Operator/AttributeHandle.h"
 #include <oneapi/tbb/parallel_for.h>
 
-GOP_test::GOP_test(enzo::nt::OpId opId)
+GOP_house::GOP_house(enzo::nt::OpId opId)
 : enzo::nt::GeometryOpDef(opId)
 {
 
 }
 
-void GOP_test::cookOp(enzo::op::Context context)
+void GOP_house::cookOp(enzo::op::Context context)
 {
     using namespace enzo;
     // std::cout << "COOKING\n";

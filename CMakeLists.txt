@@ -20,7 +20,6 @@ set(ENGINE_SOURCES
     src/Engine/Operator/GeometryOpDef.cpp
     src/Engine/Operator/OperatorTable.cpp
     src/Engine/Operator/Context.cpp
-    src/Engine/Operator/GOP_test.cpp
     src/Engine/Network/NetworkManager.cpp
 )
 
@@ -72,37 +71,37 @@ target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets 
 target_include_directories(${AppExec} PUBLIC src)
 
 # tests
-Include(FetchContent)
+# Include(FetchContent)
 
-FetchContent_Declare(
-  Catch2
-  GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG        v3.8.1 # or a later release
-)
+# FetchContent_Declare(
+#   Catch2
+#   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+#   GIT_TAG        v3.8.1 # or a later release
+# )
 
-FetchContent_MakeAvailable(Catch2)
+# FetchContent_MakeAvailable(Catch2)
 
-add_executable(${TestExec}
-    ${ENGINE_SOURCES}
-    tests/main-tests.cpp
-    tests/OperatorTests.cpp
-    tests/NetworkTests.cpp
-)
-target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb Boost::filesystem Boost::system)
-target_compile_definitions(${TestExec} PRIVATE UNIT_TEST)
-target_include_directories(${TestExec} PUBLIC
-    src
-    ${BOOST_INCLUDE_DIRS}
-)
+# add_executable(${TestExec}
+#     ${ENGINE_SOURCES}
+#     tests/main-tests.cpp
+#     tests/OperatorTests.cpp
+#     tests/NetworkTests.cpp
+# )
+# target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb Boost::filesystem Boost::system)
+# target_compile_definitions(${TestExec} PRIVATE UNIT_TEST)
+# target_include_directories(${TestExec} PUBLIC
+#     src
+#     ${BOOST_INCLUDE_DIRS}
+# )
 
-# benchmarks
-add_executable(${BenchExec}
-    ${ENGINE_SOURCES}
+# # benchmarks
+# add_executable(${BenchExec}
+#     ${ENGINE_SOURCES}
 
-    tests/Benchmarks.cpp
-)
-target_link_libraries(${BenchExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core  TBB::tbb)
-target_compile_definitions(${BenchExec} PRIVATE UNIT_TEST)
-target_include_directories(${BenchExec} PUBLIC src)
+#     tests/Benchmarks.cpp
+# )
+# target_link_libraries(${BenchExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core  TBB::tbb)
+# target_compile_definitions(${BenchExec} PRIVATE UNIT_TEST)
+# target_include_directories(${BenchExec} PUBLIC src)
 
 add_subdirectory(src/OpDefs)

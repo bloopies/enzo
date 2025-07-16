@@ -19,7 +19,6 @@
 #include <qgraphicsitem.h>
 #include <qnamespace.h>
 #include <QLine>
-#include "Engine/Operator/GOP_test.h"
 #include "Gui/Network/TabMenu.h"
 
 using namespace enzo;
@@ -315,7 +314,7 @@ void Network::keyPressEvent(QKeyEvent *event)
         }
         case(Qt::Key_G):
         {
-            if(auto newNode = createNode(&GOP_test::ctor))
+            if(auto newNode = createNode(op::OperatorTable::getOpConstructor(1)))
             {
                 newNode->setPos(viewPos);
             }

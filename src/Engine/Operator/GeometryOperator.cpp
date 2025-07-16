@@ -3,7 +3,6 @@
 #include "Engine/Network/NetworkManager.h"
 #include <optional>
 #include "Engine/Operator/Context.h"
-#include "Engine/Operator/GOP_test.h"
 #include <iostream>
 
 using namespace enzo;
