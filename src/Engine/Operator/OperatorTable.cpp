@@ -2,9 +2,10 @@
 
 #include <iostream>
 
-void enzo::op::OperatorTable::addOperator(nt::opConstructor ctorFunc)
+void enzo::op::OperatorTable::addOperator(const char* internalName, const char* displayName, nt::opConstructor ctorFunc)
 {
     std::cout << "OPERATOR TABLE ADDED\n";
+    std::cout << "adding operator: " << displayName << "\n";
     ctorStore_.push_back(ctorFunc);
 }
 

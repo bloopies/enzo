@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     QSurfaceFormat::setDefaultFormat(format);
 
     // setup table
-    auto initPlugin = boost::dll::import_symbol<void(void (*addOperator)(enzo::nt::opConstructor))>(
+    auto initPlugin = boost::dll::import_symbol<void(enzo::op::addOperatorPtr)>(
         "build/src/OpDefs/libenzoOps1.so", "newSopOperator"
     );
 

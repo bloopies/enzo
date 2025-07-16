@@ -35,7 +35,7 @@ TEST_CASE("boost dll")
         );
     std::cout << "VAR: " << *cpp_var << "\n";
 
-    auto cpp11_func = boost::dll::import_symbol<void(void (*addOperator)(enzo::nt::opConstructor))>(
+    auto cpp11_func = boost::dll::import_symbol<void(enzo::op::addOperatorPtr)>(
         "build/src/OpDefs/libenzoOps1.so", "newSopOperator"
     );
 

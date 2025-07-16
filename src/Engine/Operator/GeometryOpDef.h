@@ -30,4 +30,5 @@ protected:
 };
 
 using opConstructor = GeometryOpDef* (*)(enzo::nt::OpId);
+
 }

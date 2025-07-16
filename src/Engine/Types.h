@@ -37,6 +37,5 @@ namespace enzo
             Input,
             Output
         };
-
     }
 }

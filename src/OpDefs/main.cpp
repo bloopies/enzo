@@ -7,10 +7,12 @@
 #include <iostream>
 
 extern "C"
-{ BOOST_SYMBOL_EXPORT std::string myVar = "hello world";
-    BOOST_SYMBOL_EXPORT void newSopOperator(void (*addOperator)(enzo::nt::opConstructor))
+{
+    BOOST_SYMBOL_EXPORT void newSopOperator(enzo::op::addOperatorPtr addOperator)
     {
         addOperator(
+            "transform",
+            "Transform",
             &GopTransform::ctor
         );
     }
