@@ -33,6 +33,7 @@ public:
         DEFAULT,
         MOVING_NODE
     };
+    NodeGraphic* createNode(enzo::nt::opConstructor ctorFunc);
 
 private:
     QLayout* mainLayout_;
@@ -57,7 +58,6 @@ private:
     void destroyFloatingEdge();
     void deleteEdge(QGraphicsItem* edge);
 
-    NodeGraphic* createNode(enzo::nt::opConstructor ctorFunc);
     enzo::ui::TabMenu* tabMenu_;
 
     void leftMousePressed(QMouseEvent* event);

@@ -1,5 +1,6 @@
 #include "Gui/Network/TabMenu.h"
 #include "Engine/Operator/OperatorTable.h"
+#include "Gui/Network/Network.h"
 #include <QLabel>
 #include <QLineEdit>
 #include <iostream>
@@ -7,6 +8,7 @@
 #include <qevent.h>
 #include <qlineedit.h>
 #include <qnamespace.h>
+#include <qobject.h>
 #include <qpushbutton.h>
 #include <qscrollarea.h>
 #include <qwidget.h>
@@ -41,8 +43,10 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
     nodeScrollArea_->setFocusPolicy(Qt::NoFocus);
     for(auto tableItem : tableItems)
     {
-        auto button = new QPushButton(tableItem.displayName.c_str());
+        auto button = new TabMenuButton(tableItem.displayName.c_str());
+        button->nodeName = tableItem.internalName;
         button->setFocusPolicy(Qt::NoFocus);
+        connect(button, &TabMenuButton::clicked, this, &enzo::ui::TabMenu::nodeClicked);
         button->setStyleSheet(R"(
             QPushButton {
                 background-color: #181c1d;
@@ -66,6 +70,14 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
     setDisabled(true);
 }
 
+void enzo::ui::TabMenu::nodeClicked()
+{
+    TabMenuButton* buttonClicked = static_cast<TabMenuButton*>(sender());
+    static_cast<Network*>(parentWidget())->createNode(op::OperatorTable::getOpConstructor(buttonClicked->nodeName));
+    doHide();
+}
+
+
 void enzo::ui::TabMenu::showOnMouse(float dx, float dy)
 {
     setDisabled(false);
@@ -80,12 +92,17 @@ void enzo::ui::TabMenu::showOnMouse(float dx, float dy)
     raise();
 }
 
-void enzo::ui::TabMenu::focusOutEvent(QFocusEvent *event)
+void enzo::ui::TabMenu::doHide()
 {
-    std::cout << "focus lost\n";
-    QWidget::focusOutEvent(event); 
     setDisabled(true);
     hide();
+}
+
+
+void enzo::ui::TabMenu::focusOutEvent(QFocusEvent *event)
+{
+    QWidget::focusOutEvent(event); 
+    doHide();
 }
 
 bool enzo::ui::TabMenu::event(QEvent *event)
