@@ -1,4 +1,5 @@
 #include "Gui/Network/TabMenu.h"
+#include "Engine/Operator/OperatorTable.h"
 #include <QLabel>
 #include <QLineEdit>
 #include <iostream>
@@ -24,6 +25,7 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
     setLayout(mainLayout_);
 
     searchBar_ = new QLineEdit();
+    searchBar_->setFocusPolicy(Qt::NoFocus);
     nodeHolder_ = new QWidget();
     nodeScrollArea_ = new QScrollArea();
 
@@ -35,9 +37,12 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
 
     nodeHolderLayout_ = new QVBoxLayout();
     nodeHolder_->setLayout(nodeHolderLayout_);
-    for(int i=0; i<10; ++i)
+    auto tableItems = enzo::op::OperatorTable::getData();
+    nodeScrollArea_->setFocusPolicy(Qt::NoFocus);
+    for(auto tableItem : tableItems)
     {
-        auto button = new QPushButton(std::string("Node " + std::to_string(i)).c_str());
+        auto button = new QPushButton(tableItem.displayName.c_str());
+        button->setFocusPolicy(Qt::NoFocus);
         button->setStyleSheet(R"(
             QPushButton {
                 background-color: #181c1d;
@@ -85,7 +90,6 @@ void enzo::ui::TabMenu::focusOutEvent(QFocusEvent *event)
 
 bool enzo::ui::TabMenu::event(QEvent *event)
 {
-    std::cout << "event\n";
     if(
         (event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease)
         && event->spontaneous()

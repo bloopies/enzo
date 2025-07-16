@@ -19,6 +19,7 @@ class BOOST_SYMBOL_EXPORT OperatorTable
 public:
     static void addOperator(const char* internalName, const char* displayName, nt::opConstructor ctorFunc);
     static nt::opConstructor getOpConstructor(std::string name);
+    static std::vector<OpInfo> getData();
 private:
     static std::vector<OpInfo> opInfoStore_;
 };

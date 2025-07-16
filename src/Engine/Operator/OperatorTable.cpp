@@ -21,4 +21,10 @@ enzo::nt::opConstructor enzo::op::OperatorTable::getOpConstructor(std::string na
     return nullptr;
 }
 
+std::vector<enzo::op::OpInfo> enzo::op::OperatorTable::getData()
+{
+    return opInfoStore_;
+}
+
+
 std::vector<enzo::op::OpInfo> enzo::op::OperatorTable::opInfoStore_;
