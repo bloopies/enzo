@@ -6,12 +6,19 @@ void enzo::op::OperatorTable::addOperator(const char* internalName, const char* 
 {
     std::cout << "OPERATOR TABLE ADDED\n";
     std::cout << "adding operator: " << displayName << "\n";
-    ctorStore_.push_back(ctorFunc);
+    opInfoStore_.push_back({internalName, displayName, ctorFunc});
 }
 
-enzo::nt::opConstructor enzo::op::OperatorTable::getOpConstructor(size_t pos)
+enzo::nt::opConstructor enzo::op::OperatorTable::getOpConstructor(std::string name)
 {
-    return ctorStore_.at(pos);
+    for(auto it = opInfoStore_.begin(); it!=opInfoStore_.end(); ++it)
+    {
+        if(it->internalName==name)
+        {
+            return it->ctorFunc;
+        }
+    }
+    return nullptr;
 }
 
-std::vector<enzo::nt::opConstructor> enzo::op::OperatorTable::ctorStore_;
+std::vector<enzo::op::OpInfo> enzo::op::OperatorTable::opInfoStore_;

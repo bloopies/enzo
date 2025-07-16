@@ -314,7 +314,7 @@ void Network::keyPressEvent(QKeyEvent *event)
         }
         case(Qt::Key_G):
         {
-            if(auto newNode = createNode(op::OperatorTable::getOpConstructor(1)))
+            if(auto newNode = createNode(op::OperatorTable::getOpConstructor("transform")))
             {
                 newNode->setPos(viewPos);
             }
@@ -323,7 +323,7 @@ void Network::keyPressEvent(QKeyEvent *event)
         }
         case(Qt::Key_F):
         {
-            if(auto newNode = createNode(op::OperatorTable::getOpConstructor(0)))
+            if(auto newNode = createNode(op::OperatorTable::getOpConstructor("house")))
             {
                 newNode->setPos(viewPos);
             }

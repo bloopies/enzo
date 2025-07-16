@@ -4,15 +4,23 @@
 #include "Engine/Network/NetworkManager.h"
 #include "Engine/Operator/GeometryOpDef.h"
 
+
 namespace enzo::op
 {
+struct OpInfo
+{
+    std::string internalName;
+    std::string displayName;
+    enzo::nt::opConstructor ctorFunc;
+};
+
 class BOOST_SYMBOL_EXPORT OperatorTable
 {
 public:
     static void addOperator(const char* internalName, const char* displayName, nt::opConstructor ctorFunc);
-    static nt::opConstructor getOpConstructor(size_t pos);
+    static nt::opConstructor getOpConstructor(std::string name);
 private:
-    static std::vector<nt::opConstructor> ctorStore_;
+    static std::vector<OpInfo> opInfoStore_;
 };
 using addOperatorPtr = void (*)(const char* internalName, const char* displayName, nt::opConstructor ctorFunc);
 }
