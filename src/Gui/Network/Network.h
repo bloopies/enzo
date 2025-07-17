@@ -156,4 +156,5 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
+    bool focusNextPrevChild(bool) override;
 };

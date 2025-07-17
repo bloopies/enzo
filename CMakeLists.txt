@@ -43,6 +43,7 @@ set(GUI_SOURCES
     src/Gui/Network/DisplayFlagButton.cpp
     src/Gui/Network/NodeIconGraphic.cpp
     src/Gui/Network/TabMenu.cpp
+    src/Gui/ParametersPanel/ParametersPanel.cpp
 )
 
 # qt

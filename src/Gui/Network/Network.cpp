@@ -307,9 +307,7 @@ void Network::keyPressEvent(QKeyEvent *event)
         }
         case(Qt::Key_Tab):
         {
-            std::cout << "here\n";
             tabMenu_->showOnMouse();
-            std::cout << "here\n";
             break;
         }
         case(Qt::Key_G):
@@ -414,3 +412,4 @@ void Network::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
+bool Network::focusNextPrevChild(bool) { return false; }

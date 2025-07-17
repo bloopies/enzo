@@ -14,6 +14,7 @@ class EnzoUI
         QVBoxLayout* mainLayout_;
         QVBoxLayout* viewportSplitLayout_;
         Splitter* viewportSplitter_;
+        Splitter* networkSplitter_;
 
 
 };
