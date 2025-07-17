@@ -6,6 +6,7 @@
 #include <qscrollarea.h>
 #include <qwidget.h>
 #include <QVBoxLayout>
+#include <QSvgWidget>
 #include <iostream>
 
 namespace enzo::ui
@@ -36,7 +37,12 @@ class TabMenuButton
 : public QPushButton
 {
 public:
-    using QPushButton::QPushButton;
+    TabMenuButton(const QString &text, QWidget *parent = nullptr);
     std::string nodeName;
+private:
+    QHBoxLayout* mainLayout_;
+    QLabel* textLabel_;
+    QSvgWidget* icon_;
+
 };
 }

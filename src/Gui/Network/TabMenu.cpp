@@ -1,3 +1,7 @@
+#include <QStyleOptionFrame>
+#include <QGraphicsDropShadowEffect>
+#include <QSvgRenderer>
+#include <QSvgWidget>
 #include "Gui/Network/TabMenu.h"
 #include "Engine/Operator/OperatorTable.h"
 #include "Gui/Network/Network.h"
@@ -5,6 +9,7 @@
 #include <QLineEdit>
 #include <iostream>
 #include <qapplication.h>
+#include <qboxlayout.h>
 #include <qevent.h>
 #include <qlineedit.h>
 #include <qnamespace.h>
@@ -22,25 +27,14 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
 {
     setAttribute(Qt::WA_TranslucentBackground);
 
-    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     mainLayout_ = new QVBoxLayout(this);
-    setLayout(mainLayout_);
 
     searchBar_ = new QLineEdit();
-    searchBar_->setFocusPolicy(Qt::NoFocus);
     nodeHolder_ = new QWidget();
     nodeScrollArea_ = new QScrollArea();
-
-    nodeScrollArea_->setWidget(nodeHolder_);
-    nodeScrollArea_->setWidgetResizable(true);
-
-    mainLayout_->addWidget(searchBar_);
-    mainLayout_->addWidget(nodeScrollArea_);
-
     nodeHolderLayout_ = new QVBoxLayout();
-    nodeHolder_->setLayout(nodeHolderLayout_);
+
     auto tableItems = enzo::op::OperatorTable::getData();
-    nodeScrollArea_->setFocusPolicy(Qt::NoFocus);
     for(auto tableItem : tableItems)
     {
         auto button = new TabMenuButton(tableItem.displayName.c_str());
@@ -48,24 +42,84 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
         button->setFocusPolicy(Qt::NoFocus);
         connect(button, &TabMenuButton::clicked, this, &enzo::ui::TabMenu::nodeClicked);
         button->setStyleSheet(R"(
-            QPushButton {
-                background-color: #181c1d;
-                border: none;
+            QPushButton#TabMenuButton {
+                background-color: transparent;
+                border: 4px solid transparent;
                 padding: 0px;
-                border-radius: 4px;
+                margin: 0px;
+                border-radius: 8px;
             }
 
-            QPushButton:hover {
-                background-color: #d0d0d0;
-                color: black;
+            QPushButton#TabMenuButton:hover {
+                background-color: #3d3d3d;
+                color: white;
             }
 
-            QPushButton:pressed {
+            QPushButton#TabMenuButton:pressed {
                 background-color: #b0b0b0;
             }
         )");
         nodeHolderLayout_->addWidget(button);
     }
+
+    setLayout(mainLayout_);
+
+    // set focus policy
+    searchBar_->setFocusPolicy(Qt::NoFocus);
+    nodeScrollArea_->setFocusPolicy(Qt::NoFocus);
+
+    // disable frames
+    searchBar_->setFrame(false);
+    nodeScrollArea_->setFrameStyle(QStyleOptionFrame::None);
+
+
+    mainLayout_->addWidget(searchBar_);
+    mainLayout_->addWidget(nodeScrollArea_);
+
+    nodeHolderLayout_->setSpacing(0);
+    nodeHolderLayout_->setContentsMargins(2,4,2,4);
+    nodeHolder_->setLayout(nodeHolderLayout_);
+    nodeHolderLayout_->setAlignment(Qt::AlignTop);
+
+    nodeScrollArea_->setWidget(nodeHolder_);
+    nodeScrollArea_->setWidgetResizable(true);
+    nodeScrollArea_->setMinimumHeight(250);
+    nodeScrollArea_->setMinimumWidth(200);
+
+    //style
+    searchBar_->setAlignment(Qt::AlignCenter);
+    nodeHolder_->setProperty("shade", "dark");
+    nodeHolder_->setObjectName("TabMenuNodeHolder");
+    nodeHolder_->setStyleSheet(R"(
+           QWidget#TabMenuNodeHolder {
+                background-color: transparent;
+           }
+    )"
+    );
+    nodeScrollArea_->setObjectName("TabMenuNodeScrollArea");
+    nodeScrollArea_->setStyleSheet(R"(
+           QWidget#TabMenuNodeScrollArea {
+                background-color: #d9161616;
+               border-radius: 6px;
+           }
+    )"
+    );
+    searchBar_->setObjectName("TabMenuSearch");
+    searchBar_->setStyleSheet(R"(
+           QWidget#TabMenuSearch {
+                background-color: #d9161616;
+              padding: 3px;
+               border-radius: 4px;
+           }
+    )"
+    );
+
+    // drop shadow
+    auto dropShadow_ = new QGraphicsDropShadowEffect();
+    dropShadow_->setColor(QColor(0,0,0,80));
+    dropShadow_->setBlurRadius(15);
+    dropShadow_->setOffset(4);
+    setGraphicsEffect(dropShadow_);
 
     setDisabled(true);
 }
@@ -135,11 +189,29 @@ bool enzo::ui::TabMenu::event(QEvent *event)
 
 }
 
-// void enzo::ui::TabMenu::resizeEvent(QResizeEvent *event)
-// {
-//     QPainterPath path;
-//     constexpr float radius = 10;
-//     path.addRoundedRect(contentsRect(), radius, radius);
-//     QRegion region = QRegion(path.toFillPolygon().toPolygon());
-//     this->setMask(region);
-// }
+enzo::ui::TabMenuButton::TabMenuButton(const QString &text, QWidget *parent)
+: QPushButton(parent)
+{
+    setObjectName("TabMenuButton");
+
+
+    textLabel_ = new QLabel(text);
+    textLabel_->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    // textLabel_->setAttribute(Qt::WA_TransparentForMouseEvents, true);
+    textLabel_->setStyleSheet("background-color: transparent;");
+
+    icon_ = new QSvgWidget(":/node-icons/grid.svg");
+    icon_->renderer()->setAspectRatioMode(Qt::KeepAspectRatio);
+    icon_->setStyleSheet("background-color: transparent;");
+    icon_->setFixedSize(16, 16);
+
+    mainLayout_ = new QHBoxLayout();
+
+    mainLayout_->addWidget(icon_);
+    mainLayout_->addWidget(textLabel_);
+
+    setLayout(mainLayout_);
+
+}
+
+
