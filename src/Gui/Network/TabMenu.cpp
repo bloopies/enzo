@@ -27,6 +27,7 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
 : QWidget(parent, f)
 {
     setAttribute(Qt::WA_TranslucentBackground);
+    setWindowFlag(Qt::Popup);
 
     mainLayout_ = new QVBoxLayout(this);
 
@@ -127,11 +128,11 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
     );
 
     // drop shadow
-    auto dropShadow_ = new QGraphicsDropShadowEffect();
-    dropShadow_->setColor(QColor(0,0,0,80));
-    dropShadow_->setBlurRadius(15);
-    dropShadow_->setOffset(4);
-    setGraphicsEffect(dropShadow_);
+    // auto dropShadow_ = new QGraphicsDropShadowEffect();
+    // dropShadow_->setColor(QColor(0,0,0,80));
+    // dropShadow_->setBlurRadius(15);
+    // dropShadow_->setOffset(4);
+    // setGraphicsEffect(dropShadow_);
 
     setDisabled(true);
 }
