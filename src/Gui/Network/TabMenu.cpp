@@ -34,10 +34,13 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
     nodeScrollArea_ = new QScrollArea();
     nodeHolderLayout_ = new QVBoxLayout();
 
+    connect(searchBar_, &QLineEdit::textChanged, this, &TabMenu::textChanged);
+
     auto tableItems = enzo::op::OperatorTable::getData();
     for(auto tableItem : tableItems)
     {
         auto button = new TabMenuButton(tableItem.displayName.c_str());
+        buttons_.push_back(button);
         button->nodeName = tableItem.internalName;
         button->setFocusPolicy(Qt::NoFocus);
         connect(button, &TabMenuButton::clicked, this, &enzo::ui::TabMenu::nodeClicked);
@@ -124,6 +127,27 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
     setDisabled(true);
 }
 
+void enzo::ui::TabMenu::textChanged(const QString &text)
+{
+    for(auto button : buttons_)
+    {
+        if(text=="")
+        {
+            button->setVisible(true);
+            continue;
+        }
+        if(button->getDisplayText().toLower().contains(text.toLower()))
+        {
+            button->setVisible(true);
+        }
+        else
+        {
+            button->setVisible(false);
+        }
+    }
+}
+
+
 void enzo::ui::TabMenu::nodeClicked()
 {
     TabMenuButton* buttonClicked = static_cast<TabMenuButton*>(sender());
@@ -176,12 +200,12 @@ bool enzo::ui::TabMenu::event(QEvent *event)
                 focusOutEvent(static_cast<QFocusEvent*>(event));
                 return true;
             }
-            std::cout << "key pressed: " << static_cast<QKeyEvent*>(event)->text().toStdString() << "\n";
+            // std::cout << "key pressed: " << static_cast<QKeyEvent*>(event)->text().toStdString() << "\n";
         }
-        else if(event->type() == QEvent::KeyRelease)
-        {
-            std::cout << "key release: " << static_cast<QKeyEvent*>(event)->text().toStdString() << "\n";
-        }
+        // else if(event->type() == QEvent::KeyRelease)
+        // {
+        //     std::cout << "key release: " << static_cast<QKeyEvent*>(event)->text().toStdString() << "\n";
+        // }
         QApplication::sendEvent(searchBar_, clone);
         return true;
     }
@@ -193,6 +217,7 @@ enzo::ui::TabMenuButton::TabMenuButton(const QString &text, QWidget *parent)
 : QPushButton(parent)
 {
     setObjectName("TabMenuButton");
+    displayText_ = text;
 
 
     textLabel_ = new QLabel(text);
@@ -214,4 +239,8 @@ enzo::ui::TabMenuButton::TabMenuButton(const QString &text, QWidget *parent)
 
 }
 
+// enzo::ui::TabMenuSearch::TabMenuSearch(QWidget *parent)
+// : QLineEdit(parent)
+// {
 
+// }
