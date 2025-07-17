@@ -113,7 +113,8 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
     nodeScrollArea_->setStyleSheet(R"(
            QWidget#TabMenuNodeScrollArea {
                 background-color: #d9161616;
-               border-radius: 6px;
+                border: 1px solid #363636;
+               border-radius: 8px;
            }
     )"
     );
@@ -122,7 +123,8 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
            QWidget#TabMenuSearch {
                 background-color: #d9161616;
               padding: 3px;
-               border-radius: 4px;
+               border-radius: 6px;
+                border: 1px solid #363636;
            }
     )"
     );
