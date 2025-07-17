@@ -20,6 +20,7 @@
 #include <QEvent>
 #include <QPainterPath>
 #include <QPushButton>
+#include <stdexcept>
 #include <string>
 
 enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
@@ -51,6 +52,14 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
                 padding: 0px;
                 margin: 0px;
                 border-radius: 8px;
+            }
+
+            QPushButton#TabMenuButton[selected="true"] {
+                background-color: #3d3d3d;
+            }
+
+            QPushButton#TabMenuButton[selected="false"] {
+                background-color: transparent;
             }
 
             QPushButton#TabMenuButton:hover {
@@ -129,16 +138,28 @@ enzo::ui::TabMenu::TabMenu(QWidget *parent, Qt::WindowFlags f)
 
 void enzo::ui::TabMenu::textChanged(const QString &text)
 {
-    for(auto button : buttons_)
+    selectionIndex_ = 0;
+    bool selectionMade = false;
+    visibleButtons_.clear();
+    for(size_t i=0; i<buttons_.size(); ++i)
     {
-        if(text=="")
+        auto button = buttons_.at(i);
+        if(text=="" || button->getDisplayText().toLower().contains(text.toLower()))
         {
+            // make selection
+            if(!selectionMade)
+            {
+                std::cout << "selecting: " << button->getDisplayText().toStdString() << "\n";
+                button->setSelected(true);
+            }
+            else
+            {
+                std::cout << "deselecting: " << button->getDisplayText().toStdString() << "\n";
+                button->setSelected(false);
+            }
+            visibleButtons_.push_back(button);
             button->setVisible(true);
-            continue;
-        }
-        if(button->getDisplayText().toLower().contains(text.toLower()))
-        {
-            button->setVisible(true);
+            selectionMade = true;
         }
         else
         {
@@ -162,6 +183,7 @@ void enzo::ui::TabMenu::showOnMouse(float dx, float dy)
     std::cout << "showing\n";
     QPoint cursorPos = mapToParent(mapFromGlobal(QCursor::pos()));
     searchBar_->clear();
+    textChanged("");
     move(cursorPos + QPoint(dx, dy));
     show();
     adjustSize();
@@ -200,6 +222,23 @@ bool enzo::ui::TabMenu::event(QEvent *event)
                 focusOutEvent(static_cast<QFocusEvent*>(event));
                 return true;
             }
+            else if(key==Qt::Key_Enter || key==Qt::Key_Return)
+            {
+                if(visibleButtons_.size()==0) return true;
+                if(selectionIndex_>=visibleButtons_.size()) selectionIndex_=visibleButtons_.size()-1;
+                auto button = visibleButtons_.at(selectionIndex_);
+                static_cast<Network*>(parentWidget())->createNode(op::OperatorTable::getOpConstructor(button->nodeName));
+                doHide();
+                return true;
+            }
+            else if(key==Qt::Key_Up)
+            {
+                moveSelection(SelectionDirection::DOWN); 
+            }
+            else if(key==Qt::Key_Down)
+            {
+                moveSelection(SelectionDirection::UP); 
+            }
             // std::cout << "key pressed: " << static_cast<QKeyEvent*>(event)->text().toStdString() << "\n";
         }
         // else if(event->type() == QEvent::KeyRelease)
@@ -213,9 +252,44 @@ bool enzo::ui::TabMenu::event(QEvent *event)
 
 }
 
+void enzo::ui::TabMenu::moveSelection(SelectionDirection direction)
+{
+    if(direction==SelectionDirection::UP)
+    {
+        if(selectionIndex_+1>=visibleButtons_.size())
+        {
+            return;
+        }
+        selectionIndex_++;
+    }
+    else if(direction==SelectionDirection::DOWN)
+    {
+        if(selectionIndex_<=0)
+        {
+            return;
+        }
+        selectionIndex_--;
+        std::cout << "selection index: " << selectionIndex_ << "\n";
+    }
+
+    for(size_t i=0; i<visibleButtons_.size(); ++i)
+    {
+        TabMenuButton* button = visibleButtons_.at(i);
+        if(i==selectionIndex_)
+        {
+            button->setSelected(true);
+        }
+        else
+        {
+            button->setSelected(false);
+        }
+    }
+}
+
 enzo::ui::TabMenuButton::TabMenuButton(const QString &text, QWidget *parent)
 : QPushButton(parent)
 {
+    setSelected(false);
     setObjectName("TabMenuButton");
     displayText_ = text;
 
@@ -238,6 +312,14 @@ enzo::ui::TabMenuButton::TabMenuButton(const QString &text, QWidget *parent)
     setLayout(mainLayout_);
 
 }
+
+void enzo::ui::TabMenuButton::setSelected(bool selected)
+{
+    setProperty("selected", selected);
+    style()->polish(this);
+    update();
+}
+
 
 // enzo::ui::TabMenuSearch::TabMenuSearch(QWidget *parent)
 // : QLineEdit(parent)

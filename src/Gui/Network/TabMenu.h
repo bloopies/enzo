@@ -19,6 +19,7 @@ public:
     TabMenuButton(const QString &text, QWidget *parent = nullptr);
     std::string nodeName;
     QString getDisplayText() {return displayText_;}
+    void setSelected(bool selected);
 private:
     QHBoxLayout* mainLayout_;
     QLabel* textLabel_;
@@ -35,6 +36,12 @@ public:
     void showOnMouse(float dx=0, float dy=0);
      
 private:
+    enum class SelectionDirection
+    {
+        UP,
+        DOWN
+    };
+
     QVBoxLayout* mainLayout_;
     QLineEdit* searchBar_;
     QScrollArea* nodeScrollArea_;
@@ -43,6 +50,10 @@ private:
     void doHide();
     void textChanged(const QString &text);
     std::vector<TabMenuButton*> buttons_;
+    std::vector<TabMenuButton*> visibleButtons_;
+    unsigned int selectionIndex_ = 0;
+    void moveSelection(SelectionDirection direction);
+
 protected:
     void focusOutEvent(QFocusEvent *event) override;
     bool event(QEvent *event) override;
