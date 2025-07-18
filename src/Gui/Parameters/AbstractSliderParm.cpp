@@ -22,7 +22,14 @@ enzo::ui::AbstractSliderParm::AbstractSliderParm(QWidget *parent, Qt::WindowFlag
     valueLabel_ = new QLabel();
     valueLabel_->setAlignment(Qt::AlignCenter);
     valueLabel_->setStyleSheet("background-color: transparent;");
-    setStyleSheet("border-radius: 6px;");
+    setProperty("type", "SliderParm");
+    setStyleSheet(R"(
+                  QWidget[type="SliderParm"]
+                  {
+                      border-radius: 6px;
+                      border: 1px solid #383838;
+                  }
+                  )");
     mainLayout_->addWidget(valueLabel_);
 
     setValue(value_);
