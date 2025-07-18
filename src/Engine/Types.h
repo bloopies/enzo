@@ -26,6 +26,8 @@ namespace enzo
     // basic types types
     namespace bt
     {
+        using floatT = double;
+        using intT = int64_t;
         using Vector3 = Eigen::Vector3d;
         using Vector4 = Eigen::Vector4d;
     }

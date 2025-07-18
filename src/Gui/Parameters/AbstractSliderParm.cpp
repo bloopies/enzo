@@ -1,37 +1,73 @@
 #include "Gui/Parameters/AbstractSliderParm.h"
+#include "Engine/Types.h"
 #include <QPainter>
 #include <QPaintEvent>
+#include <QLabel>
 #include <iostream>
+#include <qboxlayout.h>
+#include <qnamespace.h>
+#include <algorithm>
+#include <string>
 
 
 enzo::ui::AbstractSliderParm::AbstractSliderParm(QWidget *parent, Qt::WindowFlags f)
 : QWidget(parent, f)
 {
-    setFixedHeight(20);
+    setFixedHeight(24);
     value_ = defaultValue_;
+    
+    mainLayout_ = new QVBoxLayout();
+    setLayout(mainLayout_);
 
+    valueLabel_ = new QLabel();
+    valueLabel_->setAlignment(Qt::AlignCenter);
+    valueLabel_->setStyleSheet("background-color: transparent;");
+    setStyleSheet("border-radius: 6px;");
+    mainLayout_->addWidget(valueLabel_);
+
+    setValue(value_);
 }
 
 void enzo::ui::AbstractSliderParm::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setPen(Qt::black);
-    painter.setBrush(Qt::red);
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QColor("#383838"));
 
     QRectF fillRect = event->rect();
     float fillPercent = value_/maxValue_;
     std::cout << "fill percent" << fillPercent << "\n";
-    fillRect.adjust(0, 0, -fillRect.width()*(1-fillPercent), 0);
-    painter.drawRoundedRect(fillRect, 8, 8);
+    float margin = 3;
+    fillRect.adjust(margin, margin, std::max<float>(-fillRect.width()+margin, -fillRect.width()*(1-fillPercent)-margin), -margin);
+    painter.drawRoundedRect(fillRect, 6, 6);
+
+}
+
+void enzo::ui::AbstractSliderParm::setValue(bt::floatT value)
+{
+    if(value_==value)
+        return;
+
+    if(clampMin_ && value<minValue_) { value = minValue_; }
+    if(clampMax_ && value>maxValue_) { value = maxValue_; }
+
+    value_ = value;
+    update();
+    QString valStr = QString::number(value);
+    valStr.truncate(4);
+    valueLabel_->setText(valStr);
 
 }
 
 
 void enzo::ui::AbstractSliderParm::mouseMoveEvent(QMouseEvent *event)
 {
-    value_ = static_cast<float>(event->pos().x())/rect().width() * maxValue_;
-    update();
-    // std::cout << "pos x: " << fillPercent << "\n";
+    setValue(static_cast<float>(event->pos().x())/rect().width() * maxValue_);
+}
+
+void enzo::ui::AbstractSliderParm::mousePressEvent(QMouseEvent *event)
+{
+    setValue(static_cast<float>(event->pos().x())/rect().width() * maxValue_);
 }
 
