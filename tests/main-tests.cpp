@@ -20,25 +20,3 @@ TEST_CASE("tbb")
                   << std::this_thread::get_id() << std::endl;
     });
 }
-
-TEST_CASE("boost dll")
-{
-    std::cout << "Using Boost "     
-          << BOOST_VERSION / 100000     << "."  // major version
-          << BOOST_VERSION / 100 % 1000 << "."  // minor version
-          << BOOST_VERSION % 100                // patch level
-          << std::endl;
-
-
-    boost::shared_ptr<std::string> cpp_var = boost::dll::import_symbol<std::string>(
-            "build/src/OpDefs/libenzoOps1.so", "myVar"
-        );
-    std::cout << "VAR: " << *cpp_var << "\n";
-
-    auto cpp11_func = boost::dll::import_symbol<void(enzo::op::addOperatorPtr)>(
-        "build/src/OpDefs/libenzoOps1.so", "newSopOperator"
-    );
-
-    cpp11_func(enzo::op::OperatorTable::addOperator);
-
-}

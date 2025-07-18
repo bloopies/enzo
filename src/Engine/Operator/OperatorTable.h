@@ -20,6 +20,8 @@ public:
     static void addOperator(const char* internalName, const char* displayName, nt::opConstructor ctorFunc);
     static nt::opConstructor getOpConstructor(std::string name);
     static std::vector<OpInfo> getData();
+    // TODO: move to better spot (maybe engine class)
+    static void initPlugins();
 private:
     static std::vector<OpInfo> opInfoStore_;
 };

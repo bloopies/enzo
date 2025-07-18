@@ -1,4 +1,5 @@
 #include "Engine/Operator/OperatorTable.h"
+#include <boost/dll/import.hpp>
 
 #include <iostream>
 
@@ -26,5 +27,18 @@ std::vector<enzo::op::OpInfo> enzo::op::OperatorTable::getData()
     return opInfoStore_;
 }
 
+void enzo::op::OperatorTable::initPlugins()
+{
+    static bool pluginsLoaded=false;
+    if(pluginsLoaded) return;
+
+    auto initPlugin = boost::dll::import_symbol<void(enzo::op::addOperatorPtr)>(
+        "build/src/OpDefs/libenzoOps1.so", "newSopOperator"
+    );
+
+    initPlugin(enzo::op::OperatorTable::addOperator);
+
+    pluginsLoaded = true;
+}
 
 std::vector<enzo::op::OpInfo> enzo::op::OperatorTable::opInfoStore_;

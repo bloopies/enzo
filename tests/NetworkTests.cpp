@@ -3,8 +3,8 @@
 #include <memory>
 #include "Engine/Network/NetworkManager.h"
 #include "Engine/Operator/GeometryOperator.h"
+#include "Engine/Operator/OperatorTable.h"
 #include "Engine/Types.h"
-#include "Engine/Operator/GOP_test.h"
 #include <iostream>
 
 struct NMReset 
@@ -20,12 +20,20 @@ struct NMReset
 
 };
 
+// TODO: fix this init monstrosity
+struct OperatorTableInit
+{
+    OperatorTableInit() { enzo::op::OperatorTable::initPlugins(); }
+};
+static OperatorTableInit _operatorTableInit;
+auto testOpCtor = enzo::op::OperatorTable::getOpConstructor("house");
+
 TEST_CASE_METHOD(NMReset, "network fixture separation start")
 {
     using namespace enzo;
     auto& nm = nt::nm();
 
-    nt::OpId newOpId = nm.addOperator(GOP_test::ctor);
+    nt::OpId newOpId = nm.addOperator(testOpCtor);
     REQUIRE(newOpId==1);
     REQUIRE(nm.isValidOp(1));
     
@@ -45,8 +53,8 @@ TEST_CASE_METHOD(NMReset, "network")
     using namespace enzo;
     auto& nm = nt::nm();
 
-    nt::OpId newOpId = nm.addOperator(GOP_test::ctor);
-    nt::OpId newOpId2 = nm.addOperator(GOP_test::ctor);
+    nt::OpId newOpId = nm.addOperator(testOpCtor);
+    nt::OpId newOpId2 = nm.addOperator(testOpCtor);
 
     REQUIRE(nm.isValidOp(newOpId));
     if(nm.isValidOp(newOpId))
@@ -70,13 +78,13 @@ TEST_CASE_METHOD(NMReset, "reset")
     using namespace enzo;
     auto& nm = nt::nm();
 
-    nt::OpId newOpId = nm.addOperator(GOP_test::ctor);
+    nt::OpId newOpId = nm.addOperator(testOpCtor);
 
     nm._reset();
 
     REQUIRE_FALSE(nm.isValidOp(newOpId));
 
-    nt::OpId newOpId2 = nm.addOperator(GOP_test::ctor);
+    nt::OpId newOpId2 = nm.addOperator(testOpCtor);
     REQUIRE(nm.isValidOp(newOpId2));
 
 

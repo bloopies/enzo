@@ -2,7 +2,6 @@
 #include <QPushButton>
 #include <QSurfaceFormat>
 #include "Engine/Operator/OperatorTable.h"
-#include <boost/dll/import.hpp>
 
 #include "Interface.h"
 
@@ -16,12 +15,7 @@ int main(int argc, char **argv)
     format.setSamples(4);
     QSurfaceFormat::setDefaultFormat(format);
 
-    // setup table
-    auto initPlugin = boost::dll::import_symbol<void(enzo::op::addOperatorPtr)>(
-        "build/src/OpDefs/libenzoOps1.so", "newSopOperator"
-    );
-
-    initPlugin(enzo::op::OperatorTable::addOperator);
+    enzo::op::OperatorTable::initPlugins();
 
 
     QApplication app (argc, argv);
