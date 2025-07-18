@@ -1,4 +1,5 @@
 #include "Gui/ParametersPanel/ParametersPanel.h"
+#include "Gui/Parameters/AbstractSliderParm.h"
 #include <qboxlayout.h>
 #include <QSpinBox>
 #include <qwidget.h>
@@ -24,11 +25,10 @@ ParametersPanel::ParametersPanel(QWidget *parent, Qt::WindowFlags f)
     mainLayout_->addLayout(parametersLayout_);
     mainLayout_->addWidget(bgWidget_);
 
-    parametersLayout_->addWidget(new QSpinBox());
-    parametersLayout_->addWidget(new QSpinBox());
-    parametersLayout_->addWidget(new QSpinBox());
-    parametersLayout_->addWidget(new QLineEdit());
-    parametersLayout_->addWidget(new QLineEdit());
+    parametersLayout_->addWidget(new enzo::ui::AbstractSliderParm());
+    parametersLayout_->addWidget(new enzo::ui::AbstractSliderParm());
+    parametersLayout_->addWidget(new enzo::ui::AbstractSliderParm());
+    parametersLayout_->addWidget(new enzo::ui::AbstractSliderParm());
 
 
     setLayout(mainLayout_);

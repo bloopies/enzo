@@ -42,7 +42,7 @@ EnzoUI::EnzoUI()
 
     viewportSplitter_->addWidget(viewport);
     viewportSplitter_->addWidget(networkSplitter_);
-    viewportSplitter_->setStretchFactor(0, 40);
+    viewportSplitter_->setStretchFactor(0, 4);
     viewportSplitter_->setStretchFactor(1, 1);
 
     networkSplitter_->addWidget(parametersPanel);

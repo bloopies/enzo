@@ -44,6 +44,7 @@ set(GUI_SOURCES
     src/Gui/Network/NodeIconGraphic.cpp
     src/Gui/Network/TabMenu.cpp
     src/Gui/ParametersPanel/ParametersPanel.cpp
+    src/Gui/Parameters/AbstractSliderParm.cpp
 )
 
 # qt
