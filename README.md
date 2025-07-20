@@ -16,6 +16,9 @@ Enzo is a 3D animation software application focused on procedural geometry editi
 <br><br>
 <img src="https://github.com/user-attachments/assets/c1de2a74-fdd3-4d9c-8e8a-3c0183eab173">
 
+> [!IMPORTANT]
+> early work in progress
+
 ## Dependencies
 - cmake
 - ninja
@@ -28,8 +31,7 @@ Enzo is a 3D animation software application focused on procedural geometry editi
 - boost 
 
 
-> [!IMPORTANT]
-> early work in progress
+
 
 
 ## Docs
