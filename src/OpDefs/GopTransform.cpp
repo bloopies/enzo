@@ -38,3 +38,5 @@ void GopTransform::cookOp(enzo::op::Context context)
 
 }
 
+enzo::prm::Template GopTransform::parameterList[] = {};
+

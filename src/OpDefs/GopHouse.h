@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/Operator/GeometryOpDef.h"
+#include "Engine/Parameter/Template.h"
 
 class GOP_house
 : public enzo::nt::GeometryOpDef
@@ -11,5 +12,7 @@ public:
     {
         return new GOP_house(opId);
     }
+
+    static BOOST_SYMBOL_EXPORT enzo::prm::Template parameterList[];
 
 };
