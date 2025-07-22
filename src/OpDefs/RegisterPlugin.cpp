@@ -11,12 +11,14 @@ extern "C"
         addOperator(
             "transform",
             "Transform",
-            &GopTransform::ctor
+            &GopTransform::ctor,
+            GopTransform::parameterList
         );
         addOperator(
             "house",
             "House",
-            &GOP_house::ctor
+            &GOP_house::ctor,
+            GopTransform::parameterList
         );
     }
 
