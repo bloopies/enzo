@@ -21,7 +21,7 @@ enzo::ui::AbstractSliderParm::AbstractSliderParm(QWidget *parent, Qt::WindowFlag
 
     valueLabel_ = new QLabel();
     valueLabel_->setAlignment(Qt::AlignCenter);
-    valueLabel_->setStyleSheet("background-color: transparent;");
+    valueLabel_->setStyleSheet("background-color: none;");
     setProperty("type", "SliderParm");
     setStyleSheet(R"(
                   QWidget[type="SliderParm"]
