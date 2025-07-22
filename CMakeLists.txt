@@ -45,6 +45,8 @@ set(GUI_SOURCES
     src/Gui/Network/TabMenu.cpp
     src/Gui/ParametersPanel/ParametersPanel.cpp
     src/Gui/Parameters/AbstractSliderParm.cpp
+    src/Gui/Parameters/AbstractFormParm.cpp
+    src/Gui/Parameters/FloatParm.cpp
 )
 
 # qt
