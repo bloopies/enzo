@@ -3,6 +3,7 @@
 #include "Engine/Operator/GeometryOperator.h"
 #include "Engine/Operator/Attribute.h"
 #include "Engine/Operator/AttributeHandle.h"
+#include "Engine/Operator/OpInfo.h"
 #include "Engine/Types.h"
 #include <iostream>
 #include <memory>
@@ -10,11 +11,11 @@
 #include <algorithm>
 #include <string>
 
-enzo::nt::OpId enzo::nt::NetworkManager::addOperator(nt::opConstructor ctorFunc)
+enzo::nt::OpId enzo::nt::NetworkManager::addOperator(op::OpInfo opInfo)
 {
 
     maxOpId_++;
-    gopStore_.emplace(maxOpId_, std::make_unique<GeometryOperator>(maxOpId_, ctorFunc));
+    gopStore_.emplace(maxOpId_, std::make_unique<GeometryOperator>(maxOpId_, opInfo));
     std::cout << "adding operator " << maxOpId_ << "\n";
 
     return maxOpId_;

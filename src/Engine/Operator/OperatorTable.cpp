@@ -3,11 +3,18 @@
 
 #include <iostream>
 
-void enzo::op::OperatorTable::addOperator(const char* internalName, const char* displayName, nt::opConstructor ctorFunc, prm::Template templateList[])
+void enzo::op::OperatorTable::addOperator(const char* internalName, const char* displayName, nt::opConstructor ctorFunc, prm::Template* templates)
 {
     std::cout << "OPERATOR TABLE ADDED\n";
     std::cout << "adding operator: " << displayName << "\n";
-    opInfoStore_.push_back({internalName, displayName, ctorFunc});
+    enzo::op::OpInfo info {
+        internalName,
+        displayName,
+        ctorFunc,
+        templates
+    };
+
+    opInfoStore_.push_back(info);
 }
 
 enzo::nt::opConstructor enzo::op::OperatorTable::getOpConstructor(std::string name)
@@ -20,6 +27,18 @@ enzo::nt::opConstructor enzo::op::OperatorTable::getOpConstructor(std::string na
         }
     }
     return nullptr;
+}
+
+const std::optional<enzo::op::OpInfo> enzo::op::OperatorTable::getOpInfo(std::string name)
+{
+    for(auto it = opInfoStore_.begin(); it!=opInfoStore_.end(); ++it)
+    {
+        if(it->internalName==name)
+        {
+            return *it;
+        }
+    }
+    return std::nullopt;
 }
 
 std::vector<enzo::op::OpInfo> enzo::op::OperatorTable::getData()

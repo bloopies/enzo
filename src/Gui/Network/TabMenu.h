@@ -21,11 +21,11 @@ public:
     QString getDisplayText() {return displayText_;}
     void setSelected(bool selected);
 private:
+
     QHBoxLayout* mainLayout_;
     QLabel* textLabel_;
     QSvgWidget* icon_;
     QString displayText_;
-
 };
 
 class TabMenu
@@ -42,6 +42,7 @@ private:
         DOWN
     };
 
+    void createNode(std::string nodeName);
     QVBoxLayout* mainLayout_;
     QLineEdit* searchBar_;
     QScrollArea* nodeScrollArea_;

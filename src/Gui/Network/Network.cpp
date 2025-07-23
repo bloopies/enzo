@@ -19,6 +19,7 @@
 #include <qgraphicsitem.h>
 #include <qnamespace.h>
 #include <QLine>
+#include <stdexcept>
 #include "Gui/Network/TabMenu.h"
 
 using namespace enzo;
@@ -310,30 +311,35 @@ void Network::keyPressEvent(QKeyEvent *event)
             tabMenu_->showOnMouse();
             break;
         }
-        case(Qt::Key_G):
-        {
-            if(auto newNode = createNode(op::OperatorTable::getOpConstructor("transform")))
-            {
-                newNode->setPos(viewPos);
-            }
+        // case(Qt::Key_G):
+        // {
+        //     auto opInfo = op::OperatorTable::getOpInfo("transform");
+        //     if(!opInfo.has_value()) {throw std::runtime_error("Couldn't find op info for: " + )}
+        //     if(
+        //         opInfo.has_value() &&
+        //         auto newNode = createNode(opInfo)
+        //         )
+        //     {
+        //         newNode->setPos(viewPos);
+        //     }
 
-            break;
-        }
-        case(Qt::Key_F):
-        {
-            if(auto newNode = createNode(op::OperatorTable::getOpConstructor("house")))
-            {
-                newNode->setPos(viewPos);
-            }
+        //     break;
+        // }
+        // case(Qt::Key_F):
+        // {
+        //     if(auto newNode = createNode(op::OperatorTable::getOpInfo("house")))
+        //     {
+        //         newNode->setPos(viewPos);
+        //     }
 
-            break;
-        }
+        //     break;
+        // }
     }
 }
 
-NodeGraphic* Network::createNode(nt::opConstructor ctorFunc)
+NodeGraphic* Network::createNode(op::OpInfo opInfo)
 {
-    if(nt::OpId id = enzo::nt::nm().addOperator(ctorFunc))
+    if(nt::OpId id = enzo::nt::nm().addOperator(opInfo))
     {
         NodeGraphic* newNode = new NodeGraphic(id);
         QPointF cursorPos = view_->mapToScene(mapFromGlobal(QCursor::pos()));
