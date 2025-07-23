@@ -171,11 +171,23 @@ void enzo::ui::TabMenu::textChanged(const QString &text)
     }
 }
 
+void enzo::ui::TabMenu::createNode(std::string nodeName)
+{
+    // get node info
+    std::optional<op::OpInfo> opInfo = op::OperatorTable::getOpInfo(nodeName);
+    // check valid result
+    if(!opInfo.has_value()) {throw std::runtime_error("Couldn't find op info for: " + nodeName);}
+
+    static_cast<Network*>(parentWidget())->createNode(opInfo.value());
+}
 
 void enzo::ui::TabMenu::nodeClicked()
 {
+    // get name of button clicked
     TabMenuButton* buttonClicked = static_cast<TabMenuButton*>(sender());
-    static_cast<Network*>(parentWidget())->createNode(op::OperatorTable::getOpConstructor(buttonClicked->nodeName));
+
+    createNode(buttonClicked->nodeName);
+
     doHide();
 }
 
@@ -230,7 +242,7 @@ bool enzo::ui::TabMenu::event(QEvent *event)
                 if(visibleButtons_.size()==0) return true;
                 if(selectionIndex_>=visibleButtons_.size()) selectionIndex_=visibleButtons_.size()-1;
                 auto button = visibleButtons_.at(selectionIndex_);
-                static_cast<Network*>(parentWidget())->createNode(op::OperatorTable::getOpConstructor(button->nodeName));
+                createNode(button->nodeName);
                 doHide();
                 return true;
             }

@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/Operator/GeometryConnection.h"
+#include "Engine/Operator/OpInfo.h"
 #include "Engine/Operator/GeometryOpDef.h"
 #include "Engine/Types.h"
 #include <optional>
@@ -11,7 +12,7 @@ void connectOperators(enzo::nt::OpId inputOpId, unsigned int inputIndex, enzo::n
 class GeometryOperator
 {
 public:
-    GeometryOperator(enzo::nt::OpId opId, nt::opConstructor ctorFunc);
+    GeometryOperator(enzo::nt::OpId opId, op::OpInfo opinfo);
 
     // disable copying
     GeometryOperator(const GeometryOperator&)            = delete;
