@@ -28,9 +28,9 @@ Network::Network(QWidget* parent)
 : QWidget(parent)
 {
 
-    mainLayout_ = new QVBoxLayout(parent);
+    mainLayout_ = new QVBoxLayout(this);
     // mainLayout_->setContentsMargins(0,0,0,0);
-    this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    // this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 
     tabMenu_ = new enzo::ui::TabMenu(this);
