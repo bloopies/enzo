@@ -10,11 +10,15 @@ namespace enzo::ui
 class AbstractSliderParm
 : public QWidget
 {
+    Q_OBJECT
 public:
     AbstractSliderParm(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+    void setValue(bt::floatT value);
+
+signals:
+    void valueChanged(bt::floatT value); 
 
 private:
-    void setValue(bt::floatT value);
 
     QVBoxLayout* mainLayout_;
     QLabel* valueLabel_;
