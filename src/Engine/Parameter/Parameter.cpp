@@ -13,3 +13,12 @@ std::string enzo::prm::Parameter::getName() const
     return template_.getName();
 }
 
+enzo::bt::floatT enzo::prm::Parameter::evalFloat() const
+{
+    return floatValue_;
+}
+void enzo::prm::Parameter::setFloat(bt::floatT value)
+{
+    floatValue_ = value;
+}
+

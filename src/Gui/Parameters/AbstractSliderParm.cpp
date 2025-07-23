@@ -13,6 +13,8 @@
 enzo::ui::AbstractSliderParm::AbstractSliderParm(QWidget *parent, Qt::WindowFlags f)
 : QWidget(parent, f)
 {
+    // tells qt to style the widget even though it's a Q_OBJECT
+    setAttribute(Qt::WA_StyledBackground, true);
     setFixedHeight(24);
     value_ = defaultValue_;
     
@@ -53,8 +55,8 @@ void enzo::ui::AbstractSliderParm::paintEvent(QPaintEvent *event)
 
 void enzo::ui::AbstractSliderParm::setValue(bt::floatT value)
 {
-    if(value_==value)
-        return;
+    // if(value_==value)
+    //     return;
 
     if(clampMin_ && value<minValue_) { value = minValue_; }
     if(clampMax_ && value>maxValue_) { value = maxValue_; }
@@ -64,6 +66,8 @@ void enzo::ui::AbstractSliderParm::setValue(bt::floatT value)
     QString valStr = QString::number(value);
     valStr.truncate(4);
     valueLabel_->setText(valStr);
+
+    valueChanged(value_);
 
 }
 

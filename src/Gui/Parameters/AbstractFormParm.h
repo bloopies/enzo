@@ -12,8 +12,13 @@ class AbstractFormParm
 public:
     AbstractFormParm(std::weak_ptr<prm::Parameter> parameter);
 
+protected slots:
+    void changeValue(bt::floatT value);
+
+
 private:
     QHBoxLayout* mainLayout_;
+    std::weak_ptr<prm::Parameter> parameter_;
 
 };
 

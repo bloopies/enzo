@@ -9,8 +9,8 @@ class Parameter
 public:
     Parameter(Template prmTemplate);
     std::string getName() const;
-    inline bt::floatT evalFloat() const {return floatValue_;}
-    inline void setFloat(bt::floatT value) {floatValue_ = value;}
+    bt::floatT evalFloat() const;
+    void setFloat(bt::floatT value);
 private:
     Template template_;
     bt::floatT floatValue_ = 0;
