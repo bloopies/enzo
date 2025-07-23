@@ -3,6 +3,8 @@
 #include "Engine/Network/NetworkManager.h"
 #include <optional>
 #include "Engine/Operator/Context.h"
+#include "Engine/Parameter/Parameter.h"
+#include "Engine/Parameter/Template.h"
 #include <iostream>
 
 using namespace enzo;
@@ -23,12 +25,27 @@ void enzo::nt::connectOperators(enzo::nt::OpId inputOpId, unsigned int inputInde
     outputOp.addInputConnection(newConnection);
 }
 
-nt::GeometryOperator::GeometryOperator(enzo::nt::OpId opId, op::OpInfo opinfo)
-: opId_{opId}, opDef_(opinfo.ctorFunc(opId))
+nt::GeometryOperator::GeometryOperator(enzo::nt::OpId opId, op::OpInfo opInfo)
+: opId_{opId}, opInfo_{opInfo}, opDef_(opInfo.ctorFunc(opId))
 {
     // TODO: drive by geometry definition
     maxInputs_=4;
     maxOutputs_=4;
+
+    initParameters();
+}
+
+void nt::GeometryOperator::initParameters()
+{
+    for(const prm::Template* t = opInfo_.templates; t->isValid(); ++t)
+    {
+        std::cout << "name: " << t->getName() << "\n";
+        // create parameter
+        parameters_.push_back(
+            std::make_shared<prm::Parameter>(*t)
+        );
+    }
+
 }
 
 void enzo::nt::GeometryOperator::cookOp(op::Context context)

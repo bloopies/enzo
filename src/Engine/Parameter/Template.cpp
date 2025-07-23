@@ -6,3 +6,20 @@ enzo::prm::Template::Template(enzo::prm::Type type, const char* name)
 {
     
 }
+
+enzo::prm::Template::Template()
+{
+    
+}
+
+bool enzo::prm::Template::isValid() const
+{
+    return name_!=nullptr;
+
+}
+
+const char* enzo::prm::Template::getName() const
+{
+    return name_;
+}
+

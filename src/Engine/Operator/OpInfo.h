@@ -11,5 +11,6 @@ struct OpInfo
     std::string displayName;
     enzo::nt::opConstructor ctorFunc;
     enzo::prm::Template* templates;
+    size_t templatesSize;
 };
 }

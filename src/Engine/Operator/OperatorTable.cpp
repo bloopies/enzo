@@ -3,15 +3,17 @@
 
 #include <iostream>
 
-void enzo::op::OperatorTable::addOperator(const char* internalName, const char* displayName, nt::opConstructor ctorFunc, prm::Template* templates)
+void enzo::op::OperatorTable::addOperator(const char* internalName, const char* displayName, nt::opConstructor ctorFunc, prm::Template templates[])
 {
     std::cout << "OPERATOR TABLE ADDED\n";
     std::cout << "adding operator: " << displayName << "\n";
+    std::cout << "tempalate size: " << sizeof(templates) << "\n";
     enzo::op::OpInfo info {
         internalName,
         displayName,
         ctorFunc,
-        templates
+        templates,
+        sizeof(*templates)
     };
 
     opInfoStore_.push_back(info);
