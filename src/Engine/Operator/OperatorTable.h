@@ -13,7 +13,7 @@ namespace enzo::op
 class BOOST_SYMBOL_EXPORT OperatorTable
 {
 public:
-    static void addOperator(const char* internalName, const char* displayName, nt::opConstructor ctorFunc, prm::Template* templates);
+    static void addOperator(const char* internalName, const char* displayName, nt::opConstructor ctorFunc, prm::Template templates[]);
     static nt::opConstructor getOpConstructor(std::string name);
     static const std::optional<op::OpInfo> getOpInfo(std::string name);
     static std::vector<OpInfo> getData();
@@ -22,6 +22,6 @@ public:
 private:
     static std::vector<OpInfo> opInfoStore_;
 };
-using addOperatorPtr = void (*)(const char* internalName, const char* displayName, nt::opConstructor ctorFunc, prm::Template* templateList);
+using addOperatorPtr = void (*)(const char* internalName, const char* displayName, nt::opConstructor ctorFunc, prm::Template templateList[]);
 }
 

@@ -1,5 +1,6 @@
 #include "OpDefs/GopTransform.hpp"
 #include "Engine/Operator/AttributeHandle.h"
+#include "Engine/Parameter/Template.h"
 
 GopTransform::GopTransform(enzo::nt::OpId opId)
 : enzo::nt::GeometryOpDef(opId)
@@ -40,6 +41,7 @@ void GopTransform::cookOp(enzo::op::Context context)
 
 enzo::prm::Template GopTransform::parameterList[] = {
     enzo::prm::Template(enzo::prm::Type::FLOAT, "Test"),
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "Test2")
+    enzo::prm::Template(enzo::prm::Type::FLOAT, "Test2"),
+    enzo::prm::Terminator
 };
 

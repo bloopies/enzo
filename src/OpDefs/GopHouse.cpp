@@ -79,4 +79,7 @@ void GOP_house::cookOp(enzo::op::Context context)
     // }
 }
 
-enzo::prm::Template GOP_house::parameterList[] = {};
+enzo::prm::Template GOP_house::parameterList[] =
+{
+    enzo::prm::Terminator
+};
