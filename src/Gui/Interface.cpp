@@ -24,7 +24,7 @@ EnzoUI::EnzoUI()
     setStyleSheet("background-color:#1d2021;");
 
     Viewport* viewport = new Viewport();
-    Network* network = new Network(this);
+    Network* network = new Network();
     ParametersPanel* parametersPanel = new ParametersPanel();
 
     constexpr int margin = 2;
@@ -32,6 +32,7 @@ EnzoUI::EnzoUI()
     network->layout()->setContentsMargins(margin, margin, margin, margin);
     parametersPanel->layout()->setContentsMargins(margin, margin, margin, margin);
     mainLayout_->setContentsMargins(margin, margin, margin, margin);
+
 
 
     viewportSplitter_ = new Splitter(this);
@@ -42,18 +43,35 @@ EnzoUI::EnzoUI()
 
     viewportSplitter_->addWidget(viewport);
     viewportSplitter_->addWidget(networkSplitter_);
-    viewportSplitter_->setStretchFactor(0, 25);
+    viewportSplitter_->setStretchFactor(0, 4);
     viewportSplitter_->setStretchFactor(1, 1);
 
     networkSplitter_->addWidget(parametersPanel);
     networkSplitter_->addWidget(network);
-    networkSplitter_->setStretchFactor(0, 1);
-    networkSplitter_->setStretchFactor(1, 10);
+    networkSplitter_->setStretchFactor(0, 10);
+    networkSplitter_->setStretchFactor(1, 1);
 
     mainLayout_->addWidget(viewportSplitter_);
 
     // connect signals
     connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, viewport, &Viewport::geometryChanged);
     connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, parametersPanel, &ParametersPanel::selectionChanged);
+
+//  ─── end of EnzoUI ctor ───
+QTimer::singleShot(0, this, [=] {
+auto dump = [](const char* name, QWidget* w) {
+    qInfo().nospace()
+        << name
+        << "  sizeHint="    << w->sizeHint()
+        << "  minHint="     << w->minimumSizeHint()
+        << "  min="         << w->minimumSize()
+        << "  policy="      << w->sizePolicy();
+};
+
+    dump("Viewport        ", viewport);
+    dump("ParametersPanel ", parametersPanel);
+    dump("Network         ", network);
+    dump("NetworkSplitter ", networkSplitter_);   // will show max(child‑mins)
+});
 
 }

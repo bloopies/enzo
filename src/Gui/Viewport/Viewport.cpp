@@ -14,17 +14,10 @@ Viewport::Viewport(QWidget *parent, Qt::WindowFlags f)
 : QWidget(parent, f)
 {
     mainLayout_=new QVBoxLayout();
-    openGLWidget_ = new ViewportGLWidget(this); mainLayout_->addWidget(openGLWidget_);
-    openGLWidget_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    // mainLayout_->addWidget(new QPushButton("hello world"));
+    openGLWidget_ = new ViewportGLWidget(this);
+    mainLayout_->addWidget(openGLWidget_);
+
     this->setLayout(mainLayout_);
-    // this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    //     QTimer::singleShot(100, this, [=] {
-    // std::cout << "MyGLWidget size: " << openGLWidget_->width() << " x " << openGLWidget_->height() << std::endl;
-    // });
-
-
 }
 
 void Viewport::geometryChanged(enzo::geo::Geometry& geometry)

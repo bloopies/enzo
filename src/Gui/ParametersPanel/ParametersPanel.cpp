@@ -29,7 +29,6 @@ ParametersPanel::ParametersPanel(QWidget *parent, Qt::WindowFlags f)
     )"
       );
 
-    mainLayout_->addLayout(parametersLayout_);
     mainLayout_->addWidget(bgWidget_);
 
     // parametersLayout_->addWidget(new enzo::ui::AbstractFormParm());
