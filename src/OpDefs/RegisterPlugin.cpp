@@ -18,7 +18,7 @@ extern "C"
             "house",
             "House",
             &GOP_house::ctor,
-            GopTransform::parameterList
+            GOP_house::parameterList
         );
     }
 

@@ -8,6 +8,8 @@ class ParametersPanel
 {
 public:
     ParametersPanel(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+public slots:
+    void selectionChanged();
 private:
     QVBoxLayout* mainLayout_;
     QVBoxLayout* parametersLayout_;

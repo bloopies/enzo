@@ -7,13 +7,17 @@ void enzo::op::OperatorTable::addOperator(const char* internalName, const char* 
 {
     std::cout << "OPERATOR TABLE ADDED\n";
     std::cout << "adding operator: " << displayName << "\n";
-    std::cout << "tempalate size: " << sizeof(templates) << "\n";
+
+    for(const prm::Template* t = templates; t->isValid(); ++t)
+    {
+        std::cout << "name: " << t->getName() << "\n";
+    }
+
     enzo::op::OpInfo info {
         internalName,
         displayName,
         ctorFunc,
         templates,
-        sizeof(*templates)
     };
 
     opInfoStore_.push_back(info);

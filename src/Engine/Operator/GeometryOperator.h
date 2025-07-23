@@ -26,7 +26,7 @@ public:
     void addOutputConnection(std::shared_ptr<nt::GeometryConnection> connection);
     std::vector<std::shared_ptr<const GeometryConnection>> getInputConnections() const;
     std::vector<std::shared_ptr<const GeometryConnection>> getOutputConnections() const;
-
+    std::vector<std::weak_ptr<prm::Parameter>> getParameters();
 
 
     unsigned int getMaxInputs() const;

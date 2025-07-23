@@ -42,17 +42,18 @@ EnzoUI::EnzoUI()
 
     viewportSplitter_->addWidget(viewport);
     viewportSplitter_->addWidget(networkSplitter_);
-    viewportSplitter_->setStretchFactor(0, 4);
+    viewportSplitter_->setStretchFactor(0, 25);
     viewportSplitter_->setStretchFactor(1, 1);
 
     networkSplitter_->addWidget(parametersPanel);
     networkSplitter_->addWidget(network);
     networkSplitter_->setStretchFactor(0, 1);
-    networkSplitter_->setStretchFactor(1, 15);
+    networkSplitter_->setStretchFactor(1, 10);
 
     mainLayout_->addWidget(viewportSplitter_);
 
     // connect signals
     connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, viewport, &Viewport::geometryChanged);
+    connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, parametersPanel, &ParametersPanel::selectionChanged);
 
 }

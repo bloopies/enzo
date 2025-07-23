@@ -76,6 +76,9 @@ qt_add_executable(${AppExec}
 target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen TBB::tbb Boost::filesystem Boost::system)
 target_include_directories(${AppExec} PUBLIC src)
 
+# compile nodes
+add_subdirectory(src/OpDefs)
+
 # tests
 # Include(FetchContent)
 
@@ -110,4 +113,3 @@ target_include_directories(${AppExec} PUBLIC src)
 # target_compile_definitions(${BenchExec} PRIVATE UNIT_TEST)
 # target_include_directories(${BenchExec} PUBLIC src)
 
-# add_subdirectory(src/OpDefs)

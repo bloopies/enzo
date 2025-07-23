@@ -39,9 +39,11 @@ void GopTransform::cookOp(enzo::op::Context context)
 
 }
 
-enzo::prm::Template GopTransform::parameterList[] = {
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "Test"),
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "Test2"),
+enzo::prm::Template GopTransform::parameterList[] = 
+{
+    enzo::prm::Template(enzo::prm::Type::FLOAT, "translateX"),
+    enzo::prm::Template(enzo::prm::Type::FLOAT, "translateY"),
+    enzo::prm::Template(enzo::prm::Type::FLOAT, "translateZ"),
     enzo::prm::Terminator
 };
 
