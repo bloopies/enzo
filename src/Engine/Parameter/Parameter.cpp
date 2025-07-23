@@ -7,3 +7,9 @@ enzo::prm::Parameter::Parameter(Template prmTemplate)
 {
     std::cout << "created new parameter: " << prmTemplate.getName() << "\n";
 }
+
+std::string enzo::prm::Parameter::getName() const
+{
+    return template_.getName();
+}
+

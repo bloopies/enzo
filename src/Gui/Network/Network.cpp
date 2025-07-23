@@ -399,8 +399,8 @@ void Network::mouseReleaseEvent(QMouseEvent *event)
                 NodeGraphic* prevDisplayNode = nodeStore_.at(*prevDisplayOpId);
                 prevDisplayNode->setDisplayFlag(false);
             }
-            nm.setDisplayOp(opId);
             static_cast<DisplayFlagButton*>(clickedDisplayFlag)->setEnabled(true);
+            nm.setDisplayOp(opId);
         }
         if(state_==State::MOVING_NODE)
         {

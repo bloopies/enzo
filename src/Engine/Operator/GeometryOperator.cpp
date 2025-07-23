@@ -83,6 +83,10 @@ std::vector<std::shared_ptr<const nt::GeometryConnection>> nt::GeometryOperator:
     }
     return inputConnections;
 }
+std::vector<std::weak_ptr<prm::Parameter>> nt::GeometryOperator::getParameters()
+{
+    return {parameters_.begin(), parameters_.end()};
+}
 
 std::vector<std::shared_ptr<const nt::GeometryConnection>> nt::GeometryOperator::getOutputConnections() const
 {
