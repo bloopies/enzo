@@ -74,6 +74,19 @@ void nt::GeometryOperator::addOutputConnection(std::shared_ptr<nt::GeometryConne
     std::cout << "size: " << outputConnections_.size() << "\n";
 }
 
+std::weak_ptr<prm::Parameter> nt::GeometryOperator::getParameter(std::string parameterName)
+{
+    for(auto parm : parameters_)
+    {
+        if(parm->getName()==parameterName)
+        {
+            return parm;
+        }
+    }
+    return std::weak_ptr<prm::Parameter>();
+
+}
+
 std::vector<std::shared_ptr<const nt::GeometryConnection>> nt::GeometryOperator::getInputConnections() const
 {
     std::vector<std::shared_ptr<const nt::GeometryConnection>> inputConnections;

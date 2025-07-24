@@ -18,6 +18,7 @@ add_library(${libName} SHARED
     ../Engine/Operator/Attribute.cpp
     ../Engine/Network/NetworkManager.cpp
     ../Engine/Parameter/Template.cpp
+    ../Engine/Parameter/Parameter.cpp
     GopTransform.cpp
     GopHouse.cpp
 )

@@ -26,7 +26,9 @@ void GopTransform::cookOp(enzo::op::Context context)
         for(int i=0; i<PAttrHandle.getAllValues().size(); ++i)
         {
             enzo::bt::Vector3 vector = PAttrHandle.getValue(i);
-            vector.y()+=2.5;
+            vector.x()+=context.evalFloatParm("translateX");
+            vector.y()+=context.evalFloatParm("translateY");
+            vector.z()+=context.evalFloatParm("translateZ");
             PAttrHandle.setValue(i, vector);
         }
         // ----
