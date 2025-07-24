@@ -41,16 +41,24 @@ void nt::GeometryOperator::initParameters()
     {
         std::cout << "name: " << t->getName() << "\n";
         // create parameter
-        parameters_.push_back(
-            std::make_shared<prm::Parameter>(*t)
-        );
+        auto parameter = std::make_shared<prm::Parameter>(*t);
+        parameter->valueChanged.connect(boost::bind(&GeometryOperator::dirtyNode, this));
+
+        parameters_.push_back(parameter);
     }
 
+}
+
+void enzo::nt::GeometryOperator::dirtyNode()
+{
+    dirty_=true;
+    nodeDirtied(opId_);
 }
 
 void enzo::nt::GeometryOperator::cookOp(op::Context context)
 {
     opDef_->cookOp(context);
+    dirty_=false;
 }
 
 geo::Geometry& enzo::nt::GeometryOperator::getOutputGeo(unsigned outputIndex)

@@ -55,7 +55,8 @@ EnzoUI::EnzoUI()
 
     // connect signals
     connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, viewport, &Viewport::geometryChanged);
-    connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, parametersPanel, &ParametersPanel::selectionChanged);
+    enzo::nt::nm().displayNodeChanged.connect([parametersPanel](){parametersPanel->selectionChanged();});
+    // connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, parametersPanel, &ParametersPanel::selectionChanged);
 
 //  ─── end of EnzoUI ctor ───
 QTimer::singleShot(0, this, [=] {
