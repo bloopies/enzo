@@ -93,6 +93,7 @@ $(function(){ initResizable(false); });
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classenzo_1_1nt_1_1GeometryOperator-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">enzo::nt::GeometryOperator Class Reference</div></div>
 </div><!--header-->
@@ -130,12 +131,24 @@ std::vector&lt; std::shared_ptr&lt; const <a class="el" href="classenzo_1_1nt_1_
 <tr class="memitem:afcb85d7bd36fa607b42eaabdae18206f" id="r_afcb85d7bd36fa607b42eaabdae18206f"><td class="memItemLeft" align="right" valign="top"><a id="afcb85d7bd36fa607b42eaabdae18206f" name="afcb85d7bd36fa607b42eaabdae18206f"></a>
 std::vector&lt; std::weak_ptr&lt; <a class="el" href="classenzo_1_1prm_1_1Parameter.html">prm::Parameter</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getParameters</b> ()</td></tr>
 <tr class="separator:afcb85d7bd36fa607b42eaabdae18206f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93cdd6cf5b90dc4931ed5e08630ec0f2" id="r_a93cdd6cf5b90dc4931ed5e08630ec0f2"><td class="memItemLeft" align="right" valign="top"><a id="a93cdd6cf5b90dc4931ed5e08630ec0f2" name="a93cdd6cf5b90dc4931ed5e08630ec0f2"></a>
+std::weak_ptr&lt; <a class="el" href="classenzo_1_1prm_1_1Parameter.html">prm::Parameter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getParameter</b> (std::string parameterName)</td></tr>
+<tr class="separator:a93cdd6cf5b90dc4931ed5e08630ec0f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e0cc7430bec2b41645099892a798640" id="r_a6e0cc7430bec2b41645099892a798640"><td class="memItemLeft" align="right" valign="top"><a id="a6e0cc7430bec2b41645099892a798640" name="a6e0cc7430bec2b41645099892a798640"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>dirtyNode</b> ()</td></tr>
+<tr class="separator:a6e0cc7430bec2b41645099892a798640"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a349e0498f2c77a5188ed94414f2abc72" id="r_a349e0498f2c77a5188ed94414f2abc72"><td class="memItemLeft" align="right" valign="top"><a id="a349e0498f2c77a5188ed94414f2abc72" name="a349e0498f2c77a5188ed94414f2abc72"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getMaxInputs</b> () const</td></tr>
 <tr class="separator:a349e0498f2c77a5188ed94414f2abc72"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49417aeff42d1c377be3a5f8d4b529ea" id="r_a49417aeff42d1c377be3a5f8d4b529ea"><td class="memItemLeft" align="right" valign="top"><a id="a49417aeff42d1c377be3a5f8d4b529ea" name="a49417aeff42d1c377be3a5f8d4b529ea"></a>
 unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getMaxOutputs</b> () const</td></tr>
 <tr class="separator:a49417aeff42d1c377be3a5f8d4b529ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ae3249f4a5d25b275c149028671b0b48e" id="r_ae3249f4a5d25b275c149028671b0b48e"><td class="memItemLeft" align="right" valign="top"><a id="ae3249f4a5d25b275c149028671b0b48e" name="ae3249f4a5d25b275c149028671b0b48e"></a>
+boost::signals2::signal&lt; void(nt::OpId)&gt;&#160;</td><td class="memItemRight" valign="bottom"><b>nodeDirtied</b></td></tr>
+<tr class="separator:ae3249f4a5d25b275c149028671b0b48e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/Engine/Operator/<a class="el" href="GeometryOperator_8h_source.html">GeometryOperator.h</a></li>
