@@ -23,6 +23,6 @@ private:
     QPointF leftStartPos_;
     bool rightMouseDown_=false;
     QPointF rightStartPos_;
-public slots:
+public Q_SLOTS:
     void geometryChanged(enzo::geo::Geometry& geometry);
 };

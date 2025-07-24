@@ -15,7 +15,19 @@ enzo::nt::OpId enzo::nt::NetworkManager::addOperator(op::OpInfo opInfo)
 {
 
     maxOpId_++;
-    gopStore_.emplace(maxOpId_, std::make_unique<GeometryOperator>(maxOpId_, opInfo));
+    std::unique_ptr<GeometryOperator> newOp = std::make_unique<GeometryOperator>(maxOpId_, opInfo);
+    newOp->nodeDirtied.connect(
+        [this](nt::OpId opId)
+        {
+            cookOp(opId);
+
+            if(getDisplayOp()==opId)
+            {
+                enzo::nt::GeometryOperator& displayOp = getGeoOperator(opId);
+                updateDisplay(displayOp.getOutputGeo(0));
+            }
+        });
+    gopStore_.emplace(maxOpId_, std::move(newOp));
     std::cout << "adding operator " << maxOpId_ << "\n";
 
     return maxOpId_;
@@ -51,27 +63,25 @@ bool enzo::nt::NetworkManager::isValidOp(nt::OpId opId)
 
 void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
 {
-    std::cout << "gop size before: " << gopStore_.size() <<"\n";
     displayOp_=opId;
-    std::vector<enzo::nt::OpId> dependencyGraph = getDependencyGraph(opId);
-    enzo::geo::Geometry prevGeometry;
-    std::cout << "size: " << dependencyGraph.size() << "\n";
+    
+    cookOp(opId);
 
-    for(enzo::nt::OpId dependencyOpId : dependencyGraph)
-    {
-        cookOp(dependencyOpId);
-    }
-    std::cout << "gop size middle: " << gopStore_.size() <<"\n"; // <- size: 1
     enzo::nt::GeometryOperator& displayOp = getGeoOperator(opId);
     updateDisplay(displayOp.getOutputGeo(0));
-    std::cout << "gop size after: " << gopStore_.size() <<"\n";
+    displayNodeChanged();
 }
 
 void enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId)
 {
-    enzo::nt::GeometryOperator& op = getGeoOperator(opId);
-    enzo::op::Context context(opId, enzo::nt::nm());
-    op.cookOp(context);
+    std::vector<enzo::nt::OpId> dependencyGraph = getDependencyGraph(opId);
+
+    for(enzo::nt::OpId dependencyOpId : dependencyGraph)
+    {
+        enzo::nt::GeometryOperator& op = getGeoOperator(dependencyOpId);
+        enzo::op::Context context(dependencyOpId, enzo::nt::nm());
+        op.cookOp(context);
+    }
 }
 
 std::vector<enzo::nt::OpId> enzo::nt::NetworkManager::getDependencyGraph(enzo::nt::OpId opId)

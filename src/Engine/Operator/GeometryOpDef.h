@@ -20,6 +20,7 @@ private:
     unsigned int minInputs_;
     unsigned int maxInputs_;
     unsigned int maxOutputs_;
+
 protected:
     enzo::nt::OpId opId_;
     const enzo::geo::Geometry& getInputGeoView(unsigned int inputIndex);

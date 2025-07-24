@@ -15,7 +15,7 @@ public:
     AbstractSliderParm(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     void setValue(bt::floatT value);
 
-signals:
+Q_SIGNALS:
     void valueChanged(bt::floatT value); 
 
 private:

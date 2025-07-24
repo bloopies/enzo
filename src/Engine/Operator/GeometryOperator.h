@@ -27,10 +27,17 @@ public:
     std::vector<std::shared_ptr<const GeometryConnection>> getInputConnections() const;
     std::vector<std::shared_ptr<const GeometryConnection>> getOutputConnections() const;
     std::vector<std::weak_ptr<prm::Parameter>> getParameters();
+    std::weak_ptr<prm::Parameter> getParameter(std::string parameterName);
+
+    void dirtyNode();
 
 
     unsigned int getMaxInputs() const;
     unsigned int getMaxOutputs() const;
+
+    // signals
+    boost::signals2::signal<void (nt::OpId)> nodeDirtied;
+
 
 
 private:
@@ -45,5 +52,6 @@ private:
     std::unique_ptr<enzo::nt::GeometryOpDef> opDef_;
     enzo::nt::OpId opId_;
     enzo::op::OpInfo opInfo_;
+    bool dirty_ = true;
 };
 }

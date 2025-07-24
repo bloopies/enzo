@@ -25,6 +25,6 @@ protected:
     void resizeGL(int w, int h) override;
     void paintGL() override;
 
-public slots:
+public Q_SLOTS:
     void geometryChanged(enzo::geo::Geometry& geometry);
 };

@@ -48,7 +48,7 @@ void GOP_house::cookOp(enzo::op::Context context)
         for(int i=0; i<PAttrHandle.getAllValues().size(); ++i)
         {
             enzo::bt::Vector3 vector = PAttrHandle.getValue(i);
-            vector.x()+=2.5;
+            vector*=context.evalFloatParm("size");
             PAttrHandle.setValue(i, vector);
         }
         // ----
@@ -69,18 +69,10 @@ void GOP_house::cookOp(enzo::op::Context context)
         setOutputGeometry(0, geo);
     }
 
-    // if(outputRequested(1))
-    // {
-    //     // create new geometry
-    //     const geo::Geometry& geo1 = getInputGeoView(0);
-    //     geo::Geometry geo2;
-
-    //     setOutputGeometry(1, geo2);
-    // }
 }
 
 enzo::prm::Template GOP_house::parameterList[] =
 {
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "Size"),
+    enzo::prm::Template(enzo::prm::Type::FLOAT, "size", 1),
     enzo::prm::Terminator
 };

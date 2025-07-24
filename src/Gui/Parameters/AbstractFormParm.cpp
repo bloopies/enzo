@@ -16,7 +16,6 @@ enzo::ui::AbstractFormParm::AbstractFormParm(std::weak_ptr<prm::Parameter> param
         label->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
 
         auto slider = new AbstractSliderParm();
-        connect(slider, &AbstractSliderParm::valueChanged, this, &AbstractFormParm::changeValue); 
         slider->setValue(sharedParameter->evalFloat());
 
         mainLayout_ = new QHBoxLayout();
@@ -28,6 +27,8 @@ enzo::ui::AbstractFormParm::AbstractFormParm(std::weak_ptr<prm::Parameter> param
         setProperty("class", "Parameter");
         setStyleSheet(".Parameter { background-color: none;}");
         setLayout(mainLayout_);
+
+        connect(slider, &AbstractSliderParm::valueChanged, this, &AbstractFormParm::changeValue); 
     }
 
 }
