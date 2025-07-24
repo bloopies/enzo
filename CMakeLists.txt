@@ -54,6 +54,7 @@ set(GUI_SOURCES
 # qt
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets SvgWidgets OpenGLWidgets)
 qt_standard_project_setup()
+ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
 
 # glm
 find_package(glm REQUIRED)

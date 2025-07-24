@@ -42,7 +42,7 @@ private:
     enzo::nt::OpId maxOpId_=0;
     // operator selected for displaying in the viewport
     std::optional<OpId> displayOp_=std::nullopt;
-signals:
+Q_SIGNALS:
     void updateDisplay(enzo::geo::Geometry& geometry);
 
 };

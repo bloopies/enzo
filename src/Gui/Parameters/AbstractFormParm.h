@@ -2,6 +2,7 @@
 #include <QWidget>
 #include <QHBoxLayout>
 #include <memory>
+#include <qtmetamacros.h>
 
 namespace enzo::ui
 {
@@ -9,12 +10,12 @@ namespace enzo::ui
 class AbstractFormParm
 : public QWidget
 {
+    Q_OBJECT
 public:
     AbstractFormParm(std::weak_ptr<prm::Parameter> parameter);
 
-protected slots:
+protected Q_SLOTS:
     void changeValue(bt::floatT value);
-
 
 private:
     QHBoxLayout* mainLayout_;

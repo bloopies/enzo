@@ -5,6 +5,7 @@
 enzo::prm::Parameter::Parameter(Template prmTemplate)
 : template_{prmTemplate}
 {
+    floatValue_ = prmTemplate.getDefault();
     std::cout << "created new parameter: " << prmTemplate.getName() << "\n";
 }
 
