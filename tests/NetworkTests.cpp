@@ -26,14 +26,14 @@ struct OperatorTableInit
     OperatorTableInit() { enzo::op::OperatorTable::initPlugins(); }
 };
 static OperatorTableInit _operatorTableInit;
-auto testOpCtor = enzo::op::OperatorTable::getOpConstructor("house");
+auto testOpInfo = enzo::op::OperatorTable::getOpInfo("house").value();
 
 TEST_CASE_METHOD(NMReset, "network fixture separation start")
 {
     using namespace enzo;
     auto& nm = nt::nm();
 
-    nt::OpId newOpId = nm.addOperator(testOpCtor);
+    nt::OpId newOpId = nm.addOperator(testOpInfo);
     REQUIRE(newOpId==1);
     REQUIRE(nm.isValidOp(1));
     
@@ -53,8 +53,8 @@ TEST_CASE_METHOD(NMReset, "network")
     using namespace enzo;
     auto& nm = nt::nm();
 
-    nt::OpId newOpId = nm.addOperator(testOpCtor);
-    nt::OpId newOpId2 = nm.addOperator(testOpCtor);
+    nt::OpId newOpId = nm.addOperator(testOpInfo);
+    nt::OpId newOpId2 = nm.addOperator(testOpInfo);
 
     REQUIRE(nm.isValidOp(newOpId));
     if(nm.isValidOp(newOpId))
@@ -78,13 +78,13 @@ TEST_CASE_METHOD(NMReset, "reset")
     using namespace enzo;
     auto& nm = nt::nm();
 
-    nt::OpId newOpId = nm.addOperator(testOpCtor);
+    nt::OpId newOpId = nm.addOperator(testOpInfo);
 
     nm._reset();
 
     REQUIRE_FALSE(nm.isValidOp(newOpId));
 
-    nt::OpId newOpId2 = nm.addOperator(testOpCtor);
+    nt::OpId newOpId2 = nm.addOperator(testOpInfo);
     REQUIRE(nm.isValidOp(newOpId2));
 
 

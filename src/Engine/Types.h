@@ -31,6 +31,16 @@ namespace enzo
         using Vector3 = Eigen::Vector3d;
         using Vector4 = Eigen::Vector4d;
     }
+    namespace prm
+    {
+        enum class Type
+        {
+            STRING,
+            FLOAT,
+            INT,
+            TOGGLE
+        };
+    }
     namespace nt
     {
         using OpId = uint64_t;

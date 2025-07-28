@@ -4,12 +4,12 @@ namespace enzo::prm
 
 {
 
-enum class Type
-{
-    STRING,
-    FLOAT,
-    INT,
-};
+// enum class Type
+// {
+//     STRING,
+//     FLOAT,
+//     INT,
+// };
 
 
 // class Type

@@ -26,7 +26,7 @@ struct OperatorTableInit
     OperatorTableInit() { enzo::op::OperatorTable::initPlugins(); }
 };
 static OperatorTableInit _operatorTableInit;
-auto testOpCtor = enzo::op::OperatorTable::getOpConstructor("house");
+auto testOpInfo = enzo::op::OperatorTable::getOpInfo("house").value();
 
 TEST_CASE_METHOD(NMReset, "Network Manager")
 {
@@ -34,7 +34,7 @@ TEST_CASE_METHOD(NMReset, "Network Manager")
 
     auto& nm = nt::nm();
 
-    nt::OpId startOp = nm.addOperator(testOpCtor);
+    nt::OpId startOp = nm.addOperator(testOpInfo);
     nt::OpId prevOp = startOp;
     std::vector<nt::OpId> prevOps;
 
@@ -42,7 +42,7 @@ TEST_CASE_METHOD(NMReset, "Network Manager")
     {
         for(int i=0; i<4; ++i)
         {
-            nt::OpId newOp = nm.addOperator(testOpCtor);
+            nt::OpId newOp = nm.addOperator(testOpInfo);
             prevOps.push_back(newOp);
             nt::connectOperators(newOp, i, prevOp, 0);
         }
@@ -52,7 +52,7 @@ TEST_CASE_METHOD(NMReset, "Network Manager")
             for(int i=0; i<size(prevOpsBuffer); ++i)
             {
                 prevOps.clear();
-                nt::OpId newOp = nm.addOperator(testOpCtor);
+                nt::OpId newOp = nm.addOperator(testOpInfo);
                 prevOps.push_back(newOp);
                 nt::connectOperators(newOp, 0, prevOpsBuffer[i], 0);
 
