@@ -50,6 +50,10 @@ set(GUI_SOURCES
     src/Gui/Parameters/AbstractFormParm.cpp
     src/Gui/Parameters/FloatParm.cpp
 )
+set(ENGINE_INCLUDE_DIRECTORIES
+    src
+    extern/icecream-cpp/include
+)
 
 # qt
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets SvgWidgets OpenGLWidgets)
@@ -75,7 +79,9 @@ qt_add_executable(${AppExec}
 )
 
 target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen TBB::tbb Boost::filesystem Boost::system)
-target_include_directories(${AppExec} PUBLIC src)
+target_include_directories(${AppExec} PUBLIC
+    ${ENGINE_INCLUDE_DIRECTORIES}
+)
 
 # compile nodes
 add_subdirectory(src/OpDefs)
@@ -100,7 +106,7 @@ add_executable(${TestExec}
 target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb Boost::filesystem Boost::system)
 target_compile_definitions(${TestExec} PRIVATE UNIT_TEST)
 target_include_directories(${TestExec} PUBLIC
-    src
+    ${ENGINE_INCLUDE_DIRECTORIES}
     ${BOOST_INCLUDE_DIRS}
 )
 
@@ -112,5 +118,7 @@ add_executable(${BenchExec}
 )
 target_link_libraries(${BenchExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb Boost::filesystem Boost::system)
 target_compile_definitions(${BenchExec} PRIVATE UNIT_TEST)
-target_include_directories(${BenchExec} PUBLIC src)
+target_include_directories(${BenchExec} PUBLIC 
+    ${ENGINE_INCLUDE_DIRECTORIES}
+)
 

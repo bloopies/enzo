@@ -6,6 +6,7 @@
 #include "Engine/Parameter/Parameter.h"
 #include "Engine/Parameter/Template.h"
 #include <iostream>
+#include "icecream.hpp"
 
 using namespace enzo;
 
@@ -66,11 +67,29 @@ geo::Geometry& enzo::nt::GeometryOperator::getOutputGeo(unsigned outputIndex)
     return opDef_->getOutputGeo(outputIndex);
 }
 
-void nt::GeometryOperator::addInputConnection(std::shared_ptr<nt::GeometryConnection> connection)
+void nt::GeometryOperator::addInputConnection(std::shared_ptr<nt::GeometryConnection> newConnection)
 {
-    std::cout << "Input connection added\nConnecting ops " << connection->getInputOpId() << " -> " << connection->getOutputOpId() << "\n";
-    std::cout << "Connecting index " << connection->getInputIndex() << " -> " << connection->getOutputIndex() << "\n";
-    inputConnections_.push_back(connection); 
+    // delete previous input
+    IC();
+    for(auto it=inputConnections_.begin(); it!=inputConnections_.end();)
+    {
+        IC();
+        if((*it)->getOutputIndex()==newConnection->getOutputIndex())
+        {
+            IC();
+            inputConnections_.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+    IC();
+
+    std::cout << "Input newConnection added\nConnecting ops " << newConnection->getInputOpId() << " -> " << newConnection->getOutputOpId() << "\n";
+    std::cout << "Connecting index " << newConnection->getInputIndex() << " -> " << newConnection->getOutputIndex() << "\n";
+    // add new newConnection
+    inputConnections_.push_back(newConnection); 
     std::cout << "size: " << inputConnections_.size() << "\n";
 }
 

@@ -26,5 +26,8 @@ target_link_libraries(${libName} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets 
 
 
 MESSAGE("CURRENT SOURCE DIR" ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(${libName} PUBLIC ../)
-target_include_directories(${libName} PUBLIC .)
+target_include_directories(${libName} PUBLIC
+    ../
+    .
+    ../../extern/icecream-cpp/include
+)
