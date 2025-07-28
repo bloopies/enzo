@@ -70,13 +70,10 @@ geo::Geometry& enzo::nt::GeometryOperator::getOutputGeo(unsigned outputIndex)
 void nt::GeometryOperator::addInputConnection(std::shared_ptr<nt::GeometryConnection> newConnection)
 {
     // delete previous input
-    IC();
     for(auto it=inputConnections_.begin(); it!=inputConnections_.end();)
     {
-        IC();
         if((*it)->getOutputIndex()==newConnection->getOutputIndex())
         {
-            IC();
             inputConnections_.erase(it);
         }
         else
@@ -84,7 +81,6 @@ void nt::GeometryOperator::addInputConnection(std::shared_ptr<nt::GeometryConnec
             ++it;
         }
     }
-    IC();
 
     std::cout << "Input newConnection added\nConnecting ops " << newConnection->getInputOpId() << " -> " << newConnection->getOutputOpId() << "\n";
     std::cout << "Connecting index " << newConnection->getInputIndex() << " -> " << newConnection->getOutputIndex() << "\n";
@@ -114,28 +110,30 @@ std::weak_ptr<prm::Parameter> nt::GeometryOperator::getParameter(std::string par
 
 }
 
-std::vector<std::shared_ptr<const nt::GeometryConnection>> nt::GeometryOperator::getInputConnections() const
+std::vector<std::weak_ptr<const nt::GeometryConnection>> nt::GeometryOperator::getInputConnections() const
 {
-    std::vector<std::shared_ptr<const nt::GeometryConnection>> inputConnections;
-    for(std::shared_ptr<nt::GeometryConnection> connection : inputConnections_)
-    {
-        inputConnections.push_back(connection);
-    }
-    return inputConnections;
+    return {inputConnections_.begin(), inputConnections_.end()};
 }
 std::vector<std::weak_ptr<prm::Parameter>> nt::GeometryOperator::getParameters()
 {
     return {parameters_.begin(), parameters_.end()};
 }
 
-std::vector<std::shared_ptr<const nt::GeometryConnection>> nt::GeometryOperator::getOutputConnections() const
+std::vector<std::weak_ptr<const nt::GeometryConnection>> nt::GeometryOperator::getOutputConnections() const
 {
-    std::vector<std::shared_ptr<const nt::GeometryConnection>> outputConnections;
-    for(std::shared_ptr<nt::GeometryConnection> connection : outputConnections_)
+    return {outputConnections_.begin(), outputConnections_.end()};
+}
+
+std::optional<const nt::GeometryConnection> nt::GeometryOperator::getInputConnection(size_t index) const
+{
+    for(auto it=inputConnections_.begin(); it!=inputConnections_.end();)
     {
-        outputConnections.push_back(connection);
+        if((*it)->getOutputIndex()==index)
+        {
+            return std::optional<const nt::GeometryConnection>(**it);
+        }
     }
-    return outputConnections;
+    return std::nullopt;
 }
 
 

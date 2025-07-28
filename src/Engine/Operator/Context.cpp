@@ -3,6 +3,7 @@
 #include "Engine/Parameter/Parameter.h"
 #include <iostream>
 #include <memory>
+#include <stdexcept>
 
 
 enzo::op::Context::Context(enzo::nt::OpId opId, enzo::nt::NetworkManager& networkManager)
@@ -15,14 +16,21 @@ enzo::geo::Geometry enzo::op::Context::cloneInputGeo(unsigned int inputIndex)
 {
     // TODO: implement
     enzo::nt::GeometryOperator& selfOp = networkManager_.getGeoOperator(opId_);
-    std::vector<std::shared_ptr<const nt::GeometryConnection>> inputConnections = selfOp.getInputConnections();
+    std::vector<std::weak_ptr<const nt::GeometryConnection>> inputConnections = selfOp.getInputConnections();
     if(inputConnections.size()==0)
     {
         std::cout << "no input\n";
         return enzo::geo::Geometry();
     }
-    std::shared_ptr<const nt::GeometryConnection> inputConnection = inputConnections.at(inputIndex);
-    return networkManager_.getGeoOperator(inputConnection->getInputOpId()).getOutputGeo(inputConnection->getInputIndex());
+    auto inputConnection = inputConnections.at(inputIndex);
+    if(auto inputConnectionSP = inputConnection.lock())
+    {
+        return networkManager_.getGeoOperator(inputConnectionSP->getInputOpId()).getOutputGeo(inputConnectionSP->getInputIndex());
+    }
+    else
+    {
+        throw std::runtime_error("Connection weak ptr doesn't exist");
+    }
 }
 
 enzo::bt::floatT enzo::op::Context::evalFloatParm(const char* parmName) const
@@ -33,5 +41,9 @@ enzo::bt::floatT enzo::op::Context::evalFloatParm(const char* parmName) const
     if(auto sharedParm = parameter.lock())
     {
         return sharedParm->evalFloat();
+    }
+    else
+    {
+        throw std::runtime_error("Parameter weak ptr invalid");
     }
 }

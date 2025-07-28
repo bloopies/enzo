@@ -24,8 +24,9 @@ public:
 
     void addInputConnection(std::shared_ptr<nt::GeometryConnection> connection);
     void addOutputConnection(std::shared_ptr<nt::GeometryConnection> connection);
-    std::vector<std::shared_ptr<const GeometryConnection>> getInputConnections() const;
-    std::vector<std::shared_ptr<const GeometryConnection>> getOutputConnections() const;
+    std::vector<std::weak_ptr<const GeometryConnection>> getInputConnections() const;
+    std::vector<std::weak_ptr<const GeometryConnection>> getOutputConnections() const;
+    std::optional<const GeometryConnection> getInputConnection(size_t index) const;
     std::vector<std::weak_ptr<prm::Parameter>> getParameters();
     std::weak_ptr<prm::Parameter> getParameter(std::string parameterName);
 

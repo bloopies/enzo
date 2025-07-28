@@ -129,7 +129,7 @@ void Network::leftMousePressed(QMouseEvent *event)
 void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
 {
     std::cout << "socket clicked\n";
-    // if first click
+    // clicked first socket
     if(!floatingEdge_)
     {
         startSocket_=socket;
@@ -138,7 +138,7 @@ void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
         scene_->addItem(floatingEdge_);
         floatingEdge_->setFloatPos(view_->mapToScene(event->pos()));
     }
-    // second click
+    // clicked second socket
     // connect to opposite type
     else if (
         socket->getIO()!=startSocket_->getIO() &&

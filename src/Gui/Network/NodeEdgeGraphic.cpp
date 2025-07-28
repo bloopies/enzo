@@ -5,6 +5,7 @@
 #include <qgraphicsitem.h>
 #include <QGraphicsScene>
 #include <QGraphicsSceneHoverEvent>
+#include "icecream.hpp"
 
 NodeEdgeGraphic::NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2, QGraphicsItem *parent)
 : QGraphicsItem(parent), socket1_{socket1}, socket2_{socket2}, defaultColor_{QColor("white")}
@@ -150,6 +151,7 @@ void NodeEdgeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 
 void NodeEdgeGraphic::cleanUp()
 {
+    // TODO: possible memory leak
     // these probably aren't necessary but i'm trying to fix a bug
     prepareGeometryChange();
     update();

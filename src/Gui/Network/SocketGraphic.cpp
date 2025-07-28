@@ -3,6 +3,7 @@
 #include <iostream>
 #include <qgraphicsitem.h>
 #include "Gui/Network/NodeEdgeGraphic.h"
+#include "icecream.hpp"
 
 SocketGraphic::SocketGraphic(enzo::nt::SocketIOType type, enzo::nt::OpId opId, unsigned int socketIndex, QGraphicsItem *parent)
 : QGraphicsItem(parent), type_{type}, opId_{opId}, socketIndex_{socketIndex}
@@ -22,6 +23,19 @@ unsigned int SocketGraphic::getIndex() const
 void SocketGraphic::addEdge(NodeEdgeGraphic* edge)
 {
     std::cout << "adding edge\n";
+    if(getIO()==enzo::nt::SocketIOType::Input && edges_.size()>0)
+    {
+        std::unordered_set<NodeEdgeGraphic*> edgesCopy = edges_;
+        for(NodeEdgeGraphic* edge : edgesCopy)
+        {
+            if(!edge)
+            {
+                continue;
+            }
+            edge->cleanUp();
+        }
+        edges_.clear();
+    }
     edges_.insert(edge);
 }
 

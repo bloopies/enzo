@@ -9,6 +9,7 @@
 #include <memory>
 #include <stack>
 #include <algorithm>
+#include <stdexcept>
 #include <string>
 
 enzo::nt::OpId enzo::nt::NetworkManager::addOperator(op::OpInfo opInfo)
@@ -99,8 +100,12 @@ std::vector<enzo::nt::OpId> enzo::nt::NetworkManager::getDependencyGraph(enzo::n
         auto inputConnections = getGeoOperator(currentOp).getInputConnections();
         for(auto connection : inputConnections)
         {
-            traversalBuffer.push(connection->getInputOpId());
-            dependencyGraph.push_back(connection->getInputOpId());
+            if(auto connectionPtr = connection.lock())
+            {
+                traversalBuffer.push(connectionPtr->getInputOpId());
+                dependencyGraph.push_back(connectionPtr->getInputOpId());
+            }
+            else { throw std::runtime_error("Connection weak ptr invalid"); }
         }
     }
 
