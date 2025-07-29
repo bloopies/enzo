@@ -124,6 +124,12 @@ std::vector<std::weak_ptr<const nt::GeometryConnection>> nt::GeometryOperator::g
     return {outputConnections_.begin(), outputConnections_.end()};
 }
 
+std::string nt::GeometryOperator::getTypeName()
+{
+    return opInfo_.displayName; 
+}
+
+
 std::optional<const nt::GeometryConnection> nt::GeometryOperator::getInputConnection(size_t index) const
 {
     for(auto it=inputConnections_.begin(); it!=inputConnections_.end();)

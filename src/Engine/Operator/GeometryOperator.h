@@ -30,6 +30,8 @@ public:
     std::vector<std::weak_ptr<prm::Parameter>> getParameters();
     std::weak_ptr<prm::Parameter> getParameter(std::string parameterName);
 
+    std::string getTypeName();
+
     void dirtyNode();
 
 
