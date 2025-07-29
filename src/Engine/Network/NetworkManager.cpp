@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <string>
+#include "icecream.hpp"
 
 enzo::nt::OpId enzo::nt::NetworkManager::addOperator(op::OpInfo opInfo)
 {

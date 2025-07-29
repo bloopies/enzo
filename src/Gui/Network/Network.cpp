@@ -152,6 +152,8 @@ void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
         // the output node is the node the data flows to
         auto outputNodeSocket = startSocket_->getIO()==enzo::nt::SocketIOType::Input ? startSocket_ : socket;
 
+        nt::GeometryOperator& geoOp = enzo::nt::nm().getGeoOperator(outputNodeSocket->getOpId());
+
         std::cout << "CONNECTING opid: " << inputNodeSocket->getOpId() << " -> " << outputNodeSocket->getOpId() << "\n";
 
 
@@ -163,6 +165,8 @@ void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
         newEdge->setPos(outputNodeSocket->scenePos(), inputNodeSocket->scenePos());
         scene_->addItem(newEdge);
         destroyFloatingEdge();
+
+        geoOp.dirtyNode();
     }
 }
 
