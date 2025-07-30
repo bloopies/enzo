@@ -36,6 +36,7 @@ private:
     // functions
     void cookOp(enzo::nt::OpId opId);
     std::vector<enzo::nt::OpId> getDependencyGraph(enzo::nt::OpId opId);
+    std::vector<enzo::nt::OpId> getDependentsGraph(enzo::nt::OpId opId);
 
     // variables
     // store for geometry operators

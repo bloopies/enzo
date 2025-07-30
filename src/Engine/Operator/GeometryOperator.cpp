@@ -40,17 +40,17 @@ void nt::GeometryOperator::initParameters()
         std::cout << "name: " << t->getName() << "\n";
         // create parameter
         auto parameter = std::make_shared<prm::Parameter>(*t);
-        parameter->valueChanged.connect(boost::bind(&GeometryOperator::dirtyNode, this));
+        parameter->valueChanged.connect([this](){dirtyNode();});
 
         parameters_.push_back(parameter);
     }
 
 }
 
-void enzo::nt::GeometryOperator::dirtyNode()
+void enzo::nt::GeometryOperator::dirtyNode(bool dirtyDescendents)
 {
     dirty_=true;
-    nodeDirtied(opId_);
+    nodeDirtied(opId_, dirtyDescendents);
 }
 
 void enzo::nt::GeometryOperator::cookOp(op::Context context)
@@ -79,11 +79,11 @@ void nt::GeometryOperator::addInputConnection(std::shared_ptr<nt::GeometryConnec
         }
     }
 
-    std::cout << "Input newConnection added\nConnecting ops " << newConnection->getInputOpId() << " -> " << newConnection->getOutputOpId() << "\n";
-    std::cout << "Connecting index " << newConnection->getInputIndex() << " -> " << newConnection->getOutputIndex() << "\n";
     // add new newConnection
     inputConnections_.push_back(newConnection); 
-    std::cout << "size: " << inputConnections_.size() << "\n";
+
+    IC();
+    dirtyNode();
 }
 
 void nt::GeometryOperator::addOutputConnection(std::shared_ptr<nt::GeometryConnection> connection)

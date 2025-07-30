@@ -19,15 +19,31 @@ enzo::nt::OpId enzo::nt::NetworkManager::addOperator(op::OpInfo opInfo)
     maxOpId_++;
     std::unique_ptr<GeometryOperator> newOp = std::make_unique<GeometryOperator>(maxOpId_, opInfo);
     newOp->nodeDirtied.connect(
-        [this](nt::OpId opId)
+        [this](nt::OpId opId, bool dirtyDescendents)
         {
-            cookOp(opId);
-
-            if(getDisplayOp()==opId)
+            IC();
+            if(dirtyDescendents)
             {
-                enzo::nt::GeometryOperator& displayOp = getGeoOperator(opId);
-                updateDisplay(displayOp.getOutputGeo(0));
+                IC();
+                std::vector<OpId> dependentIds = getDependentsGraph(opId);
+                for(OpId dependentId : dependentIds)
+                {
+                    IC();
+                    // dirty node
+                    enzo::nt::GeometryOperator& dependentOp = getGeoOperator(opId);
+                    std::cout << "dirtying id: " << dependentId << "\n";
+                    dependentOp.dirtyNode(false);
+
+                    // cook display op
+                    if(getDisplayOp().has_value() && getDisplayOp().value()==dependentId)
+                    {
+                        IC();
+                        cookOp(dependentId);
+                        updateDisplay(dependentOp.getOutputGeo(0));
+                    }
+                }
             }
+
         });
     gopStore_.emplace(maxOpId_, std::move(newOp));
     std::cout << "adding operator " << maxOpId_ << "\n";
@@ -96,7 +112,6 @@ std::vector<enzo::nt::OpId> enzo::nt::NetworkManager::getDependencyGraph(enzo::n
     while(traversalBuffer.size()!=0)
     {
         enzo::nt::OpId currentOp = traversalBuffer.top();
-        std::cout << "cooking node: " << currentOp << "\n";
         traversalBuffer.pop();
         auto inputConnections = getGeoOperator(currentOp).getInputConnections();
         for(auto connection : inputConnections)
@@ -114,6 +129,31 @@ std::vector<enzo::nt::OpId> enzo::nt::NetworkManager::getDependencyGraph(enzo::n
     return dependencyGraph;
 }
 
+std::vector<enzo::nt::OpId> enzo::nt::NetworkManager::getDependentsGraph(enzo::nt::OpId opId)
+{
+    std::stack<enzo::nt::OpId> traversalBuffer;
+    std::vector<enzo::nt::OpId> dependencyGraph;
+    traversalBuffer.push(opId);
+    dependencyGraph.push_back(opId);
+
+    while(traversalBuffer.size()!=0)
+    {
+        enzo::nt::OpId currentOp = traversalBuffer.top();
+        traversalBuffer.pop();
+        auto outputConnections = getGeoOperator(currentOp).getOutputConnections();
+        for(auto connection : outputConnections)
+        {
+            if(auto connectionPtr = connection.lock())
+            {
+                traversalBuffer.push(connectionPtr->getOutputOpId());
+                dependencyGraph.push_back(connectionPtr->getOutputOpId());
+            }
+            else { throw std::runtime_error("Connection weak ptr invalid"); }
+        }
+    }
+
+    return dependencyGraph;
+}
 
 std::optional<enzo::nt::OpId> enzo::nt::NetworkManager::getDisplayOp()
 {

@@ -165,8 +165,6 @@ void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
         newEdge->setPos(outputNodeSocket->scenePos(), inputNodeSocket->scenePos());
         scene_->addItem(newEdge);
         destroyFloatingEdge();
-
-        geoOp.dirtyNode();
     }
 }
 

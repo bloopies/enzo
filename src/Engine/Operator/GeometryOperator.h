@@ -32,15 +32,15 @@ public:
 
     std::string getTypeName();
 
-    void dirtyNode();
+    void dirtyNode(bool dirtyDescendents=true);
 
 
-    unsigned int getMaxInputs() const;
     unsigned int getMinInputs() const;
+    unsigned int getMaxInputs() const;
     unsigned int getMaxOutputs() const;
 
     // signals
-    boost::signals2::signal<void (nt::OpId)> nodeDirtied;
+    boost::signals2::signal<void (nt::OpId opId, bool dirtyDescendents)> nodeDirtied;
 
 
 
