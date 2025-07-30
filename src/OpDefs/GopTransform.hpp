@@ -6,11 +6,11 @@ class GopTransform
 : public enzo::nt::GeometryOpDef
 {
 public:
-    GopTransform(enzo::nt::OpId opId);
+    GopTransform(enzo::nt::NetworkManager* network, enzo::op::OpInfo opInfo);
     virtual void cookOp(enzo::op::Context context);
-    static enzo::nt::GeometryOpDef* ctor(enzo::nt::OpId opId)
+    static enzo::nt::GeometryOpDef* ctor(enzo::nt::NetworkManager* network, enzo::op::OpInfo opInfo)
     {
-        return new GopTransform(opId);
+        return new GopTransform(network, opInfo);
     }
 
     static BOOST_SYMBOL_EXPORT enzo::prm::Template parameterList[];

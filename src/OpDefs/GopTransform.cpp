@@ -2,8 +2,8 @@
 #include "Engine/Operator/AttributeHandle.h"
 #include "Engine/Parameter/Template.h"
 
-GopTransform::GopTransform(enzo::nt::OpId opId)
-: enzo::nt::GeometryOpDef(opId)
+GopTransform::GopTransform(enzo::nt::NetworkManager* network, enzo::op::OpInfo opInfo)
+: GeometryOpDef(network, opInfo)
 {
 
 }

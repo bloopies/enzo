@@ -27,11 +27,8 @@ void enzo::nt::connectOperators(enzo::nt::OpId inputOpId, unsigned int inputInde
 }
 
 nt::GeometryOperator::GeometryOperator(enzo::nt::OpId opId, op::OpInfo opInfo)
-: opId_{opId}, opInfo_{opInfo}, opDef_(opInfo.ctorFunc(opId))
+: opId_{opId}, opInfo_{opInfo}, opDef_(opInfo.ctorFunc(&nt::nm(), opInfo))
 {
-    // TODO: drive by geometry definition
-    maxInputs_=4;
-    maxOutputs_=4;
 
     initParameters();
 }
@@ -165,9 +162,13 @@ std::optional<const nt::GeometryConnection> nt::GeometryOperator::getInputConnec
 
 unsigned int nt::GeometryOperator::getMaxInputs() const
 {
-    return maxInputs_;
+    return opDef_->getMaxInputs();
 }
 unsigned int nt::GeometryOperator::getMaxOutputs() const
 {
-    return maxOutputs_;
+    return opDef_->getMaxOutputs();
+}
+unsigned int nt::GeometryOperator::getMinInputs() const
+{
+    return opDef_->getMinInputs();
 }

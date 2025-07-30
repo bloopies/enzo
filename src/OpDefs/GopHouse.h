@@ -6,11 +6,11 @@ class GOP_house
 : public enzo::nt::GeometryOpDef
 {
 public:
-    GOP_house(enzo::nt::OpId opId);
+    GOP_house(enzo::nt::NetworkManager* network, enzo::op::OpInfo opInfo);
     virtual void cookOp(enzo::op::Context context);
-    static enzo::nt::GeometryOpDef* ctor(enzo::nt::OpId opId)
+    static enzo::nt::GeometryOpDef* ctor(enzo::nt::NetworkManager* network, enzo::op::OpInfo opInfo)
     {
-        return new GOP_house(opId);
+        return new GOP_house(network, opInfo);
     }
 
     static BOOST_SYMBOL_EXPORT enzo::prm::Template parameterList[];

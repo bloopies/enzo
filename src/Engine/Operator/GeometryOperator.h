@@ -36,6 +36,7 @@ public:
 
 
     unsigned int getMaxInputs() const;
+    unsigned int getMinInputs() const;
     unsigned int getMaxOutputs() const;
 
     // signals
@@ -50,8 +51,6 @@ private:
     std::vector<std::shared_ptr<nt::GeometryConnection>> inputConnections_;
     std::vector<std::shared_ptr<nt::GeometryConnection>> outputConnections_;
     std::vector<std::shared_ptr<prm::Parameter>> parameters_; 
-    unsigned int maxInputs_;
-    unsigned int maxOutputs_;
     std::unique_ptr<enzo::nt::GeometryOpDef> opDef_;
     enzo::nt::OpId opId_;
     enzo::op::OpInfo opInfo_;

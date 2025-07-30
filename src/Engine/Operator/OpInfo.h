@@ -1,7 +1,18 @@
 #pragma once
 #include <string>
-#include "Engine/Operator/GeometryOpDef.h"
 #include "Engine/Parameter/Template.h"
+
+// forward declaration
+namespace enzo::op
+{
+    struct OpInfo;
+}
+namespace enzo::nt
+{
+    class GeometryOpDef;
+    class NetworkManager;
+    using opConstructor = GeometryOpDef* (*)(enzo::nt::NetworkManager* network, enzo::op::OpInfo opInfo);
+}
 
 namespace enzo::op
 {
@@ -11,6 +22,9 @@ struct OpInfo
     std::string displayName;
     enzo::nt::opConstructor ctorFunc;
     enzo::prm::Template* templates;
-    size_t templatesSize;
+    unsigned int minInputs=0;
+    unsigned int maxInputs=1;
+    unsigned int maxOutputs=1;
 };
 }
+

@@ -1,5 +1,6 @@
 #include "Gui/Network/NodeGraphic.h"
 #include <QTextDocument>
+#include <algorithm>
 #include <iostream>
 #include <qgraphicsitem.h>
 #include <qnamespace.h>
@@ -79,11 +80,15 @@ void NodeGraphic::initFlagButtons()
     displayFlagButton_->setPos(QPointF(bodyRect_.right()-displayFlagButton_->getWidth()/2.0f-padding, bodyRect_.center().y()));
 }
 
+#include <icecream.hpp>
 void NodeGraphic::initSockets()
 {
     enzo::nt::GeometryOperator& op = enzo::nt::nm().getGeoOperator(opId_);
+    IC();
     for(int i=0, max=op.getMaxInputs(); i<max; ++i)
     {
+        IC();
+        std::cout << "CREATING INPUT SOCKET!\n";
         auto* socketInput = new SocketGraphic(enzo::nt::SocketIOType::Input, opId_, i, this);
         socketInput->setPos(getSocketPosition(i, enzo::nt::SocketIOType::Input));
         inputs_.push_back(socketInput);
@@ -91,6 +96,8 @@ void NodeGraphic::initSockets()
 
     for(int i=0, max=op.getMaxOutputs(); i<max; ++i)
     {
+        IC();
+        std::cout << "CREATING OUTPUT SOCKET!\n";
         auto* socketOutput = new SocketGraphic(enzo::nt::SocketIOType::Output, opId_, i, this);
         socketOutput->setPos(getSocketPosition(i, enzo::nt::SocketIOType::Output));
         outputs_.push_back(socketOutput);
@@ -212,7 +219,7 @@ QPointF NodeGraphic::getSocketPosition(int socketIndex, enzo::nt::SocketIOType s
     xPos = bodyRect_.center().x();
     yPos = socketType == enzo::nt::SocketIOType::Input ? bodyRect_.top() : bodyRect_.bottom();
 
-    xPos += ((socketIndex/static_cast<float>(maxSocketNumber-1))-0.5)*2*socketSpread;
+    xPos += ((socketIndex/static_cast<float>(std::max(maxSocketNumber-1, 1)))-0.5)*2*socketSpread;
 
     return QPointF(xPos, yPos);
 }

@@ -13,35 +13,43 @@ bool enzo::nt::GeometryOpDef::outputRequested(unsigned int outputIndex)
     return true;
 }
 
-const enzo::geo::Geometry& enzo::nt::GeometryOpDef::getInputGeoView(unsigned int inputIndex)
-{
-    // TODO: implement
-    return enzo::geo::Geometry();
-
-}
 
 
 void enzo::nt::GeometryOpDef::setOutputGeometry(unsigned int outputIndex, enzo::geo::Geometry geometry)
 {
-    if(outputIndex>maxOutputs_)
+    if(outputIndex>getMaxOutputs())
     {
         throw std::runtime_error("Cannot set output geometry to index > maxOutputs");
     }
     outputGeometry_[outputIndex] = geometry;
 }
 
-enzo::nt::GeometryOpDef::GeometryOpDef(enzo::nt::OpId opId)
-: opId_{opId}
+unsigned int enzo::nt::GeometryOpDef::getMinInputs() const
 {
-    minInputs_=1;
-    maxInputs_=4;
-    maxOutputs_=4;
-    outputGeometry_ = std::vector<enzo::geo::Geometry>(4, enzo::geo::Geometry());
+    return opInfo_.minInputs;
+
+}
+
+unsigned int enzo::nt::GeometryOpDef::getMaxInputs() const
+{
+    return opInfo_.maxInputs;
+}
+
+unsigned int enzo::nt::GeometryOpDef::getMaxOutputs() const
+{
+    return opInfo_.maxOutputs;
+}
+
+
+enzo::nt::GeometryOpDef::GeometryOpDef(nt::NetworkManager* network, op::OpInfo opInfo)
+: opInfo_{opInfo}, network_{network}
+{
+    outputGeometry_ = std::vector<enzo::geo::Geometry>(getMaxOutputs(), enzo::geo::Geometry());
 }
 
 enzo::geo::Geometry& enzo::nt::GeometryOpDef::getOutputGeo(unsigned outputIndex)
 {
-    if(outputIndex>maxOutputs_)
+    if(outputIndex>getMaxOutputs())
     {
         throw std::runtime_error("Cannot set output geometry to index > maxOutputs");
     }

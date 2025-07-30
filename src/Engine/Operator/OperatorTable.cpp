@@ -1,24 +1,19 @@
 #include "Engine/Operator/OperatorTable.h"
+#include "Engine/Operator/OpInfo.h"
 #include <boost/dll/import.hpp>
 
 #include <iostream>
 
-void enzo::op::OperatorTable::addOperator(const char* internalName, const char* displayName, nt::opConstructor ctorFunc, prm::Template templates[])
+void enzo::op::OperatorTable::addOperator(enzo::op::OpInfo info)
 {
     std::cout << "OPERATOR TABLE ADDED\n";
-    std::cout << "adding operator: " << displayName << "\n";
+    std::cout << "adding operator: " << info.displayName << "\n";
 
-    for(const prm::Template* t = templates; t->isValid(); ++t)
+    for(const prm::Template* t = info.templates; t->isValid(); ++t)
     {
         std::cout << "name: " << t->getName() << "\n";
     }
 
-    enzo::op::OpInfo info {
-        internalName,
-        displayName,
-        ctorFunc,
-        templates,
-    };
 
     opInfoStore_.push_back(info);
 }
