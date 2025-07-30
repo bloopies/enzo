@@ -39,14 +39,21 @@ void ViewportGLWidget::initializeGL()
 
 
     // vertex shader
-    const std::string vertexShaderSource = "#version 330 core\n"
-    "uniform mat4 uView;\n"
-    "uniform mat4 uProj;\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = uProj * uView * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\n";
+    const std::string vertexShaderSource = R"(
+        #version 330 core
+        uniform mat4 uView;
+        uniform mat4 uProj;
+        layout (location = 0) in vec3 aPos;
+        layout (location = 1) in vec3 aNormal;
+
+        out vec3 Normal;
+
+        void main()
+        {
+            Normal = aNormal;
+            gl_Position = uProj * uView * vec4(aPos, 1.0);
+        }
+        )";
     // shader type
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
     // convert source
@@ -74,12 +81,18 @@ void ViewportGLWidget::initializeGL()
     
     
     // fragment shader
-    const std::string fragmentShaderSource = "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\n";
+    const std::string fragmentShaderSource = R"(
+    #version 330 core
+    in vec3 Normal;
+
+    out vec4 FragColor;
+
+    void main()
+    {
+        // FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+        FragColor = vec4(Normal, 1.0f);
+    }
+    )";
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     const GLchar* fragmentShaderSourceC = fragmentShaderSource.c_str();
     glShaderSource(fragmentShader, 1, &fragmentShaderSourceC, NULL);
@@ -150,26 +163,15 @@ std::unique_ptr<GLMesh> ViewportGLWidget::meshFromGeo(enzo::geo::Geometry& geome
         
     std::shared_ptr<ga::Attribute> PAttr = geometry.getAttribByName(ga::AttrOwner::POINT, "P");
     ga::AttributeHandleVector3 PAttrHandle = ga::AttributeHandleVector3(PAttr);
-    PAttrHandle.addValue(bt::Vector3(1.0f, -1.0f, 0.0f));
-    PAttrHandle.addValue(bt::Vector3(-1.0f, -1.0f, 0.0f));
-    PAttrHandle.addValue(bt::Vector3(-1.0f, 1.0f, 0.0f));
-    PAttrHandle.addValue(bt::Vector3(0.0f, 2.0f, 0.0f));
-    PAttrHandle.addValue(bt::Vector3(1.0f, 1.0f, 0.0f));
 
 
-    mesh->setPosBuffer(PAttrHandle.getAllValues());
+    mesh->setPosBuffer(geometry);
 
     std::shared_ptr<ga::Attribute> pointAttr = geometry.getAttribByName(ga::AttrOwner::VERTEX, "point");
     ga::AttributeHandleInt pointAttrHandle = ga::AttributeHandleInt(pointAttr);
-    pointAttrHandle.addValue(0);
-    pointAttrHandle.addValue(1);
-    pointAttrHandle.addValue(2);
-    pointAttrHandle.addValue(3);
-    pointAttrHandle.addValue(4);
 
     std::shared_ptr<ga::Attribute> vertexCountAttr = geometry.getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount");
     ga::AttributeHandleInt vertexCountHandle = ga::AttributeHandleInt(vertexCountAttr);
-    vertexCountHandle.addValue(5);
 
     mesh->setIndexBuffer(pointAttrHandle.getAllValues(), vertexCountHandle.getAllValues());
 
@@ -184,7 +186,7 @@ void ViewportGLWidget::geometryChanged(enzo::geo::Geometry& geometry)
     std::shared_ptr<ga::Attribute> PAttr = geometry.getAttribByName(ga::AttrOwner::POINT, "P");
     ga::AttributeHandleVector3 PAttrHandle = ga::AttributeHandleVector3(PAttr);
 
-    triangleMesh_->setPosBuffer(PAttrHandle.getAllValues());
+    triangleMesh_->setPosBuffer(geometry);
 
     std::shared_ptr<ga::Attribute> pointAttr = geometry.getAttribByName(ga::AttrOwner::VERTEX, "point");
     ga::AttributeHandleInt pointAttrHandle = ga::AttributeHandleInt(pointAttr);

@@ -1,6 +1,9 @@
 #include "Gui/Viewport/GLMesh.h"
 #include <GL/gl.h>
 #include <iostream>
+#include "Engine/Operator/AttributeHandle.h"
+
+
 
 GLMesh::GLMesh()
 {
@@ -34,30 +37,35 @@ void GLMesh::initBuffers()
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
     // gives the shader a way to read buffer data 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    // read normal
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
     // disable vertex attrib array
     glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
 
     glGenBuffers(1, &indexBuffer);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 
 }
 
-void GLMesh::setPosBuffer(std::vector<enzo::bt::Vector3> data)
+void GLMesh::setPosBuffer(enzo::geo::Geometry& geometry)
 {
     bind();
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    vertexPosData.clear();
-    std::cout << "pos data\n-------\n";
-    for(auto vector : data)
+    vertices.clear();
+
+    std::shared_ptr<enzo::ga::Attribute> PAttr = geometry.getAttribByName(enzo::ga::AttrOwner::POINT, "P");
+    enzo::ga::AttributeHandleVector3 PAttrHandle = enzo::ga::AttributeHandleVector3(PAttr);
+    auto pointPositions = PAttrHandle.getAllValues();
+
+    for(auto position : pointPositions)
     {
-        vertexPosData.push_back(vector.x());
-        vertexPosData.push_back(vector.y());
-        vertexPosData.push_back(vector.z());
-        std::cout << vector.x() << " " << vector.y() << " " << vector.z() << "\n";
+        vertices.push_back({{position.x(), position.y(), position.z()}, {position.x(), position.y(), position.z()}});
+        std::cout << position.x() << " " << position.y() << " " << position.z() << "\n";
     }
 
-    glBufferData(GL_ARRAY_BUFFER, vertexPosData.size()*sizeof(GLfloat), vertexPosData.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
     unbind();
 }
 
@@ -110,7 +118,7 @@ void GLMesh::draw()
     bind();
 
     // wireframe
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
     glDrawElements(GL_TRIANGLES, indexData.size(), GL_UNSIGNED_INT, 0);
 }
