@@ -1,6 +1,7 @@
 #include "Engine/Operator/OpInfo.h"
 #include "Engine/Operator/OperatorTable.h"
 #include "GopHouse.h"
+#include "GopTestCube.h"
 #include "OpDefs/GopTransform.hpp"
 #include <boost/config.hpp>
 #include <boost/dll.hpp>
@@ -26,6 +27,17 @@ extern "C"
                 "House",
                 &GOP_house::ctor,
                 GOP_house::parameterList,
+                0,
+                0,
+                1,
+            }
+        );
+        addOperator(
+            enzo::op::OpInfo {
+                "testGeoCube",
+                "Test Cube",
+                &GopTestGeoCube::ctor,
+                GopTestGeoCube::parameterList,
                 0,
                 0,
                 1,

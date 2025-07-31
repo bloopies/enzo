@@ -21,6 +21,7 @@ add_library(${libName} SHARED
     ../Engine/Parameter/Parameter.cpp
     GopTransform.cpp
     GopHouse.cpp
+    GopTestCube.cpp
 )
 target_link_libraries(${libName} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen TBB::tbb)
 

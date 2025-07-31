@@ -36,10 +36,6 @@ void GOP_house::cookOp(enzo::op::Context context)
             {0,2,-1},
             {0,2,1}
         };
-        for (auto& p : pts) PAttrHandle.addValue(p);
-
-        auto pointAttr = geo.getAttribByName(ga::AttrOwner::VERTEX, "point");
-        ga::AttributeHandleInt pointAttrHandle(pointAttr);
         std::vector<std::vector<int>> faces = {
             {7,9,6,2,3},
             {4,8,5,1,0},
@@ -51,6 +47,11 @@ void GOP_house::cookOp(enzo::op::Context context)
             {9,6,5},
             {8,5,9}
         };
+
+        for (auto& p : pts) PAttrHandle.addValue(p);
+
+        auto pointAttr = geo.getAttribByName(ga::AttrOwner::VERTEX, "point");
+        ga::AttributeHandleInt pointAttrHandle(pointAttr);
         for (auto& f : faces) for (int i : f) pointAttrHandle.addValue(startPt + i);
 
         auto vertexCountAttr = geo.getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount");
@@ -66,18 +67,6 @@ void GOP_house::cookOp(enzo::op::Context context)
             PAttrHandle.setValue(i, vector);
         }
         // ----
-
-        constexpr int N = 10000;
-        std::vector<double> results(N);
-
-        oneapi::tbb::parallel_for(0, N, [&](int i) {
-            double val = 0;
-            for (int j = 0; j < 100; ++j) {
-                val += std::sin(i + j);
-            }
-            results[i] = val;
-        });
-
 
         // set output geometry
         setOutputGeometry(0, geo);

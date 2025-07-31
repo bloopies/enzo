@@ -119,8 +119,6 @@ void GLMesh::setPosBuffer(enzo::geo::Geometry& geometry)
 
                  
 
-            IC(vertexCount, pointIndex);
-            IC(p.x(), p.y(), p.z());
             vertices.push_back({
                 { p.x(),
                   p.y(),
