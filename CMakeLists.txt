@@ -71,6 +71,9 @@ find_package(TBB REQUIRED COMPONENTS TBB::tbb)
 
 find_package(Boost REQUIRED COMPONENTS filesystem system)
 
+# cgal
+find_package(CGAL REQUIRED COMPONENTS Core)
+
 
 
 qt_add_executable(${AppExec}
@@ -78,7 +81,7 @@ qt_add_executable(${AppExec}
     ${ENGINE_SOURCES}
 )
 
-target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen TBB::tbb Boost::filesystem Boost::system)
+target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen TBB::tbb Boost::filesystem Boost::system CGAL::CGAL CGAL::CGAL_Core)
 target_include_directories(${AppExec} PUBLIC
     ${ENGINE_INCLUDE_DIRECTORIES}
 )

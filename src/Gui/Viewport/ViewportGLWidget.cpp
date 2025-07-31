@@ -85,12 +85,21 @@ void ViewportGLWidget::initializeGL()
     #version 330 core
     in vec3 Normal;
 
-    out vec4 FragColor;
+    out vec4 color;
+
+    float remap(float value, float inMin, float inMax, float outMin, float outMax)
+    {
+        return outMin + (outMax - outMin) * (value - inMin) / (inMax - inMin);
+    }
 
     void main()
     {
         // FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
-        FragColor = vec4(Normal, 1.0f);
+        // FragColor = vec4(Normal, 1.0f);
+        vec3 lightDir = normalize(vec3(1.0,1.0,1.0));
+        float brightness = remap(dot(Normal, lightDir), -1, 1, 0.5, 1);
+        color = vec4(vec3(brightness), 1.0f);
+
     }
     )";
     GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);

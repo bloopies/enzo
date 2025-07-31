@@ -3,7 +3,9 @@
 #include "Engine/Operator/AttributeHandle.h"
 #include "Engine/Types.h"
 #include <memory>
+#include <oneapi/tbb/task_group.h>
 #include <stdexcept>
+#include "icecream.hpp"
 
 using namespace enzo;
 geo::Geometry::Geometry()
@@ -12,6 +14,58 @@ geo::Geometry::Geometry()
     addIntAttribute(ga::AttrOwner::VERTEX, "point");
     addIntAttribute(ga::AttrOwner::PRIMITIVE, "vertexCount");
 }
+
+enzo::geo::HeMesh geo::Geometry::computeHalfEdgeMesh()
+{
+    HeMesh heMesh;
+
+    std::shared_ptr<enzo::ga::Attribute> PAttr = getAttribByName(enzo::ga::AttrOwner::POINT, "P");
+    enzo::ga::AttributeHandleVector3 PAttrHandle = enzo::ga::AttributeHandleVector3(PAttr);
+    auto pointPositions = PAttrHandle.getAllValues();
+    
+    std::shared_ptr<enzo::ga::Attribute> pointAttr = getAttribByName(enzo::ga::AttrOwner::VERTEX, "point");
+    enzo::ga::AttributeHandleInt pointAttrHandle = enzo::ga::AttributeHandleInt(pointAttr);
+    auto vertexPointIndices = pointAttrHandle.getAllValues();
+
+    std::shared_ptr<enzo::ga::Attribute> vertexCountAttr = getAttribByName(enzo::ga::AttrOwner::PRIMITIVE, "vertexCount");
+    enzo::ga::AttributeHandleInt vertexCountHandle = enzo::ga::AttributeHandleInt(vertexCountAttr);
+    auto vertexCounts = vertexCountHandle.getAllValues();
+
+    int vertexIndex = 0;
+    std::vector<geo::vertexDescriptor> createdPoints;
+    createdPoints.reserve(pointPositions.size());
+    std::vector<geo::vertexDescriptor> facePoints;
+    facePoints.reserve(16);
+
+    for(auto pointPos : pointPositions)
+    {
+        enzo::geo::vertexDescriptor point = heMesh.add_vertex(geo::Point(pointPos.x(), pointPos.y(), pointPos.z()));
+        createdPoints.push_back(point);
+    }
+
+    // iterate through each prim
+    for(int primIndx=0; primIndx<vertexCounts.size(); ++primIndx)
+    {
+        facePoints.clear();
+
+        // represents how many vertices are in a primitive
+        auto vertexCount = vertexCounts[primIndx];
+
+        // create primtive vertices
+        for(int i=0; i<vertexCount; ++i)
+        {
+            auto pointIndex = vertexPointIndices.at(vertexIndex);
+            facePoints.push_back(createdPoints[pointIndex]);
+            ++vertexIndex;
+        }
+
+        heMesh.add_face(facePoints);
+    }
+
+
+    return heMesh;
+}
+
 
 ga::AttributeHandle<int> geo::Geometry::addIntAttribute(ga::AttributeOwner owner, std::string name)
 {

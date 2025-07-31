@@ -2,6 +2,8 @@
 #include <GL/gl.h>
 #include <iostream>
 #include "Engine/Operator/AttributeHandle.h"
+#include "Engine/Operator/Geometry.h"
+#include <CGAL/Polygon_mesh_processing/compute_normal.h>
 
 
 
@@ -55,14 +57,34 @@ void GLMesh::setPosBuffer(enzo::geo::Geometry& geometry)
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     vertices.clear();
 
-    std::shared_ptr<enzo::ga::Attribute> PAttr = geometry.getAttribByName(enzo::ga::AttrOwner::POINT, "P");
-    enzo::ga::AttributeHandleVector3 PAttrHandle = enzo::ga::AttributeHandleVector3(PAttr);
-    auto pointPositions = PAttrHandle.getAllValues();
+    enzo::geo::HeMesh heMesh = geometry.computeHalfEdgeMesh();
 
-    for(auto position : pointPositions)
+    // compute mesh normals
+    auto vnormals = heMesh.add_property_map<enzo::geo::V_index, enzo::geo::Vector>("v:normals", CGAL::NULL_VECTOR).first;
+    auto fnormals = heMesh.add_property_map<enzo::geo::F_index, enzo::geo::Vector>("f:normals", CGAL::NULL_VECTOR).first;
+    namespace PMP = CGAL::Polygon_mesh_processing;
+
+    PMP::compute_normals(
+      heMesh, 
+      vnormals,
+      fnormals,
+      PMP::parameters::vertex_point_map(heMesh.points())
+    );
+
+
+    for (enzo::geo::V_index v : heMesh.vertices())
     {
-        vertices.push_back({{position.x(), position.y(), position.z()}, {position.x(), position.y(), position.z()}});
-        std::cout << position.x() << " " << position.y() << " " << position.z() << "\n";
+        const enzo::geo::Point  &p = heMesh.point(v);
+        const enzo::geo::Vector &n = vnormals[v];
+
+        vertices.push_back({
+            { p.x(),
+              p.y(),
+              p.z()},
+            { n.x(),
+              n.y(),
+              n.z()}
+        });
     }
 
     glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
