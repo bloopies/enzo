@@ -3,7 +3,9 @@
 #include <iostream>
 #include "Engine/Operator/AttributeHandle.h"
 #include "Engine/Operator/Geometry.h"
+#include "Engine/Types.h"
 #include <CGAL/Polygon_mesh_processing/compute_normal.h>
+#include "icecream.hpp"
 
 
 
@@ -71,20 +73,39 @@ void GLMesh::setPosBuffer(enzo::geo::Geometry& geometry)
       PMP::parameters::vertex_point_map(heMesh.points())
     );
 
+    std::shared_ptr<enzo::ga::Attribute> PAttr = geometry.getAttribByName(enzo::ga::AttrOwner::POINT, "P");
+    enzo::ga::AttributeHandleVector3 PAttrHandle = enzo::ga::AttributeHandleVector3(PAttr);
+    auto pointPositions = PAttrHandle.getAllValues();
+    
+    std::shared_ptr<enzo::ga::Attribute> pointAttr = geometry.getAttribByName(enzo::ga::AttrOwner::VERTEX, "point");
+    enzo::ga::AttributeHandleInt pointAttrHandle = enzo::ga::AttributeHandleInt(pointAttr);
+    auto vertexPointIndices = pointAttrHandle.getAllValues();
 
-    for (enzo::geo::V_index v : heMesh.vertices())
+    std::shared_ptr<enzo::ga::Attribute> vertexCountAttr = geometry.getAttribByName(enzo::ga::AttrOwner::PRIMITIVE, "vertexCount");
+    enzo::ga::AttributeHandleInt vertexCountHandle = enzo::ga::AttributeHandleInt(vertexCountAttr);
+    std::vector<int> vertexCounts = vertexCountHandle.getAllValues();
+
+    unsigned int vertexCount = 0;
+
+    for (int primIndx=0; primIndx<vertexCounts.size(); ++primIndx)
     {
-        const enzo::geo::Point  &p = heMesh.point(v);
-        const enzo::geo::Vector &n = vnormals[v];
+        for(int i=0; i< vertexCounts[primIndx]; ++i)
+        {
+            unsigned int pointIndex = vertexPointIndices[vertexCount];
+            enzo::bt::Vector3& p = pointPositions[pointIndex];
+            IC(vertexCount, pointIndex);
+            IC(p.x(), p.y(), p.z());
+            vertices.push_back({
+                { p.x(),
+                  p.y(),
+                  p.z()},
+                { p.x(),
+                  p.y(),
+                  p.z()}
+            });
+            ++vertexCount;
+        }
 
-        vertices.push_back({
-            { p.x(),
-              p.y(),
-              p.z()},
-            { n.x(),
-              n.y(),
-              n.z()}
-        });
     }
 
     glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
@@ -96,28 +117,24 @@ void GLMesh::setIndexBuffer(std::vector<int> pointIndices, std::vector<int> prim
     bind();
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
     indexData.clear();
-    std::cout << "index pointIndices\n-------\n";
-    size_t startIndex = 1;
+
+    unsigned int startVert = 0;
 
     // create triangle fan from potentially ngon inputs
-    std::cout << "size: " << primVertexCounts.size() << "\n";
     for(size_t primNum=0; primNum<primVertexCounts.size(); ++primNum)
     {
         int primVertexCount = primVertexCounts[primNum];
 
-        std::cout << "startIndex: " << startIndex << "\n";
-        std::cout << "prim vertex count: " << primVertexCount << "\n";
 
-        for(size_t pointIndex=startIndex; pointIndex+2<startIndex+primVertexCount; ++pointIndex)
+        for(size_t i=0; i<primVertexCount-1; ++i)
         {
-            indexData.push_back(pointIndices.at(startIndex-1));
-            indexData.push_back(pointIndices.at(pointIndex));
-            indexData.push_back(pointIndices.at(pointIndex+1));
+            indexData.push_back(startVert);
+            indexData.push_back(startVert+i);
+            indexData.push_back(startVert+i+1);
 
-            std::cout << pointIndices.at(0) << " " << pointIndices.at(pointIndex) << " " << pointIndices.at(pointIndex+1) << "\n";
         }
 
-        startIndex += primVertexCount;
+        startVert += primVertexCount;
     }
 
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData.size()*sizeof(GLint), indexData.data(), GL_STATIC_DRAW);

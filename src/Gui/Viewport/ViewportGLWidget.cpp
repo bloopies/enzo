@@ -95,10 +95,11 @@ void ViewportGLWidget::initializeGL()
     void main()
     {
         // FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
-        // FragColor = vec4(Normal, 1.0f);
         vec3 lightDir = normalize(vec3(1.0,1.0,1.0));
         float brightness = remap(dot(Normal, lightDir), -1, 1, 0.5, 1);
         color = vec4(vec3(brightness), 1.0f);
+
+        color = vec4(Normal, 1.0f);
 
     }
     )";
