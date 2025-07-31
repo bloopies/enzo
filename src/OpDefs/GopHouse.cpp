@@ -25,17 +25,31 @@ void GOP_house::cookOp(enzo::op::Context context)
         ga::AttributeHandleVector3 PAttrHandle(PAttr);
         int startPt = PAttrHandle.getSize();
         std::vector<bt::Vector3> pts = {
-            {-1,-1,-1},{1,-1,-1},{1,-1,1},{-1,-1,1},
-            {-1,1,-1},{1,1,-1},{1,1,1},{-1,1,1},
-            {0,2,-1},{0,2,1}
+            {-1,-1,-1},
+            {1,-1,-1},
+            {1,-1,1},
+            {-1,-1,1},
+            {-1,1,-1},
+            {1,1,-1},
+            {1,1,1},
+            {-1,1,1},
+            {0,2,-1},
+            {0,2,1}
         };
         for (auto& p : pts) PAttrHandle.addValue(p);
 
         auto pointAttr = geo.getAttribByName(ga::AttrOwner::VERTEX, "point");
         ga::AttributeHandleInt pointAttrHandle(pointAttr);
         std::vector<std::vector<int>> faces = {
-            {3,2,6,9,7},{0,1,5,8,4},{0,3,7,4},{1,2,6,5},
-            {0,1,2,3},{4,7,9},{4,9,8},{5,6,9},{5,9,8}
+            {7,9,6,2,3},
+            {4,8,5,1,0},
+            {4,7,3,0},
+            {5,6,2,1},
+            {0,1,2,3},
+            {9,7,4},
+            {8,9,4},
+            {9,6,5},
+            {8,5,9}
         };
         for (auto& f : faces) for (int i : f) pointAttrHandle.addValue(startPt + i);
 

@@ -5,6 +5,8 @@
 #include <memory>
 #include <oneapi/tbb/task_group.h>
 #include <stdexcept>
+#include <string>
+#include <CGAL/Polygon_mesh_processing/orientation.h>
 #include "icecream.hpp"
 
 using namespace enzo;
@@ -43,6 +45,8 @@ enzo::geo::HeMesh geo::Geometry::computeHalfEdgeMesh()
         createdPoints.push_back(point);
     }
 
+    CGAL::Polygon_mesh_processing::orient(heMesh);
+
     // iterate through each prim
     for(int primIndx=0; primIndx<vertexCounts.size(); ++primIndx)
     {
@@ -59,7 +63,29 @@ enzo::geo::HeMesh geo::Geometry::computeHalfEdgeMesh()
             ++vertexIndex;
         }
 
-        heMesh.add_face(facePoints);
+        // debug
+        std::cout << "Primitive " << primIndx << " has " << vertexCount << " vertices: ";
+        for (auto& v : facePoints)
+        {
+            auto pt = heMesh.point(v);
+            std::cout << "(" << pt.x() << ", " << pt.y() << ", " << pt.z() << ") ";
+        }
+        std::cout << std::endl;
+
+        std::cout << "Point indices: ";
+        for (int i = 0; i < vertexCount; ++i) {
+            int pointIndex = vertexPointIndices.at(vertexIndex - vertexCount + i);
+            std::cout << pointIndex << " ";
+        }
+        std::cout << std::endl;
+        // debug
+
+        auto face = heMesh.add_face(facePoints);
+        if (face != HeMesh::null_face()) {
+            // validFaceIndices.push_back(enzo::geo::F_index(primIndx));
+        } else {
+            // throw std::runtime_error("Warning: Face creation failed at primitive " + std::to_string(primIndx));
+        }
     }
 
 

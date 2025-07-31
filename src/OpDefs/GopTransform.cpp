@@ -1,6 +1,8 @@
 #include "OpDefs/GopTransform.hpp"
 #include "Engine/Operator/AttributeHandle.h"
 #include "Engine/Parameter/Template.h"
+#include <Eigen/src/Core/Matrix.h>
+#include <Eigen/src/Geometry/AngleAxis.h>
 
 GopTransform::GopTransform(enzo::nt::NetworkManager* network, enzo::op::OpInfo opInfo)
 : GeometryOpDef(network, opInfo)
@@ -26,6 +28,10 @@ void GopTransform::cookOp(enzo::op::Context context)
         for(int i=0; i<PAttrHandle.getAllValues().size(); ++i)
         {
             enzo::bt::Vector3 vector = PAttrHandle.getValue(i);
+            Eigen::AngleAxisd rotationX(context.evalFloatParm("rotateX"), Eigen::Vector3d(1,0,0));
+            Eigen::AngleAxisd rotationY(context.evalFloatParm("rotateY"), Eigen::Vector3d(0,1,0));
+            Eigen::AngleAxisd rotationZ(context.evalFloatParm("rotateZ"), Eigen::Vector3d(0,0,1));
+            vector = (rotationX*rotationY*rotationZ)*vector;
             vector.x()+=context.evalFloatParm("translateX");
             vector.y()+=context.evalFloatParm("translateY");
             vector.z()+=context.evalFloatParm("translateZ");
@@ -46,6 +52,9 @@ enzo::prm::Template GopTransform::parameterList[] =
     enzo::prm::Template(enzo::prm::Type::FLOAT, "translateX", 0),
     enzo::prm::Template(enzo::prm::Type::FLOAT, "translateY", 0),
     enzo::prm::Template(enzo::prm::Type::FLOAT, "translateZ", 0),
+    enzo::prm::Template(enzo::prm::Type::FLOAT, "rotateX", 0),
+    enzo::prm::Template(enzo::prm::Type::FLOAT, "rotateY", 0),
+    enzo::prm::Template(enzo::prm::Type::FLOAT, "rotateZ", 0),
     enzo::prm::Terminator
 };
 

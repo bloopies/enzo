@@ -86,25 +86,52 @@ void GLMesh::setPosBuffer(enzo::geo::Geometry& geometry)
     std::vector<int> vertexCounts = vertexCountHandle.getAllValues();
 
     unsigned int vertexCount = 0;
+    unsigned int primStartVert = 0;
 
     for (int primIndx=0; primIndx<vertexCounts.size(); ++primIndx)
     {
-        for(int i=0; i< vertexCounts[primIndx]; ++i)
+        auto faceIndex = primIndx;
+        int faceVertCnt = vertexCounts[primIndx];
+
+        enzo::bt::Vector3 n;
+
+        // compute normal
+        if(faceVertCnt>=3)
+        {
+            const unsigned v0 = primStartVert;
+            const unsigned v1 = primStartVert + 1;
+            const unsigned v2 = primStartVert + 2;
+
+            const enzo::bt::Vector3 pos1 = pointPositions[vertexPointIndices[v0]];
+            const enzo::bt::Vector3 pos2 = pointPositions[vertexPointIndices[v1]];
+            const enzo::bt::Vector3 pos3 = pointPositions[vertexPointIndices[v2]];
+
+            const enzo::bt::Vector3 tang1 = (pos2-pos1).normalized();
+            const enzo::bt::Vector3 tang2 = (pos3-pos1).normalized();
+
+            n = tang1.cross(tang2);
+        }
+
+        for(int i=0; i< faceVertCnt; ++i)
         {
             unsigned int pointIndex = vertexPointIndices[vertexCount];
             enzo::bt::Vector3& p = pointPositions[pointIndex];
+
+                 
+
             IC(vertexCount, pointIndex);
             IC(p.x(), p.y(), p.z());
             vertices.push_back({
                 { p.x(),
                   p.y(),
                   p.z()},
-                { p.x(),
-                  p.y(),
-                  p.z()}
+                { n.x(),
+                  n.y(),
+                  n.z()}
             });
             ++vertexCount;
         }
+        primStartVert+=faceVertCnt;
 
     }
 
@@ -126,7 +153,7 @@ void GLMesh::setIndexBuffer(std::vector<int> pointIndices, std::vector<int> prim
         int primVertexCount = primVertexCounts[primNum];
 
 
-        for(size_t i=0; i<primVertexCount-1; ++i)
+        for(size_t i=1; i<primVertexCount-1; ++i)
         {
             indexData.push_back(startVert);
             indexData.push_back(startVert+i);
