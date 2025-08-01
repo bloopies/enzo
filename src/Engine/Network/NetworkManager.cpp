@@ -60,7 +60,6 @@ enzo::nt::NetworkManager& enzo::nt::NetworkManager::getInstance()
 
 enzo::nt::GeometryOperator& enzo::nt::NetworkManager::getGeoOperator(nt::OpId opId)
 {
-    std::cout << "gop size middle getter: " << gopStore_.size() <<"\n"; // <- size 0
     auto it = gopStore_.find(opId);
     if(it == gopStore_.end())
     {

@@ -1,4 +1,5 @@
 #pragma once
+#include <oneapi/tbb/concurrent_vector.h>
 #include <string>
 #include <optional>
 #include <string_view>
@@ -9,6 +10,8 @@
 
 namespace enzo{
     namespace ga{
+        template <typename T>
+        using StoreContainer = std::vector<T>;
 
         template <typename T>
         class AttributeHandle;
@@ -41,11 +44,10 @@ namespace enzo{
 
             void* data_;
 
-
             // data stores
-            std::shared_ptr<std::vector<int>> intStore_;
-            std::shared_ptr<std::vector<float>> floatStore_;
-            std::shared_ptr<std::vector<enzo::bt::Vector3>> vector3Store_;
+            std::shared_ptr<StoreContainer<int>> intStore_;
+            std::shared_ptr<StoreContainer<float>> floatStore_;
+            std::shared_ptr<StoreContainer<enzo::bt::Vector3>> vector3Store_;
         };
 
 

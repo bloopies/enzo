@@ -6,6 +6,7 @@
 #include <vector>
 #include "Engine/Operator/Attribute.h"
 #include "Engine/Types.h"
+#include "tbb/concurrent_vector.h"
 
 #include <iostream>
 
@@ -54,9 +55,10 @@ public:
         data_->push_back(value);
     }
 
+    // TODO: replace with iterator
     std::vector<T> getAllValues() const
     {
-        return *data_;
+        return {data_->begin(), data_->end()};
     }
 
     size_t getSize()
@@ -96,7 +98,7 @@ private:
 
     std::string name_="";
 
-    std::shared_ptr<std::vector<T>> data_;
+    std::shared_ptr<StoreContainer<T>> data_;
 
     // int typeID_;
 

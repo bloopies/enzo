@@ -59,19 +59,19 @@ void GLMesh::setPosBuffer(enzo::geo::Geometry& geometry)
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
     vertices.clear();
 
-    enzo::geo::HeMesh heMesh = geometry.computeHalfEdgeMesh();
+    // enzo::geo::HeMesh heMesh = geometry.computeHalfEdgeMesh();
 
-    // compute mesh normals
-    auto vnormals = heMesh.add_property_map<enzo::geo::V_index, enzo::geo::Vector>("v:normals", CGAL::NULL_VECTOR).first;
-    auto fnormals = heMesh.add_property_map<enzo::geo::F_index, enzo::geo::Vector>("f:normals", CGAL::NULL_VECTOR).first;
-    namespace PMP = CGAL::Polygon_mesh_processing;
+    // // compute mesh normals
+    // auto vnormals = heMesh.add_property_map<enzo::geo::V_index, enzo::geo::Vector>("v:normals", CGAL::NULL_VECTOR).first;
+    // auto fnormals = heMesh.add_property_map<enzo::geo::F_index, enzo::geo::Vector>("f:normals", CGAL::NULL_VECTOR).first;
+    // namespace PMP = CGAL::Polygon_mesh_processing;
 
-    PMP::compute_normals(
-      heMesh, 
-      vnormals,
-      fnormals,
-      PMP::parameters::vertex_point_map(heMesh.points())
-    );
+    // PMP::compute_normals(
+    //   heMesh, 
+    //   vnormals,
+    //   fnormals,
+    //   PMP::parameters::vertex_point_map(heMesh.points())
+    // );
 
     std::shared_ptr<enzo::ga::Attribute> PAttr = geometry.getAttribByName(enzo::ga::AttrOwner::POINT, "P");
     enzo::ga::AttributeHandleVector3 PAttrHandle = enzo::ga::AttributeHandleVector3(PAttr);

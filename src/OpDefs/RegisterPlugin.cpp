@@ -1,5 +1,6 @@
 #include "Engine/Operator/OpInfo.h"
 #include "Engine/Operator/OperatorTable.h"
+#include "GopGeometryImport.h"
 #include "GopHouse.h"
 #include "GopTestCube.h"
 #include "OpDefs/GopTransform.hpp"
@@ -38,6 +39,17 @@ extern "C"
                 "Test Cube",
                 &GopTestGeoCube::ctor,
                 GopTestGeoCube::parameterList,
+                0,
+                0,
+                1,
+            }
+        );
+        addOperator(
+            enzo::op::OpInfo {
+                "geometryImport",
+                "Geometry Import",
+                &GopGeometryImport::ctor,
+                GopGeometryImport::parameterList,
                 0,
                 0,
                 1,
