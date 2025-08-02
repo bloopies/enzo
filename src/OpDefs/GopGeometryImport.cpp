@@ -20,6 +20,7 @@ void GopGeometryImport::cookOp(enzo::op::Context context)
     if(outputRequested(0))
     {
         std::string filePath = "/home/parker/Downloads/Rat_Placeholder_Polycount_12.obj";
+        std::cout << "COOKING IMPORT NODE\n";
 
         geo::Geometry geo;
 
@@ -59,31 +60,26 @@ void GopGeometryImport::cookOp(enzo::op::Context context)
                 }
                 const bt::Vector3 pointPos = {std::stod(result[1]), std::stod(result[2]), std::stod(result[3])};
                 PAttrHandle.addValue(pointPos);
-                std::cout << "adding vector: " << pointPos.x() << " " << pointPos.y() << " " << pointPos.z() << "\n";
             }
             else if(firstChar=='f')
             {
                 std::vector<std::string> result;
                 boost::split(result, line, isspace);
-                // if(result.size()<3)
-                // {
-                //     continue;
+                if(result.size()<3)
+                {
+                    continue;
 
-                // }
+                }
 
 
                 // set vertex attributes
-                std::cout << "connecting:";
                 for(int i=1; i<result.size(); ++i)
                 {
                     const int primNum = std::stoi(result[i]);
                     pointAttrHandle.addValue(primNum-1);
-                    std::cout << " " << primNum;
                 }
-                std::cout << "\n";
 
                 // set face attribute
-                std::cout << "face size: " << result.size()-1 << "\n";
                 vertexCountHandle.addValue(result.size()-1);
 
             }
@@ -98,15 +94,6 @@ void GopGeometryImport::cookOp(enzo::op::Context context)
             enzo::bt::Vector3 pointPos = PAttrHandle.getValue(i);
             pointPos*=scale;
             PAttrHandle.setValue(i, pointPos);
-            std::cout << "adding point: " << pointPos.x() << " " << pointPos.y() << " " << pointPos.z() << "\n";
-        }
-        for(auto value : pointAttrHandle.getAllValues())
-        {
-            std::cout << "adding vector: " << value << "\n";
-        }
-        for(auto value : vertexCountHandle.getAllValues())
-        {
-            std::cout << "adding face: " << value << "\n";
         }
         // ----
 

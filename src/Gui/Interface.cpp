@@ -57,22 +57,4 @@ EnzoUI::EnzoUI()
     connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, viewport, &Viewport::geometryChanged);
     enzo::nt::nm().displayNodeChanged.connect([parametersPanel](){parametersPanel->selectionChanged();});
     // connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, parametersPanel, &ParametersPanel::selectionChanged);
-
-//  ─── end of EnzoUI ctor ───
-QTimer::singleShot(0, this, [=] {
-auto dump = [](const char* name, QWidget* w) {
-    qInfo().nospace()
-        << name
-        << "  sizeHint="    << w->sizeHint()
-        << "  minHint="     << w->minimumSizeHint()
-        << "  min="         << w->minimumSize()
-        << "  policy="      << w->sizePolicy();
-};
-
-    dump("Viewport        ", viewport);
-    dump("ParametersPanel ", parametersPanel);
-    dump("Network         ", network);
-    dump("NetworkSplitter ", networkSplitter_);   // will show max(child‑mins)
-});
-
 }

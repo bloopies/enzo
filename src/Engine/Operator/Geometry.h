@@ -22,14 +22,19 @@ class Geometry
 {
 public:
     Geometry();
+    Geometry(const Geometry& other);
     ga::AttributeHandle<int> addIntAttribute(ga::AttributeOwner owner, std::string name);
     ga::AttributeHandle<bt::Vector3> addVector3Attribute(ga::AttributeOwner owner, std::string name);
+    // TODO: return weak ptr
     std::shared_ptr<ga::Attribute> getAttribByName(ga::AttributeOwner owner, std::string name);
     std::vector<bt::Vector3> derivePointNormals();
     HeMesh computeHalfEdgeMesh();
 private:
     using attribVector = std::vector<std::shared_ptr<ga::Attribute>>;
     attribVector& getAttributeStore(ga::AttributeOwner& owner);
+
+    attribVector deepCopyAttributes(attribVector source);
+
     attribVector pointAttributes_;
     attribVector vertexAttributes_;
     attribVector primitiveAttributes_;

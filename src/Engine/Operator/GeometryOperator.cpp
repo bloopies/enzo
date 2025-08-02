@@ -53,13 +53,19 @@ void enzo::nt::GeometryOperator::dirtyNode(bool dirtyDescendents)
     nodeDirtied(opId_, dirtyDescendents);
 }
 
+bool enzo::nt::GeometryOperator::isDirty()
+{
+    return dirty_;
+}
+
+
 void enzo::nt::GeometryOperator::cookOp(op::Context context)
 {
     opDef_->cookOp(context);
     dirty_=false;
 }
 
-geo::Geometry& enzo::nt::GeometryOperator::getOutputGeo(unsigned outputIndex)
+geo::Geometry& enzo::nt::GeometryOperator::getOutputGeo(unsigned outputIndex) const
 {
     return opDef_->getOutputGeo(outputIndex);
 }

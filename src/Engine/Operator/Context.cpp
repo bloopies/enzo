@@ -25,7 +25,8 @@ enzo::geo::Geometry enzo::op::Context::cloneInputGeo(unsigned int inputIndex)
     auto inputConnection = inputConnections.at(inputIndex);
     if(auto inputConnectionSP = inputConnection.lock())
     {
-        return networkManager_.getGeoOperator(inputConnectionSP->getInputOpId()).getOutputGeo(inputConnectionSP->getInputIndex());
+        const nt::GeometryOperator& geoOp = networkManager_.getGeoOperator(inputConnectionSP->getInputOpId());
+        return geoOp.getOutputGeo(inputConnectionSP->getInputIndex());
     }
     else
     {
@@ -33,6 +34,7 @@ enzo::geo::Geometry enzo::op::Context::cloneInputGeo(unsigned int inputIndex)
     }
 }
 
+// TODO: cache value
 enzo::bt::floatT enzo::op::Context::evalFloatParm(const char* parmName) const
 {
     enzo::nt::GeometryOperator& selfOp = networkManager_.getGeoOperator(opId_);

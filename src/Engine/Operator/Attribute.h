@@ -20,6 +20,7 @@ namespace enzo{
         {
         public:
             Attribute(std::string name, ga::AttributeType type);
+            Attribute(const Attribute& other);
             AttributeType getType();
             std::string getName();
 
@@ -42,7 +43,7 @@ namespace enzo{
 
             std::string name_;
 
-            void* data_;
+            // void* data_;
 
             // data stores
             std::shared_ptr<StoreContainer<int>> intStore_;

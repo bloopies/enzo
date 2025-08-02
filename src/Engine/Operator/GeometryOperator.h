@@ -20,7 +20,7 @@ public:
     GeometryOperator& operator=(const GeometryOperator&) = delete;
 
     void cookOp(op::Context context);
-    geo::Geometry& getOutputGeo(unsigned outputIndex);
+    geo::Geometry& getOutputGeo(unsigned outputIndex) const;
 
     void addInputConnection(std::shared_ptr<nt::GeometryConnection> connection);
     void addOutputConnection(std::shared_ptr<nt::GeometryConnection> connection);
@@ -33,6 +33,7 @@ public:
     std::string getTypeName();
 
     void dirtyNode(bool dirtyDescendents=true);
+    bool isDirty();
 
 
     unsigned int getMinInputs() const;

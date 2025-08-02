@@ -17,6 +17,39 @@ geo::Geometry::Geometry()
     addIntAttribute(ga::AttrOwner::PRIMITIVE, "vertexCount");
 }
 
+geo::Geometry::Geometry(const Geometry& other)
+{
+    pointAttributes_ = deepCopyAttributes(other.pointAttributes_);
+    vertexAttributes_ = deepCopyAttributes(other.vertexAttributes_);
+    primitiveAttributes_ = deepCopyAttributes(other.primitiveAttributes_);
+    globalAttributes_ = deepCopyAttributes(other.globalAttributes_);
+
+}
+
+geo::Geometry::attribVector geo::Geometry::deepCopyAttributes(attribVector originalVector)
+{
+    geo::Geometry::attribVector copied;
+    const size_t sourceSize = originalVector.size();
+
+    copied.reserve(sourceSize);
+
+    for(const std::shared_ptr<ga::Attribute> sourceAttrib : originalVector)
+    {
+        if(sourceAttrib)
+        {
+            copied.push_back(std::make_shared<ga::Attribute>(*sourceAttrib));
+        }
+        else
+        {
+            copied.push_back(nullptr);
+        }
+    }
+
+    return copied;
+
+}
+
+
 enzo::geo::HeMesh geo::Geometry::computeHalfEdgeMesh()
 {
     HeMesh heMesh;

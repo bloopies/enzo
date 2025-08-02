@@ -19,16 +19,13 @@ enzo::nt::OpId enzo::nt::NetworkManager::addOperator(op::OpInfo opInfo)
     maxOpId_++;
     std::unique_ptr<GeometryOperator> newOp = std::make_unique<GeometryOperator>(maxOpId_, opInfo);
     newOp->nodeDirtied.connect(
-        [this](nt::OpId opId, bool dirtyDescendents)
+        [this](nt::OpId opId, bool dirtyDependents)
         {
-            IC();
-            if(dirtyDescendents)
+            if(dirtyDependents)
             {
-                IC();
                 std::vector<OpId> dependentIds = getDependentsGraph(opId);
                 for(OpId dependentId : dependentIds)
                 {
-                    IC();
                     // dirty node
                     enzo::nt::GeometryOperator& dependentOp = getGeoOperator(opId);
                     std::cout << "dirtying id: " << dependentId << "\n";
@@ -37,7 +34,6 @@ enzo::nt::OpId enzo::nt::NetworkManager::addOperator(op::OpInfo opInfo)
                     // cook display op
                     if(getDisplayOp().has_value() && getDisplayOp().value()==dependentId)
                     {
-                        IC();
                         cookOp(dependentId);
                         updateDisplay(dependentOp.getOutputGeo(0));
                     }
@@ -46,7 +42,6 @@ enzo::nt::OpId enzo::nt::NetworkManager::addOperator(op::OpInfo opInfo)
 
         });
     gopStore_.emplace(maxOpId_, std::move(newOp));
-    std::cout << "adding operator " << maxOpId_ << "\n";
 
     return maxOpId_;
 }
@@ -96,8 +91,11 @@ void enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId)
     for(enzo::nt::OpId dependencyOpId : dependencyGraph)
     {
         enzo::nt::GeometryOperator& op = getGeoOperator(dependencyOpId);
-        enzo::op::Context context(dependencyOpId, enzo::nt::nm());
-        op.cookOp(context);
+        if(op.isDirty())
+        {
+            enzo::op::Context context(dependencyOpId, enzo::nt::nm());
+            op.cookOp(context);
+        }
     }
 }
 
