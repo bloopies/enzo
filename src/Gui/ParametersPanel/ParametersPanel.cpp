@@ -33,12 +33,6 @@ ParametersPanel::ParametersPanel(QWidget *parent, Qt::WindowFlags f)
 
     mainLayout_->addWidget(bgWidget_);
 
-    // parametersLayout_->addWidget(new enzo::ui::AbstractFormParm());
-    // parametersLayout_->addWidget(new enzo::ui::AbstractFormParm());
-    // parametersLayout_->addWidget(new enzo::ui::AbstractFormParm());
-    // parametersLayout_->addWidget(new enzo::ui::AbstractFormParm());
-
-
     setLayout(mainLayout_);
 }
 
@@ -59,27 +53,30 @@ void ParametersPanel::selectionChanged()
 
     enzo::nt::GeometryOperator& displayOp = nm.getGeoOperator(displayOpId.value());
     auto parameters = displayOp.getParameters();
+
+    std::vector<enzo::ui::AbstractFormParm*> parameterWidgets;
+    parameterWidgets.reserve(parameters.size());
+
+    int maxLeftPadding = 0;
+
     for(auto parameter : parameters)
     {
         auto parameterShared = parameter.lock();
         if(!parameterShared) throw std::runtime_error("Failed to lock parameter");
 
-        
+        enzo::ui::AbstractFormParm* parameterWidget = new enzo::ui::AbstractFormParm(parameter);
+        int leftPadding = parameterWidget->getLeftPadding();
+        if(leftPadding > maxLeftPadding) maxLeftPadding = leftPadding;
 
-        parametersLayout_->addWidget(new enzo::ui::AbstractFormParm(parameter));
-        // switch(parameterShared->getType())
-        // {
-        //     case prm::Type::FLOAT:
-        //         parametersLayout_->addWidget(new enzo::ui::AbstractFormParm(parameter));
-        //         break;
-        //     case prm::Type::VECTOR3:
-        //         parametersLayout_->addWidget(new enzo::ui::VectorParr(parameter));
-        //         break;
-        //     default:
-        //         throw std::runtime_error("Parameter panel: paremeter type not accounted for");
+        parameterWidgets.push_back(parameterWidget);
+    }
 
-        // }
+    const int leftPadding = maxLeftPadding + 5;
 
+    for(auto parameterWidget : parameterWidgets)
+    {
+        parameterWidget->setLeftPadding(leftPadding);
+        parametersLayout_->addWidget(parameterWidget);
     }
 }
 
