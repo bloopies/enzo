@@ -27,8 +27,8 @@ enzo::nt::OpId enzo::nt::NetworkManager::addOperator(op::OpInfo opInfo)
                 for(OpId dependentId : dependentIds)
                 {
                     // dirty node
-                    enzo::nt::GeometryOperator& dependentOp = getGeoOperator(opId);
-                    std::cout << "dirtying id: " << dependentId << "\n";
+                    enzo::nt::GeometryOperator& dependentOp = getGeoOperator(dependentId);
+                    std::cout << "Manager dirtying id: " << dependentId << "\n";
                     dependentOp.dirtyNode(false);
 
                     // cook display op

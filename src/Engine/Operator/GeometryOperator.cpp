@@ -49,6 +49,7 @@ void nt::GeometryOperator::initParameters()
 
 void enzo::nt::GeometryOperator::dirtyNode(bool dirtyDescendents)
 {
+    std::cout << "Dirtying op: " << opId_ << "\n";
     dirty_=true;
     nodeDirtied(opId_, dirtyDescendents);
 }
@@ -61,6 +62,7 @@ bool enzo::nt::GeometryOperator::isDirty()
 
 void enzo::nt::GeometryOperator::cookOp(op::Context context)
 {
+    std::cout << "Cooking op: " << opId_ << "\n";
     opDef_->cookOp(context);
     dirty_=false;
 }
