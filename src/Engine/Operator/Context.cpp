@@ -49,3 +49,19 @@ enzo::bt::floatT enzo::op::Context::evalFloatParm(const char* parmName, const un
         throw std::runtime_error("Parameter weak ptr invalid");
     }
 }
+
+// TODO: cache value
+enzo::bt::String enzo::op::Context::evalStringParm(const char* parmName, const unsigned int index) const
+{
+    enzo::nt::GeometryOperator& selfOp = networkManager_.getGeoOperator(opId_);
+    std::weak_ptr<prm::Parameter> parameter = selfOp.getParameter(parmName);
+
+    if(auto sharedParm = parameter.lock())
+    {
+        return sharedParm->evalString(index);
+    }
+    else
+    {
+        throw std::runtime_error("Parameter weak ptr invalid");
+    }
+}

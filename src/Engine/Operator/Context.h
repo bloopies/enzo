@@ -16,6 +16,7 @@ public:
     Context(enzo::nt::OpId opId, enzo::nt::NetworkManager& networkManager);
     enzo::geo::Geometry cloneInputGeo(unsigned int inputIndex);
     bt::floatT evalFloatParm(const char* parmName, const unsigned int index=0) const;
+    bt::String evalStringParm(const char* parmName, const unsigned int index=0) const;
 private:
     enzo::nt::OpId opId_;
     enzo::nt::NetworkManager& networkManager_;

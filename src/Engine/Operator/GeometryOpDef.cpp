@@ -24,6 +24,13 @@ void enzo::nt::GeometryOpDef::setOutputGeometry(unsigned int outputIndex, enzo::
     outputGeometry_[outputIndex] = geometry;
 }
 
+void enzo::nt::GeometryOpDef::throwError(std::string error)
+{
+    std::cerr << "NODE EXCEPTION: " << error << "\n";
+
+}
+
+
 unsigned int enzo::nt::GeometryOpDef::getMinInputs() const
 {
     return opInfo_.minInputs;

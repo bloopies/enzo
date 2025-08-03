@@ -20,6 +20,8 @@ public:
     virtual void cookOp(op::Context context) = 0;
     geo::Geometry& getOutputGeo(unsigned outputIndex);
 
+    void throwError(std::string error);
+
     unsigned int getMinInputs() const;
     unsigned int getMaxInputs() const;
     unsigned int getMaxOutputs() const;

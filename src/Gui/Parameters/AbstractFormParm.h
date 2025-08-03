@@ -19,6 +19,7 @@ public:
 
 protected Q_SLOTS:
     void changeValue(bt::floatT value, unsigned int index=0);
+    void changeValue(bt::String value, unsigned int index=0);
 
 private:
     QHBoxLayout* mainLayout_;

@@ -49,6 +49,7 @@ set(GUI_SOURCES
     src/Gui/Parameters/AbstractSliderParm.cpp
     src/Gui/Parameters/AbstractFormParm.cpp
     src/Gui/Parameters/FloatParm.cpp
+    src/Gui/Parameters/StringParm.cpp
 )
 set(ENGINE_INCLUDE_DIRECTORIES
     src

@@ -1,10 +1,12 @@
 #include "Gui/Parameters/AbstractFormParm.h"
 #include "Engine/Types.h"
 #include "Gui/Parameters/AbstractSliderParm.h"
+#include "Gui/Parameters/StringParm.h"
 #include <qboxlayout.h>
 #include <QLabel>
 #include <iostream>
 #include <qlabel.h>
+#include <string>
 
 
 enzo::ui::AbstractFormParm::AbstractFormParm(std::weak_ptr<prm::Parameter> parameter)
@@ -48,8 +50,20 @@ enzo::ui::AbstractFormParm::AbstractFormParm(std::weak_ptr<prm::Parameter> param
                 connect(slider3, &AbstractSliderParm::valueChanged, this, [this](bt::floatT value){this->changeValue(value, 2);}); 
                 break;
             }
+            case prm::Type::STRING:
+            {
+                StringParm* stringParm = new StringParm();
+
+                connect(stringParm, &StringParm::valueChanged, this, [this](bt::String value){this->changeValue(value, 0);}); 
+
+                mainLayout_->addWidget(stringParm);
+
+                break;
+
+
+            }
             default:
-                throw std::runtime_error("Parameter panel: paremeter type not accounted for");
+                throw std::runtime_error("Parameter panel: paremeter type not accounted for " + std::to_string(static_cast<int>(sharedParameter->getType())));
 
         }
 
@@ -91,4 +105,19 @@ void enzo::ui::AbstractFormParm::changeValue(enzo::bt::floatT value, unsigned in
     }
      
 }
+
+void enzo::ui::AbstractFormParm::changeValue(enzo::bt::String value, unsigned int index)
+{
+    if(auto sharedParameter=parameter_.lock())
+    {
+        sharedParameter->setString(value, index);
+    }
+    else
+    {
+        std::cout << "ERROR: parameter no longer exists\n";
+
+    }
+     
+}
+
 
