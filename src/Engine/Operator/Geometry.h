@@ -3,6 +3,7 @@
 #include "Engine/Types.h"
 #include <CGAL/Surface_mesh/Surface_mesh.h>
 #include <CGAL/Simple_cartesian.h>
+#include "Engine/Operator/AttributeHandle.h"
 #include <variant>
 
 
@@ -29,6 +30,15 @@ public:
     std::shared_ptr<ga::Attribute> getAttribByName(ga::AttributeOwner owner, std::string name);
     std::vector<bt::Vector3> derivePointNormals();
     HeMesh computeHalfEdgeMesh();
+    // returns the first vertex of the primitive
+    unsigned int getPrimStartVertex(ga::Offset primOffset);
+    void addFace(std::initializer_list<ga::Offset> pointOffsets);
+
+    bt::Vector3 getPosFromVert(ga::Offset vertexOffset) const;
+    bt::Vector3 getPointPos(ga::Offset pointOffset) const;
+    unsigned int getPrimVertCount(ga::Offset primOffset) const;
+    ga::Offset getNumPrims() const;
+    ga::Offset getNumVerts() const;
 private:
     using attribVector = std::vector<std::shared_ptr<ga::Attribute>>;
     attribVector& getAttributeStore(ga::AttributeOwner& owner);
@@ -39,5 +49,12 @@ private:
     attribVector vertexAttributes_;
     attribVector primitiveAttributes_;
     attribVector globalAttributes_;
+
+    std::vector<ga::Offset> primStarts_;
+
+    // handles
+    enzo::ga::AttributeHandleInt vertexCountHandlePrim_;
+    enzo::ga::AttributeHandleInt pointOffsetHandleVert_;
+    enzo::ga::AttributeHandleVector3 posHandlePoint_;
 };
 }

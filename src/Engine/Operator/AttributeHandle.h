@@ -55,13 +55,18 @@ public:
         data_->push_back(value);
     }
 
+    void reserve(std::size_t newCap)
+    {
+        data_->reserve(newCap);
+    }
+
     // TODO: replace with iterator
     std::vector<T> getAllValues() const
     {
         return {data_->begin(), data_->end()};
     }
 
-    size_t getSize()
+    size_t getSize() const
     {
         return data_->size();
     }
@@ -70,7 +75,7 @@ public:
     {
         // TODO:protect against invalid positions
         // TODO: cast types
-        return data_->at(pos);
+        return data_[pos];
     }
 
     void setValue(size_t pos, const T& value)

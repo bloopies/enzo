@@ -22,6 +22,7 @@ namespace enzo
         };
         using AttrType = AttributeType;
         using AttrOwner = AttributeOwner;
+        using Offset = size_t;
     }
     // basic types types
     namespace bt

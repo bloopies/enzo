@@ -57,79 +57,55 @@ void GLMesh::setPosBuffer(enzo::geo::Geometry& geometry)
 {
     bind();
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    vertices.clear();
 
-    // enzo::geo::HeMesh heMesh = geometry.computeHalfEdgeMesh();
+    const size_t numPrims = geometry.getNumPrims();
 
-    // // compute mesh normals
-    // auto vnormals = heMesh.add_property_map<enzo::geo::V_index, enzo::geo::Vector>("v:normals", CGAL::NULL_VECTOR).first;
-    // auto fnormals = heMesh.add_property_map<enzo::geo::F_index, enzo::geo::Vector>("f:normals", CGAL::NULL_VECTOR).first;
-    // namespace PMP = CGAL::Polygon_mesh_processing;
+    vertices.resize(geometry.getNumVerts());
 
-    // PMP::compute_normals(
-    //   heMesh, 
-    //   vnormals,
-    //   fnormals,
-    //   PMP::parameters::vertex_point_map(heMesh.points())
-    // );
 
-    std::shared_ptr<enzo::ga::Attribute> PAttr = geometry.getAttribByName(enzo::ga::AttrOwner::POINT, "P");
-    enzo::ga::AttributeHandleVector3 PAttrHandle = enzo::ga::AttributeHandleVector3(PAttr);
-    auto pointPositions = PAttrHandle.getAllValues();
-    
-    std::shared_ptr<enzo::ga::Attribute> pointAttr = geometry.getAttribByName(enzo::ga::AttrOwner::VERTEX, "point");
-    enzo::ga::AttributeHandleInt pointAttrHandle = enzo::ga::AttributeHandleInt(pointAttr);
-    auto vertexPointIndices = pointAttrHandle.getAllValues();
-
-    std::shared_ptr<enzo::ga::Attribute> vertexCountAttr = geometry.getAttribByName(enzo::ga::AttrOwner::PRIMITIVE, "vertexCount");
-    enzo::ga::AttributeHandleInt vertexCountHandle = enzo::ga::AttributeHandleInt(vertexCountAttr);
-    std::vector<int> vertexCounts = vertexCountHandle.getAllValues();
-
-    unsigned int vertexCount = 0;
-    unsigned int primStartVert = 0;
-
-    for (int primIndx=0; primIndx<vertexCounts.size(); ++primIndx)
+    for (int primOffset=0; primOffset<numPrims; ++primOffset)
     {
-        auto faceIndex = primIndx;
-        int faceVertCnt = vertexCounts[primIndx];
+        const unsigned int primStartVert = geometry.getPrimStartVertex(primOffset);
+        auto faceIndex = primOffset;
+        
+        int faceVertCnt = geometry.getPrimVertCount(primOffset);
 
         enzo::bt::Vector3 n;
 
         // compute normal
         if(faceVertCnt>=3)
         {
-            const unsigned v0 = primStartVert;
-            const unsigned v1 = primStartVert + 1;
-            const unsigned v2 = primStartVert + 2;
+            const unsigned v1 = primStartVert;
+            const unsigned v2 = primStartVert + 1;
+            const unsigned v3 = primStartVert + 2;
 
-            const enzo::bt::Vector3 pos1 = pointPositions[vertexPointIndices[v0]];
-            const enzo::bt::Vector3 pos2 = pointPositions[vertexPointIndices[v1]];
-            const enzo::bt::Vector3 pos3 = pointPositions[vertexPointIndices[v2]];
+            const enzo::bt::Vector3 pos1 = geometry.getPosFromVert(v1);
+            const enzo::bt::Vector3 pos2 = geometry.getPosFromVert(v2);
+            const enzo::bt::Vector3 pos3 = geometry.getPosFromVert(v3);
 
-            const enzo::bt::Vector3 tang1 = (pos2-pos1).normalized();
-            const enzo::bt::Vector3 tang2 = (pos3-pos1).normalized();
+            enzo::bt::Vector3 tang1 = (pos2-pos1);
+            enzo::bt::Vector3 tang2 = (pos3-pos1);
+
+            tang1.normalize();
+            tang2.normalize();
 
             n = tang1.cross(tang2);
         }
 
         for(int i=0; i< faceVertCnt; ++i)
         {
-            unsigned int pointIndex = vertexPointIndices[vertexCount];
-            enzo::bt::Vector3& p = pointPositions[pointIndex];
+            const unsigned int vertexCount = primStartVert+i;
+            enzo::bt::Vector3 p = geometry.getPosFromVert(vertexCount);
 
-                 
-
-            vertices.push_back({
+            vertices[vertexCount] ={
                 { p.x(),
                   p.y(),
                   p.z()},
                 { n.x(),
                   n.y(),
                   n.z()}
-            });
-            ++vertexCount;
+            };
         }
-        primStartVert+=faceVertCnt;
 
     }
 

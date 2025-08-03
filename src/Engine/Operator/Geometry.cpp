@@ -10,21 +10,66 @@
 #include "icecream.hpp"
 
 using namespace enzo;
-geo::Geometry::Geometry()
+geo::Geometry::Geometry() :
+    vertexCountHandlePrim_{addIntAttribute(ga::AttrOwner::PRIMITIVE, "vertexCount")},
+    pointOffsetHandleVert_{addIntAttribute(ga::AttrOwner::VERTEX, "point")},
+    posHandlePoint_{addVector3Attribute(ga::AttrOwner::POINT, "P")}
 {
-    addVector3Attribute(ga::AttrOwner::POINT, "P");
-    addIntAttribute(ga::AttrOwner::VERTEX, "point");
-    addIntAttribute(ga::AttrOwner::PRIMITIVE, "vertexCount");
+    
 }
 
-geo::Geometry::Geometry(const Geometry& other)
+geo::Geometry::Geometry(const Geometry& other):
+    pointAttributes_{deepCopyAttributes(other.pointAttributes_)},
+    vertexAttributes_{deepCopyAttributes(other.vertexAttributes_)},
+    primitiveAttributes_{deepCopyAttributes(other.primitiveAttributes_)},
+    globalAttributes_{deepCopyAttributes(other.globalAttributes_)},
+    vertexCountHandlePrim_{enzo::ga::AttributeHandleInt(getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount"))},
+    pointOffsetHandleVert_{enzo::ga::AttributeHandleInt(getAttribByName(ga::AttrOwner::VERTEX, "point"))},
+    posHandlePoint_{enzo::ga::AttributeHandleVector3(getAttribByName(ga::AttrOwner::POINT, "P"))}
 {
-    pointAttributes_ = deepCopyAttributes(other.pointAttributes_);
-    vertexAttributes_ = deepCopyAttributes(other.vertexAttributes_);
-    primitiveAttributes_ = deepCopyAttributes(other.primitiveAttributes_);
-    globalAttributes_ = deepCopyAttributes(other.globalAttributes_);
 
 }
+
+void geo::Geometry::addFace(std::initializer_list<ga::Offset> pointOffsets)
+{
+    for(ga::Offset pointOffset : pointOffsets)
+    {
+        pointOffsetHandleVert_.addValue(pointOffset);
+    }
+    vertexCountHandlePrim_.addValue(pointOffsets.size());
+    
+}
+
+bt::Vector3 geo::Geometry::getPosFromVert(ga::Offset vertexOffset) const
+{
+    // get point offset
+    const ga::Offset pointOffset = pointOffsetHandleVert_.getValue(vertexOffset);
+    // get value at point offset
+    return posHandlePoint_.getValue(pointOffset);
+}
+
+bt::Vector3 geo::Geometry::getPointPos(ga::Offset pointOffset) const
+{
+    return posHandlePoint_.getValue(pointOffset);
+}
+
+unsigned int geo::Geometry::getPrimVertCount(ga::Offset primOffset) const
+{
+    return vertexCountHandlePrim_.getValue(primOffset);
+}
+
+ga::Offset geo::Geometry::getNumPrims() const
+{
+    return vertexCountHandlePrim_.getSize();
+}
+
+ga::Offset geo::Geometry::getNumVerts() const
+{
+    return pointOffsetHandleVert_.getSize();
+}
+
+
+
 
 geo::Geometry::attribVector geo::Geometry::deepCopyAttributes(attribVector originalVector)
 {
@@ -124,6 +169,25 @@ enzo::geo::HeMesh geo::Geometry::computeHalfEdgeMesh()
 
     return heMesh;
 }
+
+unsigned int geo::Geometry::getPrimStartVertex(ga::Offset primOffset)
+{
+    const ga::Offset handleSize = vertexCountHandlePrim_.getSize();
+    // TODO: add smarter system to recompute primStarts_, also move to separate function 
+    // if size changed, recompute
+    if(handleSize!=primStarts_.size())
+    {
+        bt::intT primStart = 0;
+        for(size_t i=0; i<handleSize; ++i)
+        {
+            primStarts_.push_back(primStart);
+            primStart += vertexCountHandlePrim_.getValue(i);
+        }
+    }
+
+    return primStarts_[primOffset];
+}
+
 
 
 ga::AttributeHandle<int> geo::Geometry::addIntAttribute(ga::AttributeOwner owner, std::string name)

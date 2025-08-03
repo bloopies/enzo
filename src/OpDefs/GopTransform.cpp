@@ -5,6 +5,9 @@
 #include <Eigen/src/Core/Matrix.h>
 #include <Eigen/src/Geometry/AngleAxis.h>
 #include <Eigen/src/Geometry/Transform.h>
+#include <cstddef>
+#include <oneapi/tbb/blocked_range.h>
+#include <oneapi/tbb/parallel_for.h>
 
 GopTransform::GopTransform(enzo::nt::NetworkManager* network, enzo::op::OpInfo opInfo)
 : GeometryOpDef(network, opInfo)
@@ -20,10 +23,8 @@ void GopTransform::cookOp(enzo::op::Context context)
     {
         // copy input geometry
         geo::Geometry geo = context.cloneInputGeo(0);
+        // geo::Geometry geo;
 
-        // ----
-        // create geometry start
-        // ----
         auto PAttr = geo.getAttribByName(ga::AttrOwner::POINT, "P");
         ga::AttributeHandleVector3 PAttrHandle(PAttr);
 
@@ -33,12 +34,22 @@ void GopTransform::cookOp(enzo::op::Context context)
         transform.rotate(Eigen::AngleAxisd(context.evalFloatParm("rotateZ"), Eigen::Vector3d(0,0,1)));
         transform.translate(bt::Vector3(context.evalFloatParm("translateX"), context.evalFloatParm("translateY"), context.evalFloatParm("translateZ")));
 
-        for(int i=0; i<PAttrHandle.getSize(); ++i)
+        const Eigen::Matrix3d  R = transform.linear();
+        const Eigen::Vector3d  t = transform.translation();
+
+        const size_t N = PAttrHandle.getSize();
+
+
+        tbb::parallel_for(tbb::blocked_range<size_t>(0, N), [&](tbb::blocked_range<size_t> range)
         {
-            enzo::bt::Vector3 pointPos = PAttrHandle.getValue(i);
-            pointPos = transform*pointPos;
-            PAttrHandle.setValue(i, pointPos);
-        }
+            for(size_t i=range.begin(); i<range.end(); ++i)
+            {
+                enzo::bt::Vector3 pointPos = PAttrHandle.getValue(i);
+                pointPos = R * pointPos + t;
+                // pointPos = transform*pointPos;
+                PAttrHandle.setValue(i, pointPos);
+            }
+        });
 
 
         // set output geometry
