@@ -1,5 +1,6 @@
 #include "Gui/ParametersPanel/ParametersPanel.h"
 #include "Engine/Operator/GeometryOperator.h"
+#include "Engine/Types.h"
 #include "Gui/Parameters/AbstractSliderParm.h"
 #include "Gui/Parameters/AbstractFormParm.h"
 #include "Gui/Parameters/FloatParm.h"
@@ -10,6 +11,7 @@
 #include <qnamespace.h>
 #include <qwidget.h>
 #include <QLineEdit>
+#include <stdexcept>
 
 ParametersPanel::ParametersPanel(QWidget *parent, Qt::WindowFlags f)
 : QWidget(parent, f)
@@ -42,6 +44,7 @@ ParametersPanel::ParametersPanel(QWidget *parent, Qt::WindowFlags f)
 
 void ParametersPanel::selectionChanged()
 {
+    using namespace enzo;
     enzo::nt::NetworkManager& nm = enzo::nt::nm();
     std::optional<enzo::nt::OpId> displayOpId = nm.getDisplayOp();
 
@@ -58,7 +61,25 @@ void ParametersPanel::selectionChanged()
     auto parameters = displayOp.getParameters();
     for(auto parameter : parameters)
     {
+        auto parameterShared = parameter.lock();
+        if(!parameterShared) throw std::runtime_error("Failed to lock parameter");
+
+        
+
         parametersLayout_->addWidget(new enzo::ui::AbstractFormParm(parameter));
+        // switch(parameterShared->getType())
+        // {
+        //     case prm::Type::FLOAT:
+        //         parametersLayout_->addWidget(new enzo::ui::AbstractFormParm(parameter));
+        //         break;
+        //     case prm::Type::VECTOR3:
+        //         parametersLayout_->addWidget(new enzo::ui::VectorParr(parameter));
+        //         break;
+        //     default:
+        //         throw std::runtime_error("Parameter panel: paremeter type not accounted for");
+
+        // }
+
     }
 }
 

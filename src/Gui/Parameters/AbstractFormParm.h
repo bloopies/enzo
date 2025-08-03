@@ -15,7 +15,7 @@ public:
     AbstractFormParm(std::weak_ptr<prm::Parameter> parameter);
 
 protected Q_SLOTS:
-    void changeValue(bt::floatT value);
+    void changeValue(bt::floatT value, unsigned int index=0);
 
 private:
     QHBoxLayout* mainLayout_;

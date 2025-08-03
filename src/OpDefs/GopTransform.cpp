@@ -29,13 +29,16 @@ void GopTransform::cookOp(enzo::op::Context context)
         ga::AttributeHandleVector3 PAttrHandle(PAttr);
 
         Eigen::Affine3d transform = Eigen::Affine3d::Identity();
-        transform.rotate(Eigen::AngleAxisd(context.evalFloatParm("rotateX"), Eigen::Vector3d(1,0,0)));
-        transform.rotate(Eigen::AngleAxisd(context.evalFloatParm("rotateY"), Eigen::Vector3d(0,1,0)));
-        transform.rotate(Eigen::AngleAxisd(context.evalFloatParm("rotateZ"), Eigen::Vector3d(0,0,1)));
-        transform.translate(bt::Vector3(context.evalFloatParm("translateX"), context.evalFloatParm("translateY"), context.evalFloatParm("translateZ")));
+
+        const bt::floatT rotateX = context.evalFloatParm("rotate", 0);
+        const bt::floatT rotateY = context.evalFloatParm("rotate", 1);
+        const bt::floatT rotateZ = context.evalFloatParm("rotate", 2);
+        transform.rotate(Eigen::AngleAxisd(rotateX, Eigen::Vector3d(1,0,0)));
+        transform.rotate(Eigen::AngleAxisd(rotateY, Eigen::Vector3d(0,1,0)));
+        transform.rotate(Eigen::AngleAxisd(rotateZ, Eigen::Vector3d(0,0,1)));
 
         const Eigen::Matrix3d  R = transform.linear();
-        const Eigen::Vector3d  t = transform.translation();
+        const Eigen::Vector3d  t = bt::Vector3(context.evalFloatParm("translate", 0), context.evalFloatParm("translate", 1), context.evalFloatParm("translate", 2));
 
         const size_t N = PAttrHandle.getSize();
 
@@ -45,8 +48,7 @@ void GopTransform::cookOp(enzo::op::Context context)
             for(size_t i=range.begin(); i<range.end(); ++i)
             {
                 enzo::bt::Vector3 pointPos = PAttrHandle.getValue(i);
-                pointPos = R * pointPos + t;
-                // pointPos = transform*pointPos;
+                pointPos = (R * pointPos) + t;
                 PAttrHandle.setValue(i, pointPos);
             }
         });
@@ -60,12 +62,8 @@ void GopTransform::cookOp(enzo::op::Context context)
 
 enzo::prm::Template GopTransform::parameterList[] = 
 {
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "translateX", 0),
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "translateY", 0),
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "translateZ", 0),
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "rotateX", 0),
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "rotateY", 0),
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "rotateZ", 0),
+    enzo::prm::Template(enzo::prm::Type::XYZ, "translate", 0, 3),
+    enzo::prm::Template(enzo::prm::Type::XYZ, "rotate", 0, 3),
     enzo::prm::Terminator
 };
 

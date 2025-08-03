@@ -31,12 +31,14 @@ namespace enzo
         using intT = int64_t;
         using Vector3 = Eigen::Vector3d;
         using Vector4 = Eigen::Vector4d;
+        using String = std::string;
     }
     namespace prm
     {
         enum class Type
         {
             STRING,
+            XYZ,
             FLOAT,
             INT,
             TOGGLE

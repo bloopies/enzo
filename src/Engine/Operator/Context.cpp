@@ -35,14 +35,14 @@ enzo::geo::Geometry enzo::op::Context::cloneInputGeo(unsigned int inputIndex)
 }
 
 // TODO: cache value
-enzo::bt::floatT enzo::op::Context::evalFloatParm(const char* parmName) const
+enzo::bt::floatT enzo::op::Context::evalFloatParm(const char* parmName, const unsigned int index) const
 {
     enzo::nt::GeometryOperator& selfOp = networkManager_.getGeoOperator(opId_);
     std::weak_ptr<prm::Parameter> parameter = selfOp.getParameter(parmName);
 
     if(auto sharedParm = parameter.lock())
     {
-        return sharedParm->evalFloat();
+        return sharedParm->evalFloat(index);
     }
     else
     {

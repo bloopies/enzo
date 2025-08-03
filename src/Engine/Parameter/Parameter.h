@@ -10,12 +10,16 @@ class Parameter
 public:
     Parameter(Template prmTemplate);
     std::string getName() const;
-    bt::floatT evalFloat() const;
-    void setFloat(bt::floatT value);
+    bt::floatT evalFloat(unsigned int index=0) const;
+    bt::String evalString() const;
+    enzo::prm::Type getType() const;
+    
+    void setFloat(bt::floatT value, unsigned int index=0);
     boost::signals2::signal<void ()> valueChanged;
 private:
     Template template_;
-    bt::floatT floatValue_ = 0;
+    std::vector<bt::floatT> floatValues_;
+    bt::String stringValue_ = "";
 
 };
 }
