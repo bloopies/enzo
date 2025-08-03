@@ -11,12 +11,15 @@
 #include <string>
 
 
-enzo::ui::StringParm::StringParm(QWidget *parent)
+enzo::ui::StringParm::StringParm(bt::String value, QWidget *parent)
 : QLineEdit(parent)
 {
     // tells qt to style the widget even though it's a Q_OBJECT
     setAttribute(Qt::WA_StyledBackground, true);
     setFixedHeight(24);
+
+    value_ = value;
+    setText(QString::fromStdString(value_));
     
 
     // setAlignment(Qt::AlignCenter);

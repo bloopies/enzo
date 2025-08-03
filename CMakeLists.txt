@@ -22,6 +22,7 @@ set(ENGINE_SOURCES
     src/Engine/Operator/Context.cpp
     src/Engine/Parameter/Template.cpp
     src/Engine/Parameter/Parameter.cpp
+    src/Engine/Parameter/Default.cpp
     src/Engine/Network/NetworkManager.cpp
 )
 

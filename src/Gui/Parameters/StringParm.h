@@ -13,7 +13,7 @@ class StringParm
 {
     Q_OBJECT
 public:
-    StringParm(QWidget *parent = nullptr);
+    StringParm(bt::String value, QWidget *parent = nullptr);
     void setValue(bt::String value);
     void setValueQString(QString value);
 

@@ -10,13 +10,13 @@
 #include <string>
 
 
-enzo::ui::AbstractSliderParm::AbstractSliderParm(QWidget *parent, Qt::WindowFlags f)
+enzo::ui::AbstractSliderParm::AbstractSliderParm(bt::floatT value, QWidget *parent, Qt::WindowFlags f)
 : QWidget(parent, f)
 {
     // tells qt to style the widget even though it's a Q_OBJECT
     setAttribute(Qt::WA_StyledBackground, true);
     setFixedHeight(24);
-    value_ = defaultValue_;
+
     
     mainLayout_ = new QVBoxLayout();
     setLayout(mainLayout_);
@@ -34,7 +34,7 @@ enzo::ui::AbstractSliderParm::AbstractSliderParm(QWidget *parent, Qt::WindowFlag
                   )");
     mainLayout_->addWidget(valueLabel_);
 
-    setValue(value_);
+    setValueImpl(value);
 }
 
 void enzo::ui::AbstractSliderParm::paintEvent(QPaintEvent *event)
@@ -53,20 +53,24 @@ void enzo::ui::AbstractSliderParm::paintEvent(QPaintEvent *event)
 
 }
 
-void enzo::ui::AbstractSliderParm::setValue(bt::floatT value)
+void enzo::ui::AbstractSliderParm::setValueImpl(bt::floatT value)
 {
-    // if(value_==value)
-    //     return;
-
     if(clampMin_ && value<minValue_) { value = minValue_; }
     if(clampMax_ && value>maxValue_) { value = maxValue_; }
 
     value_ = value;
-    update();
-    QString valStr = QString::number(value);
+    QString valStr = QString::number(value_);
     valStr.truncate(4);
     valueLabel_->setText(valStr);
 
+
+}
+
+void enzo::ui::AbstractSliderParm::setValue(bt::floatT value)
+{
+
+    setValueImpl(value);
+    update();
     valueChanged(value_);
 
 }

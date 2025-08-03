@@ -122,7 +122,7 @@ void GopGeometryImport::cookOp(enzo::op::Context context)
 
 enzo::prm::Template GopGeometryImport::parameterList[] =
 {
-    enzo::prm::Template(enzo::prm::Type::STRING, "filePath", 1),
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "size", 1),
+    enzo::prm::Template(enzo::prm::Type::STRING, "filePath"),
+    enzo::prm::Template(enzo::prm::Type::FLOAT, "size", enzo::prm::Default(1)),
     enzo::prm::Terminator
 };

@@ -12,7 +12,7 @@ class AbstractSliderParm
 {
     Q_OBJECT
 public:
-    AbstractSliderParm(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+    AbstractSliderParm(bt::floatT value, QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     void setValue(bt::floatT value);
 
 Q_SIGNALS:
@@ -23,11 +23,12 @@ private:
     QVBoxLayout* mainLayout_;
     QLabel* valueLabel_;
     bt::floatT value_;
-    float defaultValue_=0;
     bool clampMin_ = true;
     bool clampMax_ = true;
     bt::floatT minValue_=-5;
     bt::floatT maxValue_=10;
+
+    void setValueImpl(bt::floatT value);
 
 protected:
 void paintEvent(QPaintEvent *event) override;

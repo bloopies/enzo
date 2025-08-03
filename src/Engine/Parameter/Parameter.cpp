@@ -1,5 +1,7 @@
 #include "Engine/Parameter/Parameter.h"
+#include "Engine/Parameter/Default.h"
 #include "Engine/Types.h"
+#include <algorithm>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -7,8 +9,33 @@
 enzo::prm::Parameter::Parameter(Template prmTemplate)
 : template_{prmTemplate}
 {
-    floatValues_ = std::vector<bt::floatT>(prmTemplate.getSize(), prmTemplate.getDefault());
-    stringValues_ = std::vector<bt::String>(prmTemplate.getSize(), "default");
+    floatValues_ = std::vector<bt::floatT>();
+    floatValues_.reserve(prmTemplate.getSize());
+
+    stringValues_ = std::vector<bt::String>(prmTemplate.getSize(), prmTemplate.getDefault().getString());
+    stringValues_.reserve(prmTemplate.getSize());
+
+    const unsigned int templateSize = prmTemplate.getSize();
+    const unsigned int numDefaults = prmTemplate.getNumDefaults();
+
+    if(numDefaults==1)
+    {
+        floatValues_ = std::vector<bt::floatT>(templateSize, prmTemplate.getDefault().getFloat());
+        stringValues_ = std::vector<bt::String>(templateSize, prmTemplate.getDefault().getString());
+    }
+
+    for(int i=0; i<templateSize; ++i)
+    {
+        prm::Default prmDefault;
+        if(i<numDefaults)
+        {
+             prmDefault = prmTemplate.getDefault(i);
+        }
+        floatValues_.push_back(prmDefault.getFloat());
+        stringValues_.push_back(prmDefault.getString());
+    }
+
+
     std::cout << "created new parameter: " << prmTemplate.getName() << "\n";
 }
 

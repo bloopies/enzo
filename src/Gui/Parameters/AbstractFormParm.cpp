@@ -28,18 +28,16 @@ enzo::ui::AbstractFormParm::AbstractFormParm(std::weak_ptr<prm::Parameter> param
             case prm::Type::FLOAT:
             {
                 AbstractSliderParm* slider;
-                slider = new AbstractSliderParm();
-                slider->setValue(sharedParameter->evalFloat());
+                slider = new AbstractSliderParm(sharedParameter->evalFloat());
                 mainLayout_->addWidget(slider);
                 connect(slider, &AbstractSliderParm::valueChanged, this, [this](bt::floatT value){this->changeValue(value, 0);}); 
                 break;
             }
             case prm::Type::XYZ:
             {
-                AbstractSliderParm* slider1 = new AbstractSliderParm();
-                AbstractSliderParm* slider2 = new AbstractSliderParm();
-                AbstractSliderParm* slider3 = new AbstractSliderParm();
-                slider1->setValue(sharedParameter->evalFloat());
+                AbstractSliderParm* slider1 = new AbstractSliderParm(sharedParameter->evalFloat(0));
+                AbstractSliderParm* slider2 = new AbstractSliderParm(sharedParameter->evalFloat(1));
+                AbstractSliderParm* slider3 = new AbstractSliderParm(sharedParameter->evalFloat(2));
                 QHBoxLayout* vectorLayout = new QHBoxLayout();
                 vectorLayout->addWidget(slider1);
                 vectorLayout->addWidget(slider2);
@@ -52,7 +50,7 @@ enzo::ui::AbstractFormParm::AbstractFormParm(std::weak_ptr<prm::Parameter> param
             }
             case prm::Type::STRING:
             {
-                StringParm* stringParm = new StringParm();
+                StringParm* stringParm = new StringParm(sharedParameter->evalString());
 
                 connect(stringParm, &StringParm::valueChanged, this, [this](bt::String value){this->changeValue(value, 0);}); 
 
