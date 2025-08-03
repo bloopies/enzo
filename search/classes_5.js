@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['parameter_0',['Parameter',['../classenzo_1_1prm_1_1Parameter.html',1,'enzo::prm']]]
+  ['operatortable_0',['OperatorTable',['../classenzo_1_1op_1_1OperatorTable.html',1,'enzo::op']]],
+  ['opinfo_1',['OpInfo',['../structenzo_1_1op_1_1OpInfo.html',1,'enzo::op']]]
 ];
