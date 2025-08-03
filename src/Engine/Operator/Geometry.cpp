@@ -170,23 +170,24 @@ enzo::geo::HeMesh geo::Geometry::computeHalfEdgeMesh()
     return heMesh;
 }
 
-unsigned int geo::Geometry::getPrimStartVertex(ga::Offset primOffset)
+ga::Offset geo::Geometry::getPrimStartVertex(ga::Offset primOffset) const
 {
-    const ga::Offset handleSize = vertexCountHandlePrim_.getSize();
-    // TODO: add smarter system to recompute primStarts_, also move to separate function 
-    // if size changed, recompute
-    if(handleSize!=primStarts_.size())
-    {
-        bt::intT primStart = 0;
-        for(size_t i=0; i<handleSize; ++i)
-        {
-            primStarts_.push_back(primStart);
-            primStart += vertexCountHandlePrim_.getValue(i);
-        }
-    }
 
     return primStarts_[primOffset];
 }
+
+// TODO: handle this automatically
+void geo::Geometry::computePrimStartVertices()
+{
+    const ga::Offset handleSize = vertexCountHandlePrim_.getSize();
+    bt::intT primStart = 0;
+    for(size_t i=0; i<handleSize; ++i)
+    {
+        primStarts_.push_back(primStart);
+        primStart += vertexCountHandlePrim_.getValue(i);
+    }
+}
+
 
 
 

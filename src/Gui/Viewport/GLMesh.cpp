@@ -5,6 +5,8 @@
 #include "Engine/Operator/Geometry.h"
 #include "Engine/Types.h"
 #include <CGAL/Polygon_mesh_processing/compute_normal.h>
+#include <oneapi/tbb/blocked_range.h>
+#include <oneapi/tbb/parallel_for.h>
 #include "icecream.hpp"
 
 
@@ -61,53 +63,54 @@ void GLMesh::setPosBuffer(enzo::geo::Geometry& geometry)
     const size_t numPrims = geometry.getNumPrims();
 
     vertices.resize(geometry.getNumVerts());
+    geometry.computePrimStartVertices();
 
-
-    for (int primOffset=0; primOffset<numPrims; ++primOffset)
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, numPrims), [&](tbb::blocked_range<size_t> range)
     {
-        const unsigned int primStartVert = geometry.getPrimStartVertex(primOffset);
-        auto faceIndex = primOffset;
-        
-        int faceVertCnt = geometry.getPrimVertCount(primOffset);
-
-        enzo::bt::Vector3 n;
-
-        // compute normal
-        if(faceVertCnt>=3)
+        for (int primOffset=range.begin(); primOffset<range.end(); ++primOffset)
         {
-            const unsigned v1 = primStartVert;
-            const unsigned v2 = primStartVert + 1;
-            const unsigned v3 = primStartVert + 2;
+            const enzo::ga::Offset primStartVert = geometry.getPrimStartVertex(primOffset);
+            const unsigned int faceVertCnt = geometry.getPrimVertCount(primOffset);
 
-            const enzo::bt::Vector3 pos1 = geometry.getPosFromVert(v1);
-            const enzo::bt::Vector3 pos2 = geometry.getPosFromVert(v2);
-            const enzo::bt::Vector3 pos3 = geometry.getPosFromVert(v3);
+            enzo::bt::Vector3 Normal;
 
-            enzo::bt::Vector3 tang1 = (pos2-pos1);
-            enzo::bt::Vector3 tang2 = (pos3-pos1);
+            // compute normal
+            if(faceVertCnt>=3)
+            {
+                const unsigned v1 = primStartVert;
+                const unsigned v2 = primStartVert + 1;
+                const unsigned v3 = primStartVert + 2;
 
-            tang1.normalize();
-            tang2.normalize();
+                const enzo::bt::Vector3 pos1 = geometry.getPosFromVert(v1);
+                const enzo::bt::Vector3 pos2 = geometry.getPosFromVert(v2);
+                const enzo::bt::Vector3 pos3 = geometry.getPosFromVert(v3);
 
-            n = tang1.cross(tang2);
+                enzo::bt::Vector3 tang1 = (pos2-pos1);
+                enzo::bt::Vector3 tang2 = (pos3-pos1);
+
+                tang1.normalize();
+                tang2.normalize();
+
+                Normal = tang1.cross(tang2);
+            }
+
+            for(int i=0; i< faceVertCnt; ++i)
+            {
+                const unsigned int vertexCount = primStartVert+i;
+                enzo::bt::Vector3 p = geometry.getPosFromVert(vertexCount);
+
+                vertices[vertexCount] ={
+                    { p.x(),
+                      p.y(),
+                      p.z()},
+                    { Normal.x(),
+                      Normal.y(),
+                      Normal.z()}
+                };
+            }
+
         }
-
-        for(int i=0; i< faceVertCnt; ++i)
-        {
-            const unsigned int vertexCount = primStartVert+i;
-            enzo::bt::Vector3 p = geometry.getPosFromVert(vertexCount);
-
-            vertices[vertexCount] ={
-                { p.x(),
-                  p.y(),
-                  p.z()},
-                { n.x(),
-                  n.y(),
-                  n.z()}
-            };
-        }
-
-    }
+    });
 
     glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(Vertex), vertices.data(), GL_STATIC_DRAW);
     unbind();

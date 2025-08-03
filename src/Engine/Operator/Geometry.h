@@ -31,14 +31,15 @@ public:
     std::vector<bt::Vector3> derivePointNormals();
     HeMesh computeHalfEdgeMesh();
     // returns the first vertex of the primitive
-    unsigned int getPrimStartVertex(ga::Offset primOffset);
     void addFace(std::initializer_list<ga::Offset> pointOffsets);
 
+    ga::Offset getPrimStartVertex(ga::Offset primOffset) const;
     bt::Vector3 getPosFromVert(ga::Offset vertexOffset) const;
     bt::Vector3 getPointPos(ga::Offset pointOffset) const;
     unsigned int getPrimVertCount(ga::Offset primOffset) const;
     ga::Offset getNumPrims() const;
     ga::Offset getNumVerts() const;
+    void computePrimStartVertices();
 private:
     using attribVector = std::vector<std::shared_ptr<ga::Attribute>>;
     attribVector& getAttributeStore(ga::AttributeOwner& owner);

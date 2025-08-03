@@ -75,7 +75,7 @@ public:
     {
         // TODO:protect against invalid positions
         // TODO: cast types
-        return data_[pos];
+        return (*data_)[pos];
     }
 
     void setValue(size_t pos, const T& value)
