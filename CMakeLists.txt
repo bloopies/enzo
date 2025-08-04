@@ -36,6 +36,7 @@ set(GUI_SOURCES
     src/Gui/Viewport/GLCamera.cpp
     src/Gui/Viewport/GLMesh.cpp
     src/Gui/Viewport/GLGrid.cpp
+    src/Gui/Viewport/GLPoints.cpp
     src/Gui/Network/NetworkGraphicsView.cpp
     src/Gui/Network/NetworkGraphicsScene.cpp
     src/Gui/Network/Network.cpp

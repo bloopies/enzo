@@ -123,6 +123,10 @@ void GLCamera::changeRadius(float delta)
 
 }
 
+glm::vec3 GLCamera::getPos()
+{
+    return camPos_;
+};
 
 glm::vec3 GLCamera::getRight()
 {

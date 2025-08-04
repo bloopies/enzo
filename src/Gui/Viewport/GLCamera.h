@@ -16,6 +16,7 @@ public:
     void setCenter(float x, float y, float z);
     void setUniform(uint uniformLocation);
 
+    glm::vec3 getPos();
     glm::vec3 getForward();
     glm::vec3 getRight();
     glm::vec3 getUp();

@@ -10,7 +10,7 @@ int main(int argc, char **argv)
     // set up rendering
     QSurfaceFormat format;
     format.setRenderableType(QSurfaceFormat::OpenGL);
-    format.setVersion(3, 2);
+    format.setVersion(3, 3);
     format.setProfile(QSurfaceFormat::CoreProfile);
     format.setSamples(4);
     QSurfaceFormat::setDefaultFormat(format);
