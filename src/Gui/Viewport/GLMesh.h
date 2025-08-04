@@ -18,11 +18,13 @@ public:
     GLMesh();
     GLuint vao;
     GLuint vertexBuffer;
-    GLuint indexBuffer;
+    GLuint faceIndexBuffer;
+    GLuint lineIndexBuffer;
 
     // std::vector<GLfloat> vertexPosData;
     std::vector<Vertex> vertices;
-    std::vector<GLint> indexData;
+    std::vector<GLint> faceIndexData;
+    std::vector<GLint> lineIndexData;
 
     void init();
     void initBuffers();

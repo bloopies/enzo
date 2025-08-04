@@ -50,8 +50,9 @@ void GLMesh::initBuffers()
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
 
-    glGenBuffers(1, &indexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glGenBuffers(1, &faceIndexBuffer);
+    glGenBuffers(1, &lineIndexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceIndexBuffer);
 
 }
 
@@ -119,8 +120,8 @@ void GLMesh::setPosBuffer(enzo::geo::Geometry& geometry)
 void GLMesh::setIndexBuffer(std::vector<int> pointIndices, std::vector<int> primVertexCounts)
 {
     bind();
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-    indexData.clear();
+    faceIndexData.clear();
+    lineIndexData.clear();
 
     unsigned int startVert = 0;
 
@@ -130,18 +131,31 @@ void GLMesh::setIndexBuffer(std::vector<int> pointIndices, std::vector<int> prim
         int primVertexCount = primVertexCounts[primNum];
 
 
-        for(size_t i=1; i<primVertexCount-1; ++i)
+        if(primVertexCount>=3)
         {
-            indexData.push_back(startVert);
-            indexData.push_back(startVert+i);
-            indexData.push_back(startVert+i+1);
+            for(size_t i=1; i<primVertexCount-1; ++i)
+            {
+                faceIndexData.push_back(startVert);
+                faceIndexData.push_back(startVert+i);
+                faceIndexData.push_back(startVert+i+1);
 
+            }
+        }
+        if(primVertexCount==2)
+        {
+            IC(startVert, startVert+1);
+            lineIndexData.push_back(startVert);
+            lineIndexData.push_back(startVert+1);
         }
 
         startVert += primVertexCount;
     }
 
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexData.size()*sizeof(GLint), indexData.data(), GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceIndexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, faceIndexData.size()*sizeof(GLint), faceIndexData.data(), GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, lineIndexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, lineIndexData.size()*sizeof(GLint), lineIndexData.data(), GL_STATIC_DRAW);
     unbind();
 }
 
@@ -163,5 +177,9 @@ void GLMesh::draw()
     // wireframe
     // glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 
-    glDrawElements(GL_TRIANGLES, indexData.size(), GL_UNSIGNED_INT, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceIndexBuffer);
+    glDrawElements(GL_TRIANGLES, faceIndexData.size(), GL_UNSIGNED_INT, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, lineIndexBuffer);
+    glDrawElements(GL_LINES, lineIndexData.size(), GL_UNSIGNED_INT, 0);
 }

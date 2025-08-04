@@ -78,7 +78,7 @@ void GopGeometryImport::cookOp(enzo::op::Context context)
                 const bt::Vector3 pointPos = {std::stod(result[1]), std::stod(result[2]), std::stod(result[3])};
                 PAttrHandle.addValue(pointPos);
             }
-            else if(firstChar=='f')
+            else if(firstChar=='f' || firstChar=='l')
             {
                 std::vector<std::string> result;
                 boost::split(result, line, isspace);
