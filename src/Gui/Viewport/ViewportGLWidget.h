@@ -6,6 +6,7 @@
 #include "Gui/Viewport/GLCamera.h"
 #include "Gui/Viewport/GLMesh.h"
 #include "Gui/Viewport/GLGrid.h"
+#include "Gui/Viewport/GLPoints.h"
 #include "Engine/Operator/Geometry.h"
 
 class ViewportGLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_2_Core
@@ -17,8 +18,9 @@ public:
     GLCamera curCamera;
     std::unique_ptr<GLMesh> triangleMesh_ ;
     std::unique_ptr<GLGrid> gridMesh_ ;
+    std::unique_ptr<GLPoints> points_ ;
 
-    std::unique_ptr<GLMesh> meshFromGeo(enzo::geo::Geometry& geometry);
+    // std::unique_ptr<GLMesh> meshFromGeo(enzo::geo::Geometry& geometry);
 
 protected:
     void initializeGL() override;
