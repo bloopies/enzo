@@ -184,14 +184,7 @@ std::unique_ptr<GLMesh> ViewportGLWidget::meshFromGeo(enzo::geo::Geometry& geome
 
 
     mesh->setPosBuffer(geometry);
-
-    std::shared_ptr<ga::Attribute> pointAttr = geometry.getAttribByName(ga::AttrOwner::VERTEX, "point");
-    ga::AttributeHandleInt pointAttrHandle = ga::AttributeHandleInt(pointAttr);
-
-    std::shared_ptr<ga::Attribute> vertexCountAttr = geometry.getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount");
-    ga::AttributeHandleInt vertexCountHandle = ga::AttributeHandleInt(vertexCountAttr);
-
-    mesh->setIndexBuffer(pointAttrHandle.getAllValues(), vertexCountHandle.getAllValues());
+    mesh->setIndexBuffer(geometry);
 
 
 
@@ -205,12 +198,5 @@ void ViewportGLWidget::geometryChanged(enzo::geo::Geometry& geometry)
     ga::AttributeHandleVector3 PAttrHandle = ga::AttributeHandleVector3(PAttr);
 
     triangleMesh_->setPosBuffer(geometry);
-
-    std::shared_ptr<ga::Attribute> pointAttr = geometry.getAttribByName(ga::AttrOwner::VERTEX, "point");
-    ga::AttributeHandleInt pointAttrHandle = ga::AttributeHandleInt(pointAttr);
-
-    std::shared_ptr<ga::Attribute> vertexCountAttr = geometry.getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount");
-    ga::AttributeHandleInt vertexCountHandle = ga::AttributeHandleInt(vertexCountAttr);
-
-    triangleMesh_->setIndexBuffer(pointAttrHandle.getAllValues(), vertexCountHandle.getAllValues());
+    triangleMesh_->setIndexBuffer(geometry);
 }

@@ -40,14 +40,14 @@ void GopGeometryImport::cookOp(enzo::op::Context context)
         }
 
 
-        auto PAttr = geo.getAttribByName(ga::AttrOwner::POINT, "P");
-        ga::AttributeHandleVector3 PAttrHandle(PAttr);
+        // auto PAttr = geo.getAttribByName(ga::AttrOwner::POINT, "P");
+        // ga::AttributeHandleVector3 PAttrHandle(PAttr);
 
-        auto pointAttr = geo.getAttribByName(ga::AttrOwner::VERTEX, "point");
-        ga::AttributeHandleInt pointAttrHandle(pointAttr);
+        // auto pointAttr = geo.getAttribByName(ga::AttrOwner::VERTEX, "point");
+        // ga::AttributeHandleInt pointAttrHandle(pointAttr);
 
-        auto vertexCountAttr = geo.getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount");
-        ga::AttributeHandleInt vertexCountHandle(vertexCountAttr);
+        // auto vertexCountAttr = geo.getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount");
+        // ga::AttributeHandleInt vertexCountHandle(vertexCountAttr);
 
         std::ifstream file(filePath);
         if(!file.is_open())
@@ -76,10 +76,12 @@ void GopGeometryImport::cookOp(enzo::op::Context context)
 
                 }
                 const bt::Vector3 pointPos = {std::stod(result[1]), std::stod(result[2]), std::stod(result[3])};
-                PAttrHandle.addValue(pointPos);
+                geo.addPoint(pointPos);
             }
             else if(firstChar=='f' || firstChar=='l')
             {
+                bool closedFace = firstChar=='f';
+
                 std::vector<std::string> result;
                 boost::split(result, line, isspace);
                 if(result.size()<3)
@@ -88,16 +90,18 @@ void GopGeometryImport::cookOp(enzo::op::Context context)
 
                 }
 
+                ga::Offset numVerts = result.size()-1;
+
+                std::vector<ga::Offset> verts;
+                verts.reserve(numVerts);
 
                 // set vertex attributes
-                for(int i=1; i<result.size(); ++i)
+                for(int i=1; i<numVerts+1; ++i)
                 {
-                    const int primNum = std::stoi(result[i]);
-                    pointAttrHandle.addValue(primNum-1);
+                    verts.push_back(std::stoi(result[i])-1);
                 }
 
-                // set face attribute
-                vertexCountHandle.addValue(result.size()-1);
+                geo.addFace(verts, closedFace);
 
             }
         }
@@ -106,11 +110,12 @@ void GopGeometryImport::cookOp(enzo::op::Context context)
 
         // scale
         const float scale = context.evalFloatParm("size");
-        for(int i=0; i<PAttrHandle.getSize(); ++i)
+        const ga::Offset numPoints = geo.getNumPoints();
+        for(ga::Offset i=0; i<numPoints; ++i)
         {
-            enzo::bt::Vector3 pointPos = PAttrHandle.getValue(i);
+            enzo::bt::Vector3 pointPos = geo.getPointPos(i);
             pointPos*=scale;
-            PAttrHandle.setValue(i, pointPos);
+            geo.setPointPos(i, pointPos);
         }
         // ----
 

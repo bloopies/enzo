@@ -12,6 +12,7 @@
 using namespace enzo;
 geo::Geometry::Geometry() :
     vertexCountHandlePrim_{addIntAttribute(ga::AttrOwner::PRIMITIVE, "vertexCount")},
+    closedHandlePrim_{addBoolAttribute(ga::AttrOwner::PRIMITIVE, "closed")},
     pointOffsetHandleVert_{addIntAttribute(ga::AttrOwner::VERTEX, "point")},
     posHandlePoint_{addVector3Attribute(ga::AttrOwner::POINT, "P")}
 {
@@ -19,26 +20,38 @@ geo::Geometry::Geometry() :
 }
 
 geo::Geometry::Geometry(const Geometry& other):
+    // attributes
     pointAttributes_{deepCopyAttributes(other.pointAttributes_)},
     vertexAttributes_{deepCopyAttributes(other.vertexAttributes_)},
     primitiveAttributes_{deepCopyAttributes(other.primitiveAttributes_)},
     globalAttributes_{deepCopyAttributes(other.globalAttributes_)},
+
+    // handles
     vertexCountHandlePrim_{enzo::ga::AttributeHandleInt(getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount"))},
+    closedHandlePrim_{enzo::ga::AttributeHandleBool(getAttribByName(ga::AttrOwner::PRIMITIVE, "closed"))},
     pointOffsetHandleVert_{enzo::ga::AttributeHandleInt(getAttribByName(ga::AttrOwner::VERTEX, "point"))},
     posHandlePoint_{enzo::ga::AttributeHandleVector3(getAttribByName(ga::AttrOwner::POINT, "P"))}
 {
 
 }
 
-void geo::Geometry::addFace(std::initializer_list<ga::Offset> pointOffsets)
+void geo::Geometry::addFace(std::vector<ga::Offset> pointOffsets, bool closed)
 {
     for(ga::Offset pointOffset : pointOffsets)
     {
         pointOffsetHandleVert_.addValue(pointOffset);
     }
     vertexCountHandlePrim_.addValue(pointOffsets.size());
+    closedHandlePrim_.addValue(closed);
     
 }
+
+void geo::Geometry::addPoint(const bt::Vector3& pos)
+{
+    posHandlePoint_.addValue(pos);
+
+}
+
 
 bt::Vector3 geo::Geometry::getPosFromVert(ga::Offset vertexOffset) const
 {
@@ -53,6 +66,12 @@ bt::Vector3 geo::Geometry::getPointPos(ga::Offset pointOffset) const
     return posHandlePoint_.getValue(pointOffset);
 }
 
+void geo::Geometry::setPointPos(const ga::Offset offset, const bt::Vector3& pos)
+{
+    posHandlePoint_.setValue(offset, pos);
+}
+
+
 unsigned int geo::Geometry::getPrimVertCount(ga::Offset primOffset) const
 {
     return vertexCountHandlePrim_.getValue(primOffset);
@@ -66,6 +85,11 @@ ga::Offset geo::Geometry::getNumPrims() const
 ga::Offset geo::Geometry::getNumVerts() const
 {
     return pointOffsetHandleVert_.getSize();
+}
+
+ga::Offset geo::Geometry::getNumPoints() const
+{
+    return posHandlePoint_.getSize();
 }
 
 
@@ -191,12 +215,25 @@ void geo::Geometry::computePrimStartVertices()
 
 
 
-ga::AttributeHandle<int> geo::Geometry::addIntAttribute(ga::AttributeOwner owner, std::string name)
+ga::AttributeHandleInt geo::Geometry::addIntAttribute(ga::AttributeOwner owner, std::string name)
 {
     auto newAttribute = std::make_shared<ga::Attribute>(name, ga::AttrType::intT);
     getAttributeStore(owner).push_back(newAttribute);
-    return ga::AttributeHandle<int>(newAttribute);
+    return ga::AttributeHandleInt(newAttribute);
 }
+
+ga::AttributeHandleBool geo::Geometry::addBoolAttribute(ga::AttributeOwner owner, std::string name)
+{
+    auto newAttribute = std::make_shared<ga::Attribute>(name, ga::AttrType::boolT);
+    getAttributeStore(owner).push_back(newAttribute);
+    return ga::AttributeHandleBool(newAttribute);
+}
+
+bt::boolT geo::Geometry::isClosed(ga::Offset primOffset) const
+{
+    return closedHandlePrim_.getValue(primOffset);
+}
+
 
 ga::AttributeHandle<bt::Vector3> geo::Geometry::addVector3Attribute(ga::AttributeOwner owner, std::string name)
 {
