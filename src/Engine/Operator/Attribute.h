@@ -46,9 +46,10 @@ namespace enzo{
             // void* data_;
 
             // data stores
-            std::shared_ptr<StoreContainer<int>> intStore_;
-            std::shared_ptr<StoreContainer<float>> floatStore_;
+            std::shared_ptr<StoreContainer<bt::intT>> intStore_;
+            std::shared_ptr<StoreContainer<bt::floatT>> floatStore_;
             std::shared_ptr<StoreContainer<enzo::bt::Vector3>> vector3Store_;
+            std::shared_ptr<StoreContainer<enzo::bt::boolT>> boolStore_;
         };
 
 

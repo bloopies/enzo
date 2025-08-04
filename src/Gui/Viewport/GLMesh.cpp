@@ -117,21 +117,29 @@ void GLMesh::setPosBuffer(enzo::geo::Geometry& geometry)
     unbind();
 }
 
-void GLMesh::setIndexBuffer(std::vector<int> pointIndices, std::vector<int> primVertexCounts)
+void GLMesh::setIndexBuffer(enzo::geo::Geometry& geometry)
 {
     bind();
     faceIndexData.clear();
     lineIndexData.clear();
 
-    unsigned int startVert = 0;
 
     // create triangle fan from potentially ngon inputs
-    for(size_t primNum=0; primNum<primVertexCounts.size(); ++primNum)
+    for(enzo::ga::Offset primOffset=0; primOffset<geometry.getNumPrims(); ++primOffset)
     {
-        int primVertexCount = primVertexCounts[primNum];
+        int primVertexCount = geometry.getPrimVertCount(primOffset);
+        const enzo::ga::Offset startVert = geometry.getPrimStartVertex(primOffset);
+        const enzo::bt::boolT closed = geometry.isClosed(primOffset);
 
-
-        if(primVertexCount>=3)
+        if(!closed && primVertexCount>=2)
+        {
+            for(size_t i=0; i<primVertexCount-1; ++i)
+            {
+                lineIndexData.push_back(startVert+i);
+                lineIndexData.push_back(startVert+i+1);
+            }
+        }
+        else if(primVertexCount>=3)
         {
             for(size_t i=1; i<primVertexCount-1; ++i)
             {
@@ -141,14 +149,7 @@ void GLMesh::setIndexBuffer(std::vector<int> pointIndices, std::vector<int> prim
 
             }
         }
-        if(primVertexCount==2)
-        {
-            IC(startVert, startVert+1);
-            lineIndexData.push_back(startVert);
-            lineIndexData.push_back(startVert+1);
-        }
 
-        startVert += primVertexCount;
     }
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceIndexBuffer);

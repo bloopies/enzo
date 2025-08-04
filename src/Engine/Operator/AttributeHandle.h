@@ -27,13 +27,13 @@ public:
         // TODO: add the other types
 
         // int
-        if constexpr (std::is_same<int, T>::value)
+        if constexpr (std::is_same<bt::intT, T>::value)
         {
             data_=attribute->intStore_;
         }
 
         // float
-        else if constexpr (std::is_same<float, T>::value)
+        else if constexpr (std::is_same<bt::floatT, T>::value)
         {
             data_=attribute->floatStore_;
         }
@@ -43,9 +43,13 @@ public:
         {
             data_=attribute->vector3Store_;
         }
+        else if constexpr (std::is_same<enzo::bt::boolT, T>::value)
+        {
+            data_=attribute->boolStore_;
+        }
         else
         {
-                throw std::runtime_error("Type " + std::to_string(static_cast<int>(type_)) + " was not properly accounted for");
+                throw std::runtime_error("Type " + std::to_string(static_cast<int>(type_)) + " was not properly accounted for in AttributeHandle constructor");
         }
 
     }
@@ -109,8 +113,9 @@ private:
 
 };
 
-using AttributeHandleInt = AttributeHandle<int>;
-using AttributeHandleFloat = AttributeHandle<float>;
+using AttributeHandleInt = AttributeHandle<bt::intT>;
+using AttributeHandleFloat = AttributeHandle<bt::floatT>;
 using AttributeHandleVector3 = AttributeHandle<enzo::bt::Vector3>;
+using AttributeHandleBool = AttributeHandle<enzo::bt::boolT>;
 
 }

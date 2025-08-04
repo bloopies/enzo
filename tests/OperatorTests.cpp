@@ -24,7 +24,7 @@ TEST_CASE("geometry")
     using namespace enzo;
     geo::Geometry geo;
     // check add function
-    ga::AttributeHandle<int> myHandle = geo.addIntAttribute(ga::AttrOwner::POINT, "index");
+    ga::AttributeHandleInt myHandle = geo.addIntAttribute(ga::AttrOwner::POINT, "index");
     myHandle.addValue(5);
     myHandle.addValue(6);
     REQUIRE(myHandle.getValue(0)==5);

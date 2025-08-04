@@ -29,7 +29,7 @@ public:
     void init();
     void initBuffers();
     void setPosBuffer(enzo::geo::Geometry& geometry);
-    void setIndexBuffer(std::vector<int> pointIndices, std::vector<int> primVertexCounts);
+    void setIndexBuffer(enzo::geo::Geometry& geometry);
     void bind();
     void unbind();
     void draw();

@@ -24,21 +24,28 @@ class Geometry
 public:
     Geometry();
     Geometry(const Geometry& other);
-    ga::AttributeHandle<int> addIntAttribute(ga::AttributeOwner owner, std::string name);
+    ga::AttributeHandle<bt::intT> addIntAttribute(ga::AttributeOwner owner, std::string name);
+    ga::AttributeHandleBool addBoolAttribute(ga::AttributeOwner owner, std::string name);
     ga::AttributeHandle<bt::Vector3> addVector3Attribute(ga::AttributeOwner owner, std::string name);
     // TODO: return weak ptr
     std::shared_ptr<ga::Attribute> getAttribByName(ga::AttributeOwner owner, std::string name);
     std::vector<bt::Vector3> derivePointNormals();
     HeMesh computeHalfEdgeMesh();
-    // returns the first vertex of the primitive
-    void addFace(std::initializer_list<ga::Offset> pointOffsets);
+    void addFace(std::vector<ga::Offset> pointOffsets, bool closed=true);
+    void addPoint(const bt::Vector3& pos);
 
-    ga::Offset getPrimStartVertex(ga::Offset primOffset) const;
+    void setPointPos(const ga::Offset offset, const bt::Vector3& pos);
+
+    ga::Offset getPrimStartVertex(ga::Offset primOffset) const; // returns the first vertex of the primitive
     bt::Vector3 getPosFromVert(ga::Offset vertexOffset) const;
     bt::Vector3 getPointPos(ga::Offset pointOffset) const;
     unsigned int getPrimVertCount(ga::Offset primOffset) const;
     ga::Offset getNumPrims() const;
     ga::Offset getNumVerts() const;
+    ga::Offset getNumPoints() const;
+
+    bt::boolT isClosed(ga::Offset primOffset) const;
+
     void computePrimStartVertices();
 private:
     using attribVector = std::vector<std::shared_ptr<ga::Attribute>>;
@@ -55,6 +62,7 @@ private:
 
     // handles
     enzo::ga::AttributeHandleInt vertexCountHandlePrim_;
+    enzo::ga::AttributeHandleBool closedHandlePrim_;
     enzo::ga::AttributeHandleInt pointOffsetHandleVert_;
     enzo::ga::AttributeHandleVector3 posHandlePoint_;
 };
