@@ -10,9 +10,6 @@
 #include "Gui/Viewport/GLCamera.h"
 #include "icecream.hpp"
 
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/norm.hpp>
-
 
 GLPoints::GLPoints()
 {
@@ -61,17 +58,23 @@ void GLPoints::initBuffers()
 
 void GLPoints::setPoints(enzo::geo::Geometry& geometry, GLCamera& camera)
 {
-    const enzo::ga::Offset numPoints =  geometry.getNumPoints();
+    const enzo::ga::Offset numPoints =  geometry.getNumSoloPoints();
     const glm::vec3 camPosGlm = camera.getPos();
     const enzo::bt::Vector3 camPos(camPosGlm.x, camPosGlm.y, camPosGlm.z);
 
     points_ = std::vector<Point>(numPoints);
 
-    for(enzo::ga::Offset ptOffset=0; ptOffset<numPoints; ++ptOffset)
+    std::vector<enzo::ga::Offset> soloPoints = {geometry.soloPointsBegin(), geometry.soloPointsEnd()};
+
+    tbb::parallel_for(tbb::blocked_range<enzo::ga::Offset>(0, numPoints), [&](tbb::blocked_range<enzo::ga::Offset> range)
     {
-        const enzo::bt::Vector3 pos = geometry.getPointPos(ptOffset);
-        points_[ptOffset] = {glm::vec3(pos.x(), pos.y(), pos.z()), static_cast<float>((pos-camPos).norm())*0.005f};
-    }
+        for(enzo::ga::Offset i=range.begin(); i<range.end(); ++i)
+        {
+            const enzo::ga::Offset ptOffset = soloPoints[i];
+            const enzo::bt::Vector3 pos = geometry.getPointPos(ptOffset);
+            points_[i] = {glm::vec3(pos.x(), pos.y(), pos.z()), static_cast<float>((pos-camPos).norm())*0.005f};
+        }
+    });
     pointCount = points_.size();
 
     glBindBuffer(GL_ARRAY_BUFFER, pointDataBuffer_);

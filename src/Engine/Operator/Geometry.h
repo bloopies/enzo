@@ -34,6 +34,9 @@ public:
     void addFace(std::vector<ga::Offset> pointOffsets, bool closed=true);
     void addPoint(const bt::Vector3& pos);
 
+    std::set<ga::Offset>::const_iterator soloPointsBegin();
+    std::set<ga::Offset>::const_iterator soloPointsEnd();
+
     void setPointPos(const ga::Offset offset, const bt::Vector3& pos);
 
     ga::Offset getPrimStartVertex(ga::Offset primOffset) const; // returns the first vertex of the primitive
@@ -43,6 +46,7 @@ public:
     ga::Offset getNumPrims() const;
     ga::Offset getNumVerts() const;
     ga::Offset getNumPoints() const;
+    ga::Offset getNumSoloPoints() const;
 
     bt::boolT isClosed(ga::Offset primOffset) const;
 
@@ -57,6 +61,8 @@ private:
     attribVector vertexAttributes_;
     attribVector primitiveAttributes_;
     attribVector globalAttributes_;
+
+    std::set<ga::Offset> soloPoints_;
 
     std::vector<ga::Offset> primStarts_;
 
