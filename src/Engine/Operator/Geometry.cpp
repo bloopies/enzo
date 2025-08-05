@@ -30,7 +30,10 @@ geo::Geometry::Geometry(const Geometry& other):
     vertexCountHandlePrim_{enzo::ga::AttributeHandleInt(getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount"))},
     closedHandlePrim_{enzo::ga::AttributeHandleBool(getAttribByName(ga::AttrOwner::PRIMITIVE, "closed"))},
     pointOffsetHandleVert_{enzo::ga::AttributeHandleInt(getAttribByName(ga::AttrOwner::VERTEX, "point"))},
-    posHandlePoint_{enzo::ga::AttributeHandleVector3(getAttribByName(ga::AttrOwner::POINT, "P"))}
+    posHandlePoint_{enzo::ga::AttributeHandleVector3(getAttribByName(ga::AttrOwner::POINT, "P"))},
+
+    // other
+    soloPoints_{other.soloPoints_}
 {
 
 }
@@ -40,6 +43,7 @@ void geo::Geometry::addFace(std::vector<ga::Offset> pointOffsets, bool closed)
     for(ga::Offset pointOffset : pointOffsets)
     {
         pointOffsetHandleVert_.addValue(pointOffset);
+        soloPoints_.erase(pointOffset);
     }
     vertexCountHandlePrim_.addValue(pointOffsets.size());
     closedHandlePrim_.addValue(closed);
@@ -49,8 +53,27 @@ void geo::Geometry::addFace(std::vector<ga::Offset> pointOffsets, bool closed)
 void geo::Geometry::addPoint(const bt::Vector3& pos)
 {
     posHandlePoint_.addValue(pos);
+    soloPoints_.emplace(posHandlePoint_.getSize()-1);
+}
+
+ga::Offset geo::Geometry::getNumSoloPoints() const
+{
+    return soloPoints_.size();
 
 }
+
+
+
+std::set<ga::Offset>::const_iterator geo::Geometry::soloPointsBegin()
+{
+    return soloPoints_.begin();
+}
+
+std::set<ga::Offset>::const_iterator geo::Geometry::soloPointsEnd()
+{
+    return soloPoints_.end();
+}
+
 
 
 bt::Vector3 geo::Geometry::getPosFromVert(ga::Offset vertexOffset) const
