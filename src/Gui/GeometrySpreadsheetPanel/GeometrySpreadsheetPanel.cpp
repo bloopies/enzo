@@ -1,5 +1,6 @@
 #include "Gui/GeometrySpreadsheetPanel/GeometrySpreadsheetPanel.h"
 #include "Gui/GeometrySpreadsheetPanel/GeometrySpreadsheetMenuBar.h"
+#include "Gui/GeometrySpreadsheetPanel/GeometrySpreadsheetModel.h"
 #include <QTableWidget>
 #include <QTreeWidget>
 #include <QLabel>
@@ -24,6 +25,9 @@ GeometrySpreadsheetPanel::GeometrySpreadsheetPanel(QWidget *parent, Qt::WindowFl
         }
     )");
     t->setFrameStyle(QFrame::NoFrame);
+    
+    auto model = new GeometrySpreadsheetModel({"hello", "world"});
+    t->setModel(model);
 
 
     mainLayout_->addWidget(new GeometrySpreadsheetMenuBar());
