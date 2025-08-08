@@ -10,7 +10,7 @@ set(BenchExec bench)
 set(CMAKE_AUTORCC ON)
 
 # setup project
-project(enzo_project)
+project(enzo)
 
 set(ENGINE_SOURCES
     src/Engine/Operator/Attribute.cpp
@@ -64,6 +64,7 @@ set(ENGINE_INCLUDE_DIRECTORIES
     extern/icecream-cpp/include
 )
 
+
 # qt
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets SvgWidgets OpenGLWidgets)
 qt_standard_project_setup()
@@ -90,6 +91,19 @@ qt_add_executable(${AppExec}
     ${ENGINE_SOURCES}
 )
 
+# --- packaging ---
+if(UNIX)
+    set(CPACK_PACKAGING_INSTALL_PREFIX "/opt")
+endif(UNIX)
+
+set(ENZO_BIN_DIR ${CPACK_PACKAGING_INSTALL_PREFIX}/${CMAKE_PROJECT_NAME}/bin)
+
+install(TARGETS ${AppExec} RUNTIME DESTINATION ${ENZO_BIN_DIR})
+include(CPack)
+
+# --- end packaging
+
+
 target_link_libraries(${AppExec} PRIVATE Qt6::Core Qt6::Widgets Qt6::SvgWidgets Qt6::OpenGLWidgets glm::glm Eigen3::Eigen TBB::tbb Boost::filesystem Boost::system CGAL::CGAL CGAL::CGAL_Core)
 target_include_directories(${AppExec} PUBLIC
     ${ENGINE_INCLUDE_DIRECTORIES}
@@ -115,7 +129,7 @@ add_executable(${TestExec}
     tests/OperatorTests.cpp
     tests/NetworkTests.cpp
 )
-target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb Boost::filesystem Boost::system)
+target_link_libraries(${TestExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb Boost::filesystem Boost::system CGAL::CGAL CGAL::CGAL_Core)
 target_compile_definitions(${TestExec} PRIVATE UNIT_TEST)
 target_include_directories(${TestExec} PUBLIC
     ${ENGINE_INCLUDE_DIRECTORIES}
@@ -128,7 +142,7 @@ add_executable(${BenchExec}
 
     tests/Benchmarks.cpp
 )
-target_link_libraries(${BenchExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb Boost::filesystem Boost::system)
+target_link_libraries(${BenchExec} PRIVATE Catch2::Catch2WithMain Eigen3::Eigen Qt6::Core TBB::tbb Boost::filesystem Boost::system CGAL::CGAL CGAL::CGAL_Core)
 target_compile_definitions(${BenchExec} PRIVATE UNIT_TEST)
 target_include_directories(${BenchExec} PUBLIC 
     ${ENGINE_INCLUDE_DIRECTORIES}
