@@ -9,6 +9,7 @@
 #include <qsplitter.h>
 #include <QTimer>
 #include <Gui/UtilWidgets/Splitter.h>
+#include <icecream.hpp>
 
 EnzoUI::EnzoUI()
 {
@@ -61,6 +62,7 @@ EnzoUI::EnzoUI()
 
     // connect signals
     connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, viewport, &Viewport::geometryChanged);
-    enzo::nt::nm().displayNodeChanged.connect([parametersPanel](){parametersPanel->selectionChanged();});
+    enzo::nt::nm().displayNodeChanged.connect([parametersPanel](enzo::nt::OpId opId){parametersPanel->selectionChanged(opId);});
+    enzo::nt::nm().displayNodeChanged.connect([geometrySpreadsheetPanel](enzo::nt::OpId opId){geometrySpreadsheetPanel->selectionChanged(opId);});
     // connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, parametersPanel, &ParametersPanel::selectionChanged);
 }

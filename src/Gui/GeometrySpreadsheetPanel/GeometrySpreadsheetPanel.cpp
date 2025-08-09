@@ -14,26 +14,32 @@ GeometrySpreadsheetPanel::GeometrySpreadsheetPanel(QWidget *parent, Qt::WindowFl
     mainLayout_ = new QVBoxLayout();
 
 
-    auto *t = new QTreeView(parent);
-    t->setRootIsDecorated(false);
-    t->setAlternatingRowColors(true);
-    t->setStyleSheet(R"(
+    view_ = new QTreeView(parent);
+    view_->setRootIsDecorated(false);
+    view_->setAlternatingRowColors(true);
+    view_->setStyleSheet(R"(
         QTreeView {
             background-color: #282828;
             alternate-background-color: #242424;
             paint-alternating-row-colors-for-empty-area: 1;
         }
     )");
-    t->setFrameStyle(QFrame::NoFrame);
+    view_->setFrameStyle(QFrame::NoFrame);
     
-    auto model = new GeometrySpreadsheetModel({"hello", "world"});
-    t->setModel(model);
+    model_ = new GeometrySpreadsheetModel({"hello", "world"});
+    view_->setModel(model_);
 
 
     mainLayout_->addWidget(new GeometrySpreadsheetMenuBar());
-    mainLayout_->addWidget(t);
+    mainLayout_->addWidget(view_);
 
     setLayout(mainLayout_);
+}
+
+void GeometrySpreadsheetPanel::selectionChanged(enzo::nt::OpId opId)
+{
+    model_->selectionChanged(opId);
+    view_->update();
 }
 
 void GeometrySpreadsheetPanel::resizeEvent(QResizeEvent *event)

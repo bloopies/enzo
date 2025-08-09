@@ -81,7 +81,7 @@ void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
 
     enzo::nt::GeometryOperator& displayOp = getGeoOperator(opId);
     updateDisplay(displayOp.getOutputGeo(0));
-    displayNodeChanged();
+    displayNodeChanged(opId);
 }
 
 void enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId)

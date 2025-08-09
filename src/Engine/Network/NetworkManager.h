@@ -24,7 +24,7 @@ public:
     GeometryOperator& getGeoOperator(nt::OpId opId);
     void setDisplayOp(OpId opId);
 
-    boost::signals2::signal<void ()> displayNodeChanged;
+    boost::signals2::signal<void (nt::OpId)> displayNodeChanged;
 
     #ifdef UNIT_TEST
         void _reset();
