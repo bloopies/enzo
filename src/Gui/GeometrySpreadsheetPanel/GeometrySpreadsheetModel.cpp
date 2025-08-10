@@ -1,5 +1,4 @@
 #include "Gui/GeometrySpreadsheetPanel/GeometrySpreadsheetModel.h"
-#include "Engine/Network/NetworkManager.h"
 #include "Engine/Operator/Attribute.h"
 #include "Engine/Operator/AttributeHandle.h"
 #include "Engine/Operator/Geometry.h"
@@ -7,10 +6,11 @@
 #include <icecream.hpp>
 #include <memory>
 #include <stdexcept>
+#include <string>
 
 
-GeometrySpreadsheetModel::GeometrySpreadsheetModel(const QStringList &strings, QObject *parent)
-: QAbstractListModel(parent), stringList(strings)
+GeometrySpreadsheetModel::GeometrySpreadsheetModel(QObject *parent)
+: QAbstractListModel(parent)
 {
 
 }
@@ -19,11 +19,18 @@ void GeometrySpreadsheetModel::geometryChanged(enzo::geo::Geometry& geometry)
 {
     beginResetModel();
     geometry_ = geometry;
+    initBuffers();
 
+    endResetModel();
+}
+
+void GeometrySpreadsheetModel::initBuffers()
+{
     // get sizes
     const auto attribCount = geometry_.getNumAttributes(attributeOwner_);
 
     attribSizes_.clear();
+    sectionAttribMap_.clear();
     attribSizes_.reserve(attribCount);
 
     for(size_t i=0; i<attribCount; ++i)
@@ -41,7 +48,14 @@ void GeometrySpreadsheetModel::geometryChanged(enzo::geo::Geometry& geometry)
 
     }
 
+}
 
+
+void GeometrySpreadsheetModel::setOwner(const enzo::ga::AttributeOwner owner)
+{
+    beginResetModel();
+    attributeOwner_ = owner;
+    initBuffers();
     endResetModel();
 }
 
@@ -81,6 +95,8 @@ int GeometrySpreadsheetModel::columnCount(const QModelIndex &parent) const
 
     return columnCount;
 }
+
+
 
 QVariant GeometrySpreadsheetModel::data(const QModelIndex &index, int role) const
 {
@@ -166,9 +182,29 @@ QVariant GeometrySpreadsheetModel::headerData(int section, Qt::Orientation orien
 
     if (orientation == Qt::Horizontal)
     {
-        if(auto attrib = geometry_.getAttributeByIndex(attributeOwner_, indexFromSection(section)).lock())
+        auto attributeIndex = indexFromSection(section);
+        if(auto attrib = geometry_.getAttributeByIndex(attributeOwner_, attributeIndex).lock())
         {
-            return QString::fromStdString(attrib->getName());
+            if(attribSizes_[attributeIndex]>1)
+            {
+                const unsigned int valueIndex = section-attributeIndex;
+
+                std::string valueIndexString;
+                if(attrib->getType()==enzo::ga::AttrType::vectorT)
+                {
+                    valueIndexString = std::array{".x", ".y", ".z", ".w"}.at(valueIndex);
+                }
+                else
+                {
+                    valueIndexString = "["+std::to_string(valueIndex)+"]";
+                }
+
+                return QString::fromStdString(attrib->getName() + valueIndexString);
+            }
+            else
+            {
+                return QString::fromStdString(attrib->getName());
+            }
         }
         else
         {

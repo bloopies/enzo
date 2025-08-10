@@ -9,7 +9,7 @@ class GeometrySpreadsheetModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    GeometrySpreadsheetModel(const QStringList &strings, QObject *parent = nullptr);
+    GeometrySpreadsheetModel(QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -19,14 +19,15 @@ public:
     int indexFromSection(unsigned int section) const;
 
     void geometryChanged(enzo::geo::Geometry& geometry);
+    void setOwner(const enzo::ga::AttributeOwner owner);
+    void initBuffers();
 
 
 private:
-    QStringList stringList;
     enzo::nt::OpId opId_;
     enzo::geo::Geometry geometry_;
     std::vector<unsigned int> attribSizes_;
     std::vector<unsigned int> sectionAttribMap_;
-    enzo::ga::AttributeOwner attributeOwner_=enzo::ga::AttributeOwner::PRIMITIVE;
+    enzo::ga::AttributeOwner attributeOwner_=enzo::ga::AttributeOwner::POINT;
 
 };

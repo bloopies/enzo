@@ -1,4 +1,6 @@
 #include "Gui/GeometrySpreadsheetPanel/GeometrySpreadsheetMenuBar.h"
+#include "Engine/Network/NetworkManager.h"
+#include "Engine/Operator/GeometryOperator.h"
 #include <QLabel>
 #include <qpainter.h>
 #include <qpushbutton.h>
@@ -99,18 +101,19 @@ GeoSheetMenuBarModeSelection::GeoSheetMenuBarModeSelection(QWidget *parent, Qt::
 
     modeButtonGroup_.setExclusive(true);
 
-    auto newButton = [this, &buttonBgLayout]()
+    auto newButton = [this, &buttonBgLayout](const char* tooltip="")
     {
         auto newButton = new GeoSheetModeButton();
+        newButton->setToolTip(tooltip);
         modeButtonGroup_.addButton(newButton);
         buttonBgLayout->addWidget(newButton);
         return newButton;
     };
 
-    auto pointButton = newButton();
-    auto vertButton = newButton();
-    auto primButton = newButton();
-    auto globalButton = newButton();
+    pointButton = newButton("Point Attributes");
+    vertexButton = newButton("Vertex Attributes");
+    primitiveButton = newButton("Primitive Attributes");
+    globalButton = newButton("Global Attributes");
 
     pointButton->setChecked(true);
 
@@ -121,12 +124,22 @@ GeoSheetMenuBarModeSelection::GeoSheetMenuBarModeSelection(QWidget *parent, Qt::
     setLayout(mainLayout_);
 }
 
+
+
 GeometrySpreadsheetMenuBar::GeometrySpreadsheetMenuBar(QWidget *parent, Qt::WindowFlags f)
 : QWidget(parent, f)
 {
     mainLayout_ = new QHBoxLayout();
-    mainLayout_->addWidget(new QLabel("Node: testGeometryRat"));
-    mainLayout_->addWidget(new GeoSheetMenuBarModeSelection());
+    nodeLabel_ = new QLabel();
+    mainLayout_->addWidget(nodeLabel_);
+    modeSelection = new GeoSheetMenuBarModeSelection();
+    mainLayout_->addWidget(modeSelection);
 
     setLayout(mainLayout_);
+}
+
+void GeometrySpreadsheetMenuBar::setNode(enzo::nt::OpId opId)
+{
+    enzo::nt::GeometryOperator& geoOp = enzo::nt::nm().getGeoOperator(opId);
+    nodeLabel_->setText("Node: " + QString::fromStdString(geoOp.getLabel()));
 }

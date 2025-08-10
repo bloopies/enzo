@@ -124,6 +124,12 @@ std::vector<std::weak_ptr<prm::Parameter>> nt::GeometryOperator::getParameters()
     return {parameters_.begin(), parameters_.end()};
 }
 
+std::string nt::GeometryOperator::getLabel()
+{
+    return getTypeName();
+}
+
+
 std::vector<std::weak_ptr<const nt::GeometryConnection>> nt::GeometryOperator::getOutputConnections() const
 {
     return {outputConnections_.begin(), outputConnections_.end()};

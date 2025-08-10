@@ -63,6 +63,7 @@ EnzoUI::EnzoUI()
 
     // connect signals
     enzo::nt::nm().displayNodeChanged.connect([parametersPanel](enzo::nt::OpId opId){parametersPanel->selectionChanged(opId);});
+    enzo::nt::nm().displayNodeChanged.connect([geometrySpreadsheetPanel](enzo::nt::OpId opId){geometrySpreadsheetPanel->setNode(opId);});
     enzo::nt::nm().displayGeoChanged.connect([geometrySpreadsheetPanel](enzo::geo::Geometry& geometry){geometrySpreadsheetPanel->geometryChanged(geometry);});
     enzo::nt::nm().displayGeoChanged.connect([viewport](enzo::geo::Geometry& geometry){viewport->setGeometry(geometry);});
 }
