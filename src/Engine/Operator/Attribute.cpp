@@ -73,7 +73,7 @@ ga::Attribute::Attribute(const Attribute& other)
 }
 
 
-ga::AttributeType ga::Attribute::getType()
+ga::AttributeType ga::Attribute::getType() const
 {
     return type_;
 }

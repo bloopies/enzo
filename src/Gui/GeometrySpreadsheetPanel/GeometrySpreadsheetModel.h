@@ -27,5 +27,6 @@ private:
     enzo::geo::Geometry geometry_;
     std::vector<unsigned int> attribSizes_;
     std::vector<unsigned int> sectionAttribMap_;
+    enzo::ga::AttributeOwner attributeOwner_=enzo::ga::AttributeOwner::PRIMITIVE;
 
 };

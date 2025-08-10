@@ -53,7 +53,7 @@ EnzoUI::EnzoUI()
 
     viewportSplitter_->addWidget(spreadsheetSplitter_);
     viewportSplitter_->addWidget(networkSplitter_);
-    viewportSplitter_->setSizes({100,100});
+    viewportSplitter_->setSizes({100,300});
 
     networkSplitter_->addWidget(parametersPanel);
     networkSplitter_->addWidget(network);

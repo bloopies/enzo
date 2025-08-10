@@ -1,6 +1,7 @@
 #include "Gui/GeometrySpreadsheetPanel/GeometrySpreadsheetModel.h"
 #include "Engine/Network/NetworkManager.h"
 #include "Engine/Operator/Attribute.h"
+#include "Engine/Operator/AttributeHandle.h"
 #include "Engine/Operator/Geometry.h"
 #include "Engine/Types.h"
 #include <icecream.hpp>
@@ -17,19 +18,17 @@ GeometrySpreadsheetModel::GeometrySpreadsheetModel(const QStringList &strings, Q
 void GeometrySpreadsheetModel::geometryChanged(enzo::geo::Geometry& geometry)
 {
     beginResetModel();
-    // enzo::nt::NetworkManager& nm = enzo::nt::nm();
-    IC();
     geometry_ = geometry;
 
     // get sizes
-    const auto attribCount = geometry_.getNumAttributes(enzo::ga::AttributeOwner::POINT);
+    const auto attribCount = geometry_.getNumAttributes(attributeOwner_);
 
     attribSizes_.clear();
     attribSizes_.reserve(attribCount);
 
     for(size_t i=0; i<attribCount; ++i)
     {
-        if(auto attrib = geometry_.getAttributeByIndex(enzo::ga::AttributeOwner::POINT, i).lock())
+        if(auto attrib = geometry_.getAttributeByIndex(attributeOwner_, i).lock())
         {
             const auto size = attrib->getTypeSize();
             attribSizes_.push_back(size);
@@ -48,7 +47,27 @@ void GeometrySpreadsheetModel::geometryChanged(enzo::geo::Geometry& geometry)
 
 int GeometrySpreadsheetModel::rowCount(const QModelIndex &parent) const
 {
-    return geometry_.getNumPoints();
+    switch(attributeOwner_)
+    {
+        case enzo::ga::AttributeOwner::POINT:
+        {
+            return geometry_.getNumPoints();
+        }
+        case enzo::ga::AttributeOwner::VERTEX:
+        {
+            return geometry_.getNumVerts();
+        }
+        case enzo::ga::AttributeOwner::PRIMITIVE:
+        {
+            return geometry_.getNumPrims();
+        }
+        case enzo::ga::AttributeOwner::GLOBAL:
+        {
+            return 1;
+        }
+
+    }
+    return 1;
 }
 
 int GeometrySpreadsheetModel::columnCount(const QModelIndex &parent) const
@@ -70,15 +89,57 @@ QVariant GeometrySpreadsheetModel::data(const QModelIndex &index, int role) cons
         return QVariant();
     }
 
-    if (index.row() >= geometry_.getNumPoints())
-    {
-        return QVariant();
-    }
+    // TODO: reimplement check
+    // if (index.row() >= geometry_.getNumPoints())
+    // {
+    //     return QVariant();
+    // }
 
     if (role == Qt::DisplayRole)
     {
-        std::cout << geometry_.getPointPos(index.row()).x() << "\n";
-        return geometry_.getPointPos(index.row()).x();
+
+        // std::cout << geometry_.getPointPos(index.row()).x() << "\n";
+        int attributeIndex = indexFromSection(index.column());
+        if(std::shared_ptr<const enzo::ga::Attribute> attrib = geometry_.getAttributeByIndex(attributeOwner_, attributeIndex).lock())
+        {
+            const unsigned int valueIndex = index.column()-attributeIndex;
+            using namespace enzo::ga;
+
+            switch(attrib->getType())
+            {
+                case(AttributeType::intT):
+                {
+                    const auto attribHandle = enzo::ga::AttributeHandleRO<enzo::bt::intT>(attrib);
+                    return static_cast<float>(attribHandle.getValue(index.row()));
+                }
+                case(AttributeType::floatT):
+                {
+                    const auto attribHandle = enzo::ga::AttributeHandleRO<enzo::bt::floatT>(attrib);
+                    return attribHandle.getValue(index.row());
+                }
+                case(AttributeType::boolT):
+                {
+                    const auto attribHandle = enzo::ga::AttributeHandleRO<enzo::bt::boolT>(attrib);
+                    return attribHandle.getValue(index.row()) ? "true" : "false";
+                }
+                case(AttributeType::vectorT):
+                {
+                    const auto attribHandle = enzo::ga::AttributeHandleRO<enzo::bt::Vector3>(attrib);
+                    return attribHandle.getValue(index.row())[valueIndex];
+                }
+                default:
+                {
+                    return "Failed";
+                    break;
+                }
+
+            }
+        }
+        else
+        {
+            throw std::runtime_error("Couldn't lock attribute");
+        }
+        // return geometry_.getPointPos(index.row()).x();
     }
     else
     {
@@ -105,7 +166,7 @@ QVariant GeometrySpreadsheetModel::headerData(int section, Qt::Orientation orien
 
     if (orientation == Qt::Horizontal)
     {
-        if(auto attrib = geometry_.getAttributeByIndex(enzo::ga::AttributeOwner::POINT, indexFromSection(section)).lock())
+        if(auto attrib = geometry_.getAttributeByIndex(attributeOwner_, indexFromSection(section)).lock())
         {
             return QString::fromStdString(attrib->getName());
         }
