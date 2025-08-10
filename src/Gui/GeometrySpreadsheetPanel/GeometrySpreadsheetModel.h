@@ -18,7 +18,7 @@ public:
                         int role = Qt::DisplayRole) const override;
     int indexFromSection(unsigned int section) const;
 
-    void selectionChanged(enzo::nt::OpId opId);
+    void geometryChanged(enzo::geo::Geometry& geometry);
 
 
 private:

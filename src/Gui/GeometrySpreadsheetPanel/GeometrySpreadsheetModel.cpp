@@ -14,13 +14,12 @@ GeometrySpreadsheetModel::GeometrySpreadsheetModel(const QStringList &strings, Q
 
 }
 
-void GeometrySpreadsheetModel::selectionChanged(enzo::nt::OpId opId)
+void GeometrySpreadsheetModel::geometryChanged(enzo::geo::Geometry& geometry)
 {
     beginResetModel();
-    enzo::nt::NetworkManager& nm = enzo::nt::nm();
-    opId_ = opId;
+    // enzo::nt::NetworkManager& nm = enzo::nt::nm();
     IC();
-    geometry_ = nm.getGeoOperator(opId).getOutputGeo(0);
+    geometry_ = geometry;
 
     // get sizes
     const auto attribCount = geometry_.getNumAttributes(enzo::ga::AttributeOwner::POINT);

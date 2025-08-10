@@ -12,7 +12,7 @@ class GeometrySpreadsheetPanel
 public:
     GeometrySpreadsheetPanel(QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
 public Q_SLOTS:
-    void selectionChanged(enzo::nt::OpId opId);
+    void geometryChanged(enzo::geo::Geometry& geometry);
 private:
     QVBoxLayout* mainLayout_;
     QWidget* bgWidget_;

@@ -36,9 +36,9 @@ GeometrySpreadsheetPanel::GeometrySpreadsheetPanel(QWidget *parent, Qt::WindowFl
     setLayout(mainLayout_);
 }
 
-void GeometrySpreadsheetPanel::selectionChanged(enzo::nt::OpId opId)
+void GeometrySpreadsheetPanel::geometryChanged(enzo::geo::Geometry& geometry)
 {
-    model_->selectionChanged(opId);
+    model_->geometryChanged(geometry);
     view_->update();
 }
 

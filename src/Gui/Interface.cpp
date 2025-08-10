@@ -1,5 +1,6 @@
 #include "Gui/Interface.h"
 #include "Engine/Network/NetworkManager.h"
+#include "Engine/Operator/Geometry.h"
 #include "Gui/GeometrySpreadsheetPanel/GeometrySpreadsheetPanel.h"
 #include "Gui/ParametersPanel/ParametersPanel.h"
 #include "Gui/Viewport/Viewport.h"
@@ -61,8 +62,7 @@ EnzoUI::EnzoUI()
     mainLayout_->addWidget(viewportSplitter_);
 
     // connect signals
-    connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, viewport, &Viewport::geometryChanged);
     enzo::nt::nm().displayNodeChanged.connect([parametersPanel](enzo::nt::OpId opId){parametersPanel->selectionChanged(opId);});
-    enzo::nt::nm().displayNodeChanged.connect([geometrySpreadsheetPanel](enzo::nt::OpId opId){geometrySpreadsheetPanel->selectionChanged(opId);});
-    // connect(&enzo::nt::nm(), &enzo::nt::NetworkManager::updateDisplay, parametersPanel, &ParametersPanel::selectionChanged);
+    enzo::nt::nm().displayGeoChanged.connect([geometrySpreadsheetPanel](enzo::geo::Geometry& geometry){geometrySpreadsheetPanel->geometryChanged(geometry);});
+    enzo::nt::nm().displayGeoChanged.connect([viewport](enzo::geo::Geometry& geometry){viewport->setGeometry(geometry);});
 }
