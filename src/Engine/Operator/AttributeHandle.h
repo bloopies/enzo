@@ -59,6 +59,7 @@ public:
         data_->push_back(value);
     }
 
+
     void reserve(std::size_t newCap)
     {
         data_->reserve(newCap);

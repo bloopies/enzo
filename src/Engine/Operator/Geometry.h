@@ -4,6 +4,7 @@
 #include <CGAL/Surface_mesh/Surface_mesh.h>
 #include <CGAL/Simple_cartesian.h>
 #include "Engine/Operator/AttributeHandle.h"
+#include <memory>
 #include <variant>
 
 
@@ -19,6 +20,8 @@ using faceDescriptor = HeMesh::Face_index;
 using V_index  = HeMesh::Vertex_index;
 using F_index  = HeMesh::Face_index;
 
+using attributeIterator = std::vector<std::shared_ptr<ga::Attribute>>::iterator;
+
 class Geometry
 {
 public:
@@ -29,6 +32,12 @@ public:
     ga::AttributeHandle<bt::Vector3> addVector3Attribute(ga::AttributeOwner owner, std::string name);
     // TODO: return weak ptr
     std::shared_ptr<ga::Attribute> getAttribByName(ga::AttributeOwner owner, std::string name);
+
+    const size_t getNumAttributes(const ga::AttributeOwner owner) const;
+    std::weak_ptr<const ga::Attribute> getAttributeByIndex(ga::AttributeOwner owner, unsigned int index) const;
+    // attributeIterator attributesBegin(const ga::AttributeOwner owner);
+    // attributeIterator attributesEnd(const ga::AttributeOwner owner);
+
     std::vector<bt::Vector3> derivePointNormals();
     HeMesh computeHalfEdgeMesh();
     void addFace(std::vector<ga::Offset> pointOffsets, bool closed=true);
@@ -53,7 +62,8 @@ public:
     void computePrimStartVertices();
 private:
     using attribVector = std::vector<std::shared_ptr<ga::Attribute>>;
-    attribVector& getAttributeStore(ga::AttributeOwner& owner);
+    geo::Geometry::attribVector& getAttributeStore(const ga::AttributeOwner& owner);
+    const geo::Geometry::attribVector& getAttributeStore(const ga::AttributeOwner& owner) const;
 
     attribVector deepCopyAttributes(attribVector source);
 

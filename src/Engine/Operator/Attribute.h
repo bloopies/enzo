@@ -22,7 +22,8 @@ namespace enzo{
             Attribute(std::string name, ga::AttributeType type);
             Attribute(const Attribute& other);
             AttributeType getType();
-            std::string getName();
+            std::string getName() const;
+            unsigned int getTypeSize() const;
 
 
 
@@ -40,6 +41,7 @@ namespace enzo{
             bool readOnly_=false;
 
             ga::AttributeType type_;
+            unsigned int typeSize_=1;
 
             std::string name_;
 

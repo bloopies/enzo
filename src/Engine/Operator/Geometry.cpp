@@ -63,6 +63,36 @@ ga::Offset geo::Geometry::getNumSoloPoints() const
 }
 
 
+// enzo::geo::attributeIterator geo::Geometry::attributesBegin(const ga::AttributeOwner owner)
+// {
+//     return getAttributeStore(owner).begin();
+
+// }
+
+// enzo::geo::attributeIterator geo::Geometry::attributesEnd(const ga::AttributeOwner owner)
+// {
+//     return getAttributeStore(owner).end();
+// }
+
+const size_t geo::Geometry::getNumAttributes(const ga::AttributeOwner owner) const
+{
+    return getAttributeStore(owner).size();
+}
+
+std::weak_ptr<const ga::Attribute> geo::Geometry::getAttributeByIndex(ga::AttributeOwner owner, unsigned int index) const
+{
+    auto attribStore = getAttributeStore(owner);
+    if(index>=attribStore.size())
+    {
+        throw std::out_of_range("Attribute index out of range: " + std::to_string(index) + " max size: " + std::to_string(attribStore.size()) + "\n");
+    }
+    return getAttributeStore(owner)[index];
+
+}
+
+
+
+
 
 std::set<ga::Offset>::const_iterator geo::Geometry::soloPointsBegin()
 {
@@ -265,7 +295,7 @@ ga::AttributeHandle<bt::Vector3> geo::Geometry::addVector3Attribute(ga::Attribut
     return ga::AttributeHandle<bt::Vector3>(newAttribute);
 }
 
-std::vector<std::shared_ptr<ga::Attribute>>& geo::Geometry::getAttributeStore(ga::AttributeOwner& owner)
+geo::Geometry::attribVector& geo::Geometry::getAttributeStore(const ga::AttributeOwner& owner)
 {
     switch(owner)
     {
@@ -286,6 +316,26 @@ std::vector<std::shared_ptr<ga::Attribute>>& geo::Geometry::getAttributeStore(ga
     }
 }
 
+const geo::Geometry::attribVector& geo::Geometry::getAttributeStore(const ga::AttributeOwner& owner) const
+{
+    switch(owner)
+    {
+        case ga::AttributeOwner::POINT:
+            return pointAttributes_;
+            break;
+        case ga::AttributeOwner::VERTEX:
+            return vertexAttributes_;
+            break;
+        case ga::AttributeOwner::PRIMITIVE:
+            return primitiveAttributes_;
+            break;
+        case ga::AttributeOwner::GLOBAL:
+            return globalAttributes_;
+            break;
+        default:
+            throw std::runtime_error("Unexpected, owner could not be found");
+    }
+}
 
 std::shared_ptr<ga::Attribute> geo::Geometry::getAttribByName(ga::AttributeOwner owner, std::string name)
 {
