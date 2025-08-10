@@ -133,7 +133,11 @@ GeometrySpreadsheetMenuBar::GeometrySpreadsheetMenuBar(QWidget *parent, Qt::Wind
     nodeLabel_ = new QLabel();
     mainLayout_->addWidget(nodeLabel_);
     modeSelection = new GeoSheetMenuBarModeSelection();
+    mainLayout_->addStretch();
     mainLayout_->addWidget(modeSelection);
+
+    const int margins = 0;
+    mainLayout_->setContentsMargins(margins, margins, margins, margins);
 
     setLayout(mainLayout_);
 }

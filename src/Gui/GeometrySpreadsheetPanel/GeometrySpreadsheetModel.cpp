@@ -87,7 +87,7 @@ int GeometrySpreadsheetModel::rowCount(const QModelIndex &parent) const
 int GeometrySpreadsheetModel::columnCount(const QModelIndex &parent) const
 {
 
-    int columnCount = 0;
+    int columnCount = attributeColumnPadding_; // first column is for indices
     for(auto size : attribSizes_)
     {
         columnCount += size;
@@ -114,11 +114,34 @@ QVariant GeometrySpreadsheetModel::data(const QModelIndex &index, int role) cons
     if (role == Qt::DisplayRole)
     {
 
-        // std::cout << geometry_.getPointPos(index.row()).x() << "\n";
-        int attributeIndex = indexFromSection(index.column());
+        if(index.column()==0)
+        {
+            switch(attributeOwner_)
+            {
+                case enzo::ga::AttributeOwner::POINT:
+                case enzo::ga::AttributeOwner::PRIMITIVE:
+                {
+                    return index.row();
+                }
+                case enzo::ga::AttributeOwner::VERTEX:
+                {
+                    const enzo::ga::Offset primOffset = geometry_.getVertexPrim(index.row());
+                    const enzo::ga::Offset startVert = geometry_.getPrimStartVertex(primOffset);
+                    const enzo::ga::Offset vertexNumber = index.row()-startVert;
+                    return QString::fromStdString(std::to_string(primOffset)+":"+std::to_string(vertexNumber));
+
+                }
+                case enzo::ga::AttributeOwner::GLOBAL:
+                {
+                    return "global";
+                }
+
+            }
+        }
+        int attributeIndex = indexFromSection(index.column()-attributeColumnPadding_);
         if(std::shared_ptr<const enzo::ga::Attribute> attrib = geometry_.getAttributeByIndex(attributeOwner_, attributeIndex).lock())
         {
-            const unsigned int valueIndex = index.column()-attributeIndex;
+            const unsigned int valueIndex = index.column()-attributeIndex-attributeColumnPadding_;
             using namespace enzo::ga;
 
             switch(attrib->getType())
@@ -167,9 +190,8 @@ int GeometrySpreadsheetModel::indexFromSection(unsigned int section) const
 {
     if(section>=sectionAttribMap_.size())
     {
-        throw std::out_of_range("Section is out of range of sectionAttributMap_");
+        throw std::out_of_range("Section is out of range of sectionAttributMap_, value: " + std::to_string(section) + " expected: <"+std::to_string(sectionAttribMap_.size()));
     }
-    IC(sectionAttribMap_);
     return sectionAttribMap_[section];
 }
 
@@ -182,12 +204,13 @@ QVariant GeometrySpreadsheetModel::headerData(int section, Qt::Orientation orien
 
     if (orientation == Qt::Horizontal)
     {
-        auto attributeIndex = indexFromSection(section);
+        if(section==0) return "Index";
+        auto attributeIndex = indexFromSection(section-attributeColumnPadding_);
         if(auto attrib = geometry_.getAttributeByIndex(attributeOwner_, attributeIndex).lock())
         {
             if(attribSizes_[attributeIndex]>1)
             {
-                const unsigned int valueIndex = section-attributeIndex;
+                const unsigned int valueIndex = section-attributeIndex-attributeColumnPadding_;
 
                 std::string valueIndexString;
                 if(attrib->getType()==enzo::ga::AttrType::vectorT)

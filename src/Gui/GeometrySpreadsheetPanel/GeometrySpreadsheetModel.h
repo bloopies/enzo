@@ -23,11 +23,13 @@ public:
     void initBuffers();
 
 
+
 private:
     enzo::nt::OpId opId_;
     enzo::geo::Geometry geometry_;
     std::vector<unsigned int> attribSizes_;
     std::vector<unsigned int> sectionAttribMap_;
+    const int attributeColumnPadding_ = 1;
     enzo::ga::AttributeOwner attributeOwner_=enzo::ga::AttributeOwner::POINT;
 
 };

@@ -5,6 +5,8 @@
 #include <CGAL/Simple_cartesian.h>
 #include "Engine/Operator/AttributeHandle.h"
 #include <memory>
+#include <oneapi/tbb/spin_mutex.h>
+#include <tbb/spin_mutex.h>
 #include <variant>
 
 
@@ -27,6 +29,7 @@ class Geometry
 public:
     Geometry();
     Geometry(const Geometry& other);
+    Geometry& operator=(const Geometry& rhs);
     ga::AttributeHandle<bt::intT> addIntAttribute(ga::AttributeOwner owner, std::string name);
     ga::AttributeHandleBool addBoolAttribute(ga::AttributeOwner owner, std::string name);
     ga::AttributeHandle<bt::Vector3> addVector3Attribute(ga::AttributeOwner owner, std::string name);
@@ -48,18 +51,19 @@ public:
 
     void setPointPos(const ga::Offset offset, const bt::Vector3& pos);
 
-    ga::Offset getPrimStartVertex(ga::Offset primOffset) const; // returns the first vertex of the primitive
-    bt::Vector3 getPosFromVert(ga::Offset vertexOffset) const;
-    bt::Vector3 getPointPos(ga::Offset pointOffset) const;
-    unsigned int getPrimVertCount(ga::Offset primOffset) const;
-    ga::Offset getNumPrims() const;
-    ga::Offset getNumVerts() const;
-    ga::Offset getNumPoints() const;
-    ga::Offset getNumSoloPoints() const;
+    ga::Offset      getPrimStartVertex(ga::Offset primOffset) const; // returns the first vertex of the primitive
+    bt::Vector3     getPosFromVert(ga::Offset vertexOffset) const;
+    bt::Vector3     getPointPos(ga::Offset pointOffset) const;
+    unsigned int    getPrimVertCount(ga::Offset primOffset) const;
+    ga::Offset      getVertexPrim(ga::Offset vertexOffset) const;
+    ga::Offset      getNumPrims() const;
+    ga::Offset      getNumVerts() const;
+    ga::Offset      getNumPoints() const;
+    ga::Offset      getNumSoloPoints() const;
 
     bt::boolT isClosed(ga::Offset primOffset) const;
 
-    void computePrimStartVertices();
+    void computePrimStartVertices() const;
 private:
     using attribVector = std::vector<std::shared_ptr<ga::Attribute>>;
     geo::Geometry::attribVector& getAttributeStore(const ga::AttributeOwner& owner);
@@ -74,7 +78,11 @@ private:
 
     std::set<ga::Offset> soloPoints_;
 
-    std::vector<ga::Offset> primStarts_;
+    mutable std::vector<ga::Offset> primStarts_;
+    mutable std::vector<ga::Offset> vertexPrims_;
+
+    mutable std::atomic<bool> primStartsDirty_{true};
+    mutable tbb::spin_mutex primStartsMutex_;
 
     // handles
     enzo::ga::AttributeHandleInt vertexCountHandlePrim_;

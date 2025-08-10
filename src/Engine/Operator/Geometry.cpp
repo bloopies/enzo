@@ -3,6 +3,7 @@
 #include "Engine/Operator/AttributeHandle.h"
 #include "Engine/Types.h"
 #include <memory>
+#include <oneapi/tbb/spin_mutex.h>
 #include <oneapi/tbb/task_group.h>
 #include <stdexcept>
 #include <string>
@@ -33,16 +34,45 @@ geo::Geometry::Geometry(const Geometry& other):
     posHandlePoint_{enzo::ga::AttributeHandleVector3(getAttribByName(ga::AttrOwner::POINT, "P"))},
 
     // other
-    soloPoints_{other.soloPoints_}
+    soloPoints_{other.soloPoints_},
+    vertexPrims_{other.vertexPrims_},
+    primStarts_{other.primStarts_},
+    primStartsDirty_{other.primStartsDirty_.load()}
 {
+}
 
+enzo::geo::Geometry& enzo::geo::Geometry::operator=(const enzo::geo::Geometry& rhs) {
+    if (this == &rhs) return *this;
+
+    // attributes
+    pointAttributes_      = deepCopyAttributes(rhs.pointAttributes_);
+    vertexAttributes_     = deepCopyAttributes(rhs.vertexAttributes_);
+    primitiveAttributes_  = deepCopyAttributes(rhs.primitiveAttributes_);
+    globalAttributes_     = deepCopyAttributes(rhs.globalAttributes_);
+
+    // handles
+    vertexCountHandlePrim_ = enzo::ga::AttributeHandleInt(getAttribByName(ga::AttrOwner::PRIMITIVE, "vertexCount"));
+    closedHandlePrim_ = enzo::ga::AttributeHandleBool(getAttribByName(ga::AttrOwner::PRIMITIVE, "closed"));
+    pointOffsetHandleVert_ = enzo::ga::AttributeHandleInt(getAttribByName(ga::AttrOwner::VERTEX, "point"));
+    posHandlePoint_ = enzo::ga::AttributeHandleVector3(getAttribByName(ga::AttrOwner::POINT, "P"));
+
+    // other
+    soloPoints_           = rhs.soloPoints_;
+    vertexPrims_          = rhs.vertexPrims_;
+    primStarts_           = rhs.primStarts_;
+
+    primStartsDirty_.store(rhs.primStartsDirty_.load());
+
+    return *this;
 }
 
 void geo::Geometry::addFace(std::vector<ga::Offset> pointOffsets, bool closed)
 {
+    const ga::Offset primNum = vertexCountHandlePrim_.getSize();
     for(ga::Offset pointOffset : pointOffsets)
     {
         pointOffsetHandleVert_.addValue(pointOffset);
+        vertexPrims_.push_back(primNum);
         soloPoints_.erase(pointOffset);
     }
     vertexCountHandlePrim_.addValue(pointOffsets.size());
@@ -117,6 +147,11 @@ bt::Vector3 geo::Geometry::getPosFromVert(ga::Offset vertexOffset) const
 bt::Vector3 geo::Geometry::getPointPos(ga::Offset pointOffset) const
 {
     return posHandlePoint_.getValue(pointOffset);
+}
+
+ga::Offset      geo::Geometry::getVertexPrim(ga::Offset vertexOffset) const
+{
+    return vertexPrims_[vertexOffset];
 }
 
 void geo::Geometry::setPointPos(const ga::Offset offset, const bt::Vector3& pos)
@@ -250,19 +285,30 @@ enzo::geo::HeMesh geo::Geometry::computeHalfEdgeMesh()
 ga::Offset geo::Geometry::getPrimStartVertex(ga::Offset primOffset) const
 {
 
+    if(primStartsDirty_.load())
+    {
+        tbb::spin_mutex::scoped_lock lock(primStartsMutex_); //lock
+        if(primStartsDirty_.load()) // double check
+        {
+            computePrimStartVertices();
+        }
+    }
     return primStarts_[primOffset];
 }
 
 // TODO: handle this automatically
-void geo::Geometry::computePrimStartVertices()
+void geo::Geometry::computePrimStartVertices() const
 {
     const ga::Offset handleSize = vertexCountHandlePrim_.getSize();
+    primStarts_.clear();
+    primStarts_.reserve(handleSize);
     bt::intT primStart = 0;
     for(size_t i=0; i<handleSize; ++i)
     {
         primStarts_.push_back(primStart);
         primStart += vertexCountHandlePrim_.getValue(i);
     }
+    primStartsDirty_.store(false);
 }
 
 
