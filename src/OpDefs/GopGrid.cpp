@@ -59,7 +59,7 @@ enzo::prm::Template GopGrid::parameterList[] =
 {
     enzo::prm::Template(enzo::prm::Type::FLOAT, "width", enzo::prm::Default(1)),
     enzo::prm::Template(enzo::prm::Type::FLOAT, "height", enzo::prm::Default(1)),
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "rows", enzo::prm::Default(10)),
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "columns", enzo::prm::Default(10)),
+    enzo::prm::Template(enzo::prm::Type::INT, "rows", enzo::prm::Default(10)),
+    enzo::prm::Template(enzo::prm::Type::INT, "columns", enzo::prm::Default(10)),
     enzo::prm::Terminator
 };

@@ -1,4 +1,4 @@
-#include "Gui/Parameters/AbstractSliderParm.h"
+#include "Gui/Parameters/FloatSliderParm.h"
 #include "Engine/Types.h"
 #include <QPainter>
 #include <QPaintEvent>
@@ -10,7 +10,7 @@
 #include <string>
 
 
-enzo::ui::AbstractSliderParm::AbstractSliderParm(bt::floatT value, QWidget *parent, Qt::WindowFlags f)
+enzo::ui::FloatSliderParm::FloatSliderParm(bt::floatT value, QWidget *parent, Qt::WindowFlags f)
 : QWidget(parent, f)
 {
     // tells qt to style the widget even though it's a Q_OBJECT
@@ -37,23 +37,26 @@ enzo::ui::AbstractSliderParm::AbstractSliderParm(bt::floatT value, QWidget *pare
     setValueImpl(value);
 }
 
-void enzo::ui::AbstractSliderParm::paintEvent(QPaintEvent *event)
+void enzo::ui::FloatSliderParm::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setPen(Qt::NoPen);
     painter.setBrush(QColor("#383838"));
 
-    QRectF fillRect = event->rect();
-    float fillPercent = value_/maxValue_;
-    std::cout << "fill percent" << fillPercent << "\n";
-    float margin = 3;
-    fillRect.adjust(margin, margin, std::max<float>(-fillRect.width()+margin, -fillRect.width()*(1-fillPercent)-margin), -margin);
+    const int valueRange = maxValue_-minValue_;
+    float fillPercent = static_cast<float>(value_-minValue_)/valueRange;
+
+    constexpr float margin = 3;
+    float fillWidth = rect().width()-margin*2;
+    fillWidth *= fillPercent;
+
+    QRectF fillRect = {rect().left()+margin, rect().top()+margin, fillWidth, rect().height()-margin*2};
     painter.drawRoundedRect(fillRect, 6, 6);
 
 }
 
-void enzo::ui::AbstractSliderParm::setValueImpl(bt::floatT value)
+void enzo::ui::FloatSliderParm::setValueImpl(bt::floatT value)
 {
     if(clampMin_ && value<minValue_) { value = minValue_; }
     if(clampMax_ && value>maxValue_) { value = maxValue_; }
@@ -66,7 +69,7 @@ void enzo::ui::AbstractSliderParm::setValueImpl(bt::floatT value)
 
 }
 
-void enzo::ui::AbstractSliderParm::setValue(bt::floatT value)
+void enzo::ui::FloatSliderParm::setValue(bt::floatT value)
 {
 
     setValueImpl(value);
@@ -76,13 +79,21 @@ void enzo::ui::AbstractSliderParm::setValue(bt::floatT value)
 }
 
 
-void enzo::ui::AbstractSliderParm::mouseMoveEvent(QMouseEvent *event)
+void enzo::ui::FloatSliderParm::mouseMoveEvent(QMouseEvent *event)
 {
-    setValue(static_cast<float>(event->pos().x())/rect().width() * maxValue_);
+    // normalized
+    float value = static_cast<float>(event->pos().x())/rect().width();
+    //remap
+    value = minValue_+(maxValue_-minValue_)*value;
+    setValue(value);
 }
 
-void enzo::ui::AbstractSliderParm::mousePressEvent(QMouseEvent *event)
+void enzo::ui::FloatSliderParm::mousePressEvent(QMouseEvent *event)
 {
-    setValue(static_cast<float>(event->pos().x())/rect().width() * maxValue_);
+    // normalized
+    float value = static_cast<float>(event->pos().x())/rect().width();
+    //remap
+    value = minValue_+(maxValue_-minValue_)*value;
+    setValue(value);
 }
 

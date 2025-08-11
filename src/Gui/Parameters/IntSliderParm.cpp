@@ -1,0 +1,117 @@
+#include "Gui/Parameters/IntSliderParm.h"
+#include "Engine/Types.h"
+#include <QPainter>
+#include <QPaintEvent>
+#include <QLabel>
+#include <cmath>
+#include <iostream>
+#include <qboxlayout.h>
+#include <qnamespace.h>
+#include <algorithm>
+#include <string>
+#include <icecream.hpp>
+
+
+enzo::ui::IntSliderParm::IntSliderParm(bt::intT value, QWidget *parent, Qt::WindowFlags f)
+: QWidget(parent, f)
+{
+    // tells qt to style the widget even though it's a Q_OBJECT
+    setAttribute(Qt::WA_StyledBackground, true);
+    setFixedHeight(24);
+
+    notchPen_ = QPen(QColor("#383838"), notchWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+
+
+    
+    mainLayout_ = new QVBoxLayout();
+    setLayout(mainLayout_);
+
+    valueLabel_ = new QLabel();
+    valueLabel_->setAlignment(Qt::AlignCenter);
+    valueLabel_->setStyleSheet("background-color: none;");
+    setProperty("type", "SliderParm");
+    setStyleSheet(R"(
+                  QWidget[type="SliderParm"]
+                  {
+                      border-radius: 6px;
+                      border: 1px solid #383838;
+                  }
+                  )");
+    mainLayout_->addWidget(valueLabel_);
+
+    setValueImpl(value);
+}
+
+void enzo::ui::IntSliderParm::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+
+    const int valueRange = maxValue_-minValue_;
+    float fillPercent = static_cast<float>(value_-minValue_)/valueRange;
+    IC(value_, fillPercent);
+    float margin = 3;
+    float fillWidth = rect().width()-margin*2;
+    fillWidth *= fillPercent;
+
+    QRectF fillRect = {rect().left()+margin, rect().top()+margin, fillWidth, rect().height()-margin*2};
+
+    painter.setPen(notchPen_);
+    QRectF markerLinesRect = rect();
+    markerLinesRect.adjust(margin, margin, -margin, -margin);
+    for(int i=minValue_+1;i<maxValue_; ++i)
+    {
+        float x = ((i-minValue_)*markerLinesRect.width())/valueRange;
+        x += notchWidth+4; // offset
+        const float y = markerLinesRect.bottom()-2;
+        painter.drawLine(x, y, x, y-5);
+
+    }
+
+    painter.setPen(Qt::NoPen);
+    painter.setBrush(QColor("#383838"));
+    painter.drawRoundedRect(fillRect, 6, 6);
+
+}
+
+void enzo::ui::IntSliderParm::setValueImpl(bt::intT value)
+{
+    if(clampMin_ && value<minValue_) { value = minValue_; }
+    if(clampMax_ && value>maxValue_) { value = maxValue_; }
+
+    value_ = value;
+    QString valStr = QString::number(value_);
+    valStr.truncate(4);
+    valueLabel_->setText(valStr);
+
+
+}
+
+void enzo::ui::IntSliderParm::setValue(bt::intT value)
+{
+
+    setValueImpl(value);
+    update();
+    valueChanged(value_);
+
+}
+
+
+void enzo::ui::IntSliderParm::mouseMoveEvent(QMouseEvent *event)
+{
+    // normalized
+    float value = static_cast<float>(event->pos().x())/rect().width();
+    //remap
+    value = minValue_+(maxValue_-minValue_)*value;
+    setValue(rint(value));
+}
+
+void enzo::ui::IntSliderParm::mousePressEvent(QMouseEvent *event)
+{
+    // normalized
+    float value = static_cast<float>(event->pos().x())/rect().width();
+    //remap
+    value = minValue_+(maxValue_-minValue_)*value;
+    setValue(rint(value));
+}
+

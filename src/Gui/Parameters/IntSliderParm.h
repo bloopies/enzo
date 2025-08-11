@@ -3,32 +3,36 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QPen>
 
 namespace enzo::ui
 {
 
-class AbstractSliderParm
+class IntSliderParm
 : public QWidget
 {
     Q_OBJECT
 public:
-    AbstractSliderParm(bt::floatT value, QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
-    void setValue(bt::floatT value);
+    IntSliderParm(bt::intT value, QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+    void setValue(bt::intT value);
 
 Q_SIGNALS:
-    void valueChanged(bt::floatT value); 
+    void valueChanged(bt::intT value); 
 
 private:
 
     QVBoxLayout* mainLayout_;
     QLabel* valueLabel_;
-    bt::floatT value_;
+    bt::intT value_;
     bool clampMin_ = true;
     bool clampMax_ = true;
-    bt::floatT minValue_=-5;
-    bt::floatT maxValue_=10;
+    bt::intT minValue_=-5;
+    bt::intT maxValue_=10;
 
-    void setValueImpl(bt::floatT value);
+    QPen notchPen_;
+    static constexpr int notchWidth = 2;
+
+    void setValueImpl(bt::intT value);
 
 protected:
 void paintEvent(QPaintEvent *event) override;

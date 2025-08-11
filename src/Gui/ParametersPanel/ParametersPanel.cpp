@@ -1,9 +1,8 @@
 #include "Gui/ParametersPanel/ParametersPanel.h"
 #include "Engine/Operator/GeometryOperator.h"
 #include "Engine/Types.h"
-#include "Gui/Parameters/AbstractSliderParm.h"
-#include "Gui/Parameters/AbstractFormParm.h"
-#include "Gui/Parameters/FloatParm.h"
+#include "Gui/Parameters/FloatSliderParm.h"
+#include "Gui/Parameters/FormParm.h"
 #include "Engine/Network/NetworkManager.h"
 #include <memory>
 #include <qboxlayout.h>
@@ -52,7 +51,7 @@ void ParametersPanel::selectionChanged(enzo::nt::OpId opId)
     enzo::nt::GeometryOperator& displayOp = nm.getGeoOperator(displayOpId);
     auto parameters = displayOp.getParameters();
 
-    std::vector<enzo::ui::AbstractFormParm*> parameterWidgets;
+    std::vector<enzo::ui::FormParm*> parameterWidgets;
     parameterWidgets.reserve(parameters.size());
 
     int maxLeftPadding = 0;
@@ -62,7 +61,7 @@ void ParametersPanel::selectionChanged(enzo::nt::OpId opId)
         auto parameterShared = parameter.lock();
         if(!parameterShared) throw std::runtime_error("Failed to lock parameter");
 
-        enzo::ui::AbstractFormParm* parameterWidget = new enzo::ui::AbstractFormParm(parameter);
+        enzo::ui::FormParm* parameterWidget = new enzo::ui::FormParm(parameter);
         int leftPadding = parameterWidget->getLeftPadding();
         if(leftPadding > maxLeftPadding) maxLeftPadding = leftPadding;
 
