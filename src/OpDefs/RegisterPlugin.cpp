@@ -4,6 +4,7 @@
 #include "GopHouse.h"
 #include "GopTestCube.h"
 #include "OpDefs/GopTransform.hpp"
+#include "OpDefs/GopGrid.h"
 #include <boost/config.hpp>
 #include <boost/dll.hpp>
 
@@ -50,6 +51,17 @@ extern "C"
                 "Geometry Import",
                 &GopGeometryImport::ctor,
                 GopGeometryImport::parameterList,
+                0,
+                0,
+                1,
+            }
+        );
+        addOperator(
+            enzo::op::OpInfo {
+                "grid",
+                "Grid",
+                &GopGrid::ctor,
+                GopGrid::parameterList,
                 0,
                 0,
                 1,

@@ -66,7 +66,7 @@ enzo::geo::Geometry& enzo::geo::Geometry::operator=(const enzo::geo::Geometry& r
     return *this;
 }
 
-void geo::Geometry::addFace(std::vector<ga::Offset> pointOffsets, bool closed)
+void geo::Geometry::addFace(const std::vector<ga::Offset>& pointOffsets, bool closed)
 {
     const ga::Offset primNum = vertexCountHandlePrim_.getSize();
     for(ga::Offset pointOffset : pointOffsets)

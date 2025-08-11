@@ -43,7 +43,16 @@ public:
 
     std::vector<bt::Vector3> derivePointNormals();
     HeMesh computeHalfEdgeMesh();
-    void addFace(std::vector<ga::Offset> pointOffsets, bool closed=true);
+
+    // build geometry
+    void addFace(const std::vector<ga::Offset>& pointOffsets, bool closed=true);
+    template <typename... Args>
+    void addFace(Args... args)
+    {
+        std::vector<ga::Offset> pointOffsets = { static_cast<ga::Offset>(args)... };
+        addFace(pointOffsets);
+
+    }
     void addPoint(const bt::Vector3& pos);
 
     std::set<ga::Offset>::const_iterator soloPointsBegin();
