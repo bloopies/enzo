@@ -30,7 +30,6 @@ GeoSheetModeButton::GeoSheetModeButton(QWidget* parent)
     //     }
     // )");
 
-    setIcon(QIcon(":/node-icons/grid.svg"));
 }
 
 void GeoSheetModeButton::enterEvent(QEnterEvent *event)
@@ -68,8 +67,7 @@ void GeoSheetModeButton::paintEvent(QPaintEvent* event)
 
 
         QPixmap pixmap = buttonIcon.pixmap(size);
-        QPoint center = event->rect().center() - QPoint(size.width() / 2, size.height() / 2);
-        // QPoint center = QPoint(0,0);
+        QPoint center = rect().center() - QPoint(size.width() / 2, size.height() / 2);
         painter.drawPixmap(center, pixmap);
 
     }
@@ -104,19 +102,20 @@ GeoSheetMenuBarModeSelection::GeoSheetMenuBarModeSelection(QWidget *parent, Qt::
 
     modeButtonGroup_.setExclusive(true);
 
-    auto newButton = [this, &buttonBgLayout](const char* tooltip="")
+    auto newButton = [this, &buttonBgLayout](const char* tooltip="", const char* iconPath=":/icons/attributePoint.svg")
     {
         auto newButton = new GeoSheetModeButton();
         newButton->setToolTip(tooltip);
+        newButton->setIcon(QIcon(iconPath));
         modeButtonGroup_.addButton(newButton);
         buttonBgLayout->addWidget(newButton);
         return newButton;
     };
 
-    pointButton = newButton("Point Attributes");
-    vertexButton = newButton("Vertex Attributes");
-    primitiveButton = newButton("Primitive Attributes");
-    globalButton = newButton("Global Attributes");
+    pointButton = newButton("Point Attributes", ":/icons/attributePoint.svg");
+    vertexButton = newButton("Vertex Attributes", ":/icons/attributeVertex.svg");
+    primitiveButton = newButton("Primitive Attributes", ":/icons/attributePrimitive.svg");
+    globalButton = newButton("Global Attributes", ":/icons/attributeGlobal.svg");
 
     pointButton->setChecked(true);
 
