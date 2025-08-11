@@ -10,6 +10,7 @@ class Parameter
 public:
     Parameter(Template prmTemplate);
     std::string getName() const;
+    std::string getLabel() const;
     enzo::prm::Type getType() const;
     unsigned int getVectorSize() const;
 

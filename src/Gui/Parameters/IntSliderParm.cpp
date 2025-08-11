@@ -71,9 +71,11 @@ void enzo::ui::IntSliderParm::paintEvent(QPaintEvent *event)
     painter.setPen(notchPen_);
     QRectF markerLinesRect = rect();
     markerLinesRect.adjust(margin, margin, -margin, -margin);
-    for(int i=minValue_+1;i<maxValue_; ++i)
+
+    const int notchCount = std::min<int>(valueRange, 100);
+    for(int i=1;i<notchCount; ++i)
     {
-        float x = ((i-minValue_)*markerLinesRect.width())/valueRange;
+        float x = ((i-1)*markerLinesRect.width())/notchCount;
         x += notchWidth+4; // offset
         const float y = markerLinesRect.bottom()-2;
         painter.drawLine(x, y, x, y-5);

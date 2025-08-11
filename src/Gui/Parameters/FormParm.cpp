@@ -8,6 +8,7 @@
 #include <iostream>
 #include <qlabel.h>
 #include <string>
+#include <icecream.hpp>
 
 
 enzo::ui::FormParm::FormParm(std::weak_ptr<prm::Parameter> parameter)
@@ -15,7 +16,7 @@ enzo::ui::FormParm::FormParm(std::weak_ptr<prm::Parameter> parameter)
 {
     if(auto sharedParameter=parameter_.lock())
     {
-        std::string name = sharedParameter->getName();
+        std::string name = sharedParameter->getLabel();
         label_ = new QLabel(QString::fromStdString(name+":"));
         label_->setStyleSheet("QLabel{background: none}");
         label_->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);

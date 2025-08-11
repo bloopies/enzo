@@ -24,6 +24,7 @@ set(ENGINE_SOURCES
     src/Engine/Parameter/Parameter.cpp
     src/Engine/Parameter/Default.cpp
     src/Engine/Parameter/Range.cpp
+    src/Engine/Parameter/PrmName.cpp
     src/Engine/Network/NetworkManager.cpp
 )
 

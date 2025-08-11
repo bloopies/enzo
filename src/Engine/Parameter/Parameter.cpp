@@ -45,6 +45,11 @@ std::string enzo::prm::Parameter::getName() const
     return template_.getName();
 }
 
+std::string enzo::prm::Parameter::getLabel() const
+{
+    return template_.getLabel();
+}
+
 enzo::bt::floatT enzo::prm::Parameter::evalFloat(unsigned int index) const
 {
     if(index >= floatValues_.size())

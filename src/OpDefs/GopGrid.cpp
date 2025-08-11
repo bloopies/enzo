@@ -42,7 +42,7 @@ void GopGrid::cookOp(enzo::op::Context context)
             {
                 const bt::floatT x = static_cast<bt::floatT>(i)/columns*width-centerOffsetX;
                 const bt::floatT z = static_cast<bt::floatT>(j)/rows*height-centerOffsetY;
-                geo.addPoint(bt::Vector3(x, sin(i+j)/10, z));
+                geo.addPoint(bt::Vector3(x, 0, z));
             }
         }
 
@@ -74,17 +74,17 @@ void GopGrid::cookOp(enzo::op::Context context)
 
 enzo::prm::Template GopGrid::parameterList[] =
 {
-    enzo::prm::Template(enzo::prm::Type::XYZ, "size", enzo::prm::Default(10), 2, enzo::prm::Range(0, enzo::prm::RangeFlag::UNLOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)),
+    enzo::prm::Template(enzo::prm::Type::XYZ, enzo::prm::Name("size", "Size"), enzo::prm::Default(10), 2, enzo::prm::Range(0, enzo::prm::RangeFlag::UNLOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)),
     enzo::prm::Template(
         enzo::prm::Type::INT,
-        "rows",
+        enzo::prm::Name("rows", "Rows"),
         enzo::prm::Default(10),
         1,
         enzo::prm::Range(0, enzo::prm::RangeFlag::LOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)
     ),
     enzo::prm::Template(
         enzo::prm::Type::INT,
-        "columns",
+        enzo::prm::Name("columns", "Columns"),
         enzo::prm::Default(10),
         1,
         enzo::prm::Range(0, enzo::prm::RangeFlag::LOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)

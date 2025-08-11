@@ -5,6 +5,7 @@
 #include "GopTestCube.h"
 #include "OpDefs/GopTransform.hpp"
 #include "OpDefs/GopGrid.h"
+#include "OpDefs/GopSineWave.h"
 #include <boost/config.hpp>
 #include <boost/dll.hpp>
 
@@ -64,6 +65,17 @@ extern "C"
                 GopGrid::parameterList,
                 0,
                 0,
+                1,
+            }
+        );
+        addOperator(
+            enzo::op::OpInfo {
+                "sineWave",
+                "Sine Wave",
+                &GopSineWave::ctor,
+                GopSineWave::parameterList,
+                1,
+                1,
                 1,
             }
         );
