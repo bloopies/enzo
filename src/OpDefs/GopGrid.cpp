@@ -21,8 +21,8 @@ void GopGrid::cookOp(enzo::op::Context context)
     if(outputRequested(0))
     {
         geo::Geometry geo;
-        bt::floatT width = context.evalFloatParm("width");
-        bt::floatT height = context.evalFloatParm("height");
+        bt::floatT width = context.evalFloatParm("size", 0);
+        bt::floatT height = context.evalFloatParm("size", 1);
 
         const bt::intT columns = context.evalFloatParm("columns");
         const bt::intT rows = context.evalFloatParm("rows");
@@ -74,8 +74,7 @@ void GopGrid::cookOp(enzo::op::Context context)
 
 enzo::prm::Template GopGrid::parameterList[] =
 {
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "width", enzo::prm::Default(10), 1, enzo::prm::Range(0, enzo::prm::RangeFlag::UNLOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)),
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "height", enzo::prm::Default(10), 1, enzo::prm::Range(0, enzo::prm::RangeFlag::UNLOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)),
+    enzo::prm::Template(enzo::prm::Type::XYZ, "size", enzo::prm::Default(10), 2, enzo::prm::Range(0, enzo::prm::RangeFlag::UNLOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)),
     enzo::prm::Template(
         enzo::prm::Type::INT,
         "rows",

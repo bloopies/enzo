@@ -11,6 +11,7 @@ public:
     Parameter(Template prmTemplate);
     std::string getName() const;
     enzo::prm::Type getType() const;
+    unsigned int getVectorSize() const;
 
     bt::floatT evalFloat(unsigned int index=0) const;
     bt::String evalString(unsigned int index=0) const;

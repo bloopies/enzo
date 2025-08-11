@@ -2,31 +2,43 @@
 #include "Engine/Parameter/Default.h"
 #include "Engine/Parameter/Range.h"
 #include "Engine/Parameter/Type.h"
+#include <icecream.hpp>
 
 enzo::prm::Template::Template(enzo::prm::Type type, const char* name)
 : Template(type, name, prm::Default())
 {
-
+    ranges_.resize(vectorSize_);
 }
 
 enzo::prm::Template::Template(enzo::prm::Type type, const char* name, unsigned int vectorSize)
 : Template(type, name, prm::Default(), vectorSize)
 {
-
+    ranges_.resize(vectorSize_);
 }
 
 enzo::prm::Template::Template(enzo::prm::Type type, const char* name, std::vector<prm::Default> defaults, unsigned int vectorSize, std::vector<prm::Range> ranges)
 : type_{type}, name_{name}, defaults_{defaults}, vectorSize_(vectorSize)
 {
-    ranges.resize(vectorSize);
+    if(ranges.size()<vectorSize_)
+    {
+        if(ranges.size()>=1)
+        {
+            ranges.resize(vectorSize_, ranges[0]);
+        }
+        else
+        {
+            ranges.resize(vectorSize_);
+        }
+
+    }
     ranges_ = ranges;
 }
 
 enzo::prm::Template::Template(enzo::prm::Type type, const char* name, prm::Default theDefault, unsigned int vectorSize, Range range)
 : type_{type}, name_{name}, vectorSize_(vectorSize)
 {
-    defaults_.push_back(theDefault);
-    ranges_.push_back(range);
+    defaults_.resize(vectorSize_, theDefault);
+    ranges_.resize(vectorSize_, range);
 }
 
 enzo::prm::Template::Template()

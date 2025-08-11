@@ -42,17 +42,16 @@ enzo::ui::FormParm::FormParm(std::weak_ptr<prm::Parameter> parameter)
             }
             case prm::Type::XYZ:
             {
-                FloatSliderParm* slider1 = new FloatSliderParm(parameter, 0);
-                FloatSliderParm* slider2 = new FloatSliderParm(parameter, 0);
-                FloatSliderParm* slider3 = new FloatSliderParm(parameter, 0);
+                const unsigned int vectorSize = sharedParameter->getVectorSize();
                 QHBoxLayout* vectorLayout = new QHBoxLayout();
-                vectorLayout->addWidget(slider1);
-                vectorLayout->addWidget(slider2);
-                vectorLayout->addWidget(slider3);
+                for(int i=0; i<vectorSize; i++)
+                {
+                    FloatSliderParm* slider = new FloatSliderParm(parameter, i);
+                    vectorLayout->addWidget(slider);
+                    connect(slider, &FloatSliderParm::valueChanged, this, [this, i](bt::floatT value){this->changeValue(value, i);}); 
+
+                }
                 mainLayout_->addLayout(vectorLayout);
-                connect(slider1, &FloatSliderParm::valueChanged, this, [this](bt::floatT value){this->changeValue(value, 0);}); 
-                connect(slider2, &FloatSliderParm::valueChanged, this, [this](bt::floatT value){this->changeValue(value, 1);}); 
-                connect(slider3, &FloatSliderParm::valueChanged, this, [this](bt::floatT value){this->changeValue(value, 2);}); 
                 break;
             }
             case prm::Type::STRING:

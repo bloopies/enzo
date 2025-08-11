@@ -66,6 +66,12 @@ enzo::bt::String enzo::prm::Parameter::evalString(unsigned int index) const
     return stringValues_[index];
 }
 
+unsigned int enzo::prm::Parameter::getVectorSize() const
+{
+    return template_.getSize();
+}
+
+
 const enzo::prm::Template& enzo::prm::Parameter::getTemplate()
 {
     return template_;

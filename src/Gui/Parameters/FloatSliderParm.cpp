@@ -38,7 +38,7 @@ enzo::ui::FloatSliderParm::FloatSliderParm(std::weak_ptr<prm::Parameter> paramet
 
     if(auto parameterShared=parameter_.lock())
     {
-        auto range = parameterShared->getTemplate().getRange();
+        auto range = parameterShared->getTemplate().getRange(vectorIndex);
         minValue_=range.getMin();
         maxValue_=range.getMax();
         clampMin_=range.getMinFlag()==prm::RangeFlag::LOCKED;
@@ -59,7 +59,7 @@ void enzo::ui::FloatSliderParm::paintEvent(QPaintEvent *event)
     painter.setBrush(QColor("#383838"));
 
     const int valueRange = maxValue_-minValue_;
-    float fillPercent = std::min<float>(static_cast<float>(value_-minValue_)/valueRange, 1);
+    float fillPercent = std::clamp<float>(static_cast<float>(value_-minValue_)/valueRange, 0, 1);
 
     constexpr float margin = 3;
     float fillWidth = rect().width()-margin*2;

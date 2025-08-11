@@ -61,8 +61,7 @@ void enzo::ui::IntSliderParm::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     const int valueRange = maxValue_-minValue_;
-    float fillPercent = std::min<float>(static_cast<float>(value_-minValue_)/valueRange, 1);
-    IC(value_, fillPercent);
+    float fillPercent = std::clamp<float>(static_cast<float>(value_-minValue_)/valueRange, 0, 1);
     float margin = 3;
     float fillWidth = rect().width()-margin*2;
     fillWidth *= fillPercent;
