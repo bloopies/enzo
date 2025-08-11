@@ -35,7 +35,7 @@ enzo::nt::OpId enzo::nt::NetworkManager::addOperator(op::OpInfo opInfo)
                     if(getDisplayOp().has_value() && getDisplayOp().value()==dependentId)
                     {
                         cookOp(dependentId);
-                        updateDisplay(dependentOp.getOutputGeo(0));
+                        displayGeoChanged(dependentOp.getOutputGeo(0));
                     }
                 }
             }
@@ -80,8 +80,8 @@ void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
     cookOp(opId);
 
     enzo::nt::GeometryOperator& displayOp = getGeoOperator(opId);
-    updateDisplay(displayOp.getOutputGeo(0));
-    displayNodeChanged();
+    displayGeoChanged(displayOp.getOutputGeo(0));
+    displayNodeChanged(opId);
 }
 
 void enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId)

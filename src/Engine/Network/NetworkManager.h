@@ -24,7 +24,8 @@ public:
     GeometryOperator& getGeoOperator(nt::OpId opId);
     void setDisplayOp(OpId opId);
 
-    boost::signals2::signal<void ()> displayNodeChanged;
+    boost::signals2::signal<void (nt::OpId)> displayNodeChanged;
+    boost::signals2::signal<void (enzo::geo::Geometry& geometry)> displayGeoChanged;
 
     #ifdef UNIT_TEST
         void _reset();
@@ -46,9 +47,6 @@ private:
     // operator selected for displaying in the viewport
     std::optional<OpId> displayOp_=std::nullopt;
 
-
-Q_SIGNALS:
-    void updateDisplay(enzo::geo::Geometry& geometry);
 
 };
 
