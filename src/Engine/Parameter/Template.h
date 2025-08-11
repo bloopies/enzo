@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine/Parameter/Default.h"
+#include "Engine/Parameter/Range.h"
 #include "Engine/Parameter/Type.h"
 #include "Engine/Types.h"
 
@@ -22,17 +23,20 @@ public:
         enzo::prm::Type type,
         const char* name,
         std::vector<prm::Default> defaults,
-        unsigned int vectorSize = 1
+        unsigned int vectorSize = 1,
+        std::vector<prm::Range> ranges=std::vector<prm::Range>()
     );
     Template(
         enzo::prm::Type type,
         const char* name,
         prm::Default theDefault,
-        unsigned int vectorSize = 1
+        unsigned int vectorSize = 1,
+        Range range=Range()
     );
     Template();
     const char* getName() const;
     const prm::Default getDefault(unsigned int index=0) const;
+    const prm::Range& getRange(unsigned int index=0) const;
     const prm::Type getType() const;
     const unsigned int getSize() const;
     const unsigned int getNumDefaults() const;
@@ -40,6 +44,7 @@ public:
 private:
     enzo::prm::Type type_;
     std::vector<prm::Default> defaults_;
+    std::vector<prm::Range> ranges_;
     // TODO: make a class that holds token and name
     const char* name_;
     unsigned int vectorSize_;

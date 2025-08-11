@@ -20,6 +20,7 @@ add_library(${libName} SHARED
     ../Engine/Parameter/Template.cpp
     ../Engine/Parameter/Parameter.cpp
     ../Engine/Parameter/Default.cpp
+    ../Engine/Parameter/Range.cpp
     GopTransform.cpp
     GopHouse.cpp
     GopTestCube.cpp

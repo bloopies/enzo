@@ -1,4 +1,5 @@
 #include "OpDefs/GopGrid.h"
+#include "Engine/Parameter/Range.h"
 #include "Engine/Types.h"
 #include <cmath>
 #include <cstdio>
@@ -25,30 +26,46 @@ void GopGrid::cookOp(enzo::op::Context context)
 
         const bt::intT columns = context.evalFloatParm("columns");
         const bt::intT rows = context.evalFloatParm("rows");
-        if(columns==0 || rows==0)
+        if(columns<=0 || rows<=0)
         {
             setOutputGeometry(0, geo);
             return;
         }
         
-        const bt::floatT centerOffsetX = (columns-1)*width/2.0;
-        const bt::floatT centerOffsetY = (rows-1)*height/2.0;
+        const bt::floatT centerOffsetX = width/2.0;
+        const bt::floatT centerOffsetY = height/2.0;
 
+        // add points
         for(int i=0;i<columns;i++)
         {
             for(int j=0;j<rows;++j)
             {
-                geo.addPoint(bt::Vector3(i*width-centerOffsetX, sin(i+j), j*height-centerOffsetY));
+                const bt::floatT x = static_cast<bt::floatT>(i)/columns*width-centerOffsetX;
+                const bt::floatT z = static_cast<bt::floatT>(j)/rows*height-centerOffsetY;
+                geo.addPoint(bt::Vector3(x, sin(i+j)/10, z));
             }
         }
 
-        for(int i=0;i<std::floor((columns-1)*(rows)-1);i++)
+        if(columns > 1 && rows > 1)
         {
-            const int endOffset = (i+1)%rows==0;
-            const ga::Offset startPt = i+endOffset; 
-            geo.addFace(startPt,startPt+rows,startPt+rows+1,startPt+1);
+            // add faces
+            for(int i=0;i<std::floor((columns-1)*(rows)-1);i++)
+            {
+                const int endOffset = (i+1)%rows==0;
+                const ga::Offset startPt = i+endOffset; 
+                geo.addFace({startPt,startPt+rows,startPt+rows+1,startPt+1});
+            }
         }
-
+        else
+        {
+            // add lines
+            const size_t iterationLimit = std::max(columns, rows)-1; 
+            for(int i=0;i<iterationLimit;i++)
+            {
+                const ga::Offset startPt = i; 
+                geo.addFace({startPt,startPt+1}, false);
+            }
+        }
 
         setOutputGeometry(0, geo);
     }
@@ -57,9 +74,21 @@ void GopGrid::cookOp(enzo::op::Context context)
 
 enzo::prm::Template GopGrid::parameterList[] =
 {
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "width", enzo::prm::Default(1)),
-    enzo::prm::Template(enzo::prm::Type::FLOAT, "height", enzo::prm::Default(1)),
-    enzo::prm::Template(enzo::prm::Type::INT, "rows", enzo::prm::Default(10)),
-    enzo::prm::Template(enzo::prm::Type::INT, "columns", enzo::prm::Default(10)),
+    enzo::prm::Template(enzo::prm::Type::FLOAT, "width", enzo::prm::Default(10), 1, enzo::prm::Range(0, enzo::prm::RangeFlag::UNLOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)),
+    enzo::prm::Template(enzo::prm::Type::FLOAT, "height", enzo::prm::Default(10), 1, enzo::prm::Range(0, enzo::prm::RangeFlag::UNLOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)),
+    enzo::prm::Template(
+        enzo::prm::Type::INT,
+        "rows",
+        enzo::prm::Default(10),
+        1,
+        enzo::prm::Range(0, enzo::prm::RangeFlag::LOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)
+    ),
+    enzo::prm::Template(
+        enzo::prm::Type::INT,
+        "columns",
+        enzo::prm::Default(10),
+        1,
+        enzo::prm::Range(0, enzo::prm::RangeFlag::LOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)
+    ),
     enzo::prm::Terminator
 };

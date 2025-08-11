@@ -66,6 +66,11 @@ enzo::bt::String enzo::prm::Parameter::evalString(unsigned int index) const
     return stringValues_[index];
 }
 
+const enzo::prm::Template& enzo::prm::Parameter::getTemplate()
+{
+    return template_;
+}
+
 
 
 enzo::prm::Type enzo::prm::Parameter::getType() const

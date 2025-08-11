@@ -28,23 +28,23 @@ enzo::ui::FormParm::FormParm(std::weak_ptr<prm::Parameter> parameter)
         {
             case prm::Type::FLOAT:
             {
-                FloatSliderParm* slider = new FloatSliderParm(sharedParameter->evalFloat());
+                FloatSliderParm* slider = new FloatSliderParm(parameter);
                 mainLayout_->addWidget(slider);
                 connect(slider, &FloatSliderParm::valueChanged, this, [this](bt::floatT value){this->changeValue(value, 0);}); 
                 break;
             }
             case prm::Type::INT:
             {
-                IntSliderParm* slider = new IntSliderParm(sharedParameter->evalInt());
+                IntSliderParm* slider = new IntSliderParm(parameter_);
                 mainLayout_->addWidget(slider);
                 connect(slider, &IntSliderParm::valueChanged, this, [this](bt::intT value){this->changeValue(value, 0);}); 
                 break;
             }
             case prm::Type::XYZ:
             {
-                FloatSliderParm* slider1 = new FloatSliderParm(sharedParameter->evalFloat(0));
-                FloatSliderParm* slider2 = new FloatSliderParm(sharedParameter->evalFloat(1));
-                FloatSliderParm* slider3 = new FloatSliderParm(sharedParameter->evalFloat(2));
+                FloatSliderParm* slider1 = new FloatSliderParm(parameter, 0);
+                FloatSliderParm* slider2 = new FloatSliderParm(parameter, 0);
+                FloatSliderParm* slider3 = new FloatSliderParm(parameter, 0);
                 QHBoxLayout* vectorLayout = new QHBoxLayout();
                 vectorLayout->addWidget(slider1);
                 vectorLayout->addWidget(slider2);
@@ -57,7 +57,7 @@ enzo::ui::FormParm::FormParm(std::weak_ptr<prm::Parameter> parameter)
             }
             case prm::Type::STRING:
             {
-                StringParm* stringParm = new StringParm(sharedParameter->evalString());
+                StringParm* stringParm = new StringParm(parameter);
 
                 connect(stringParm, &StringParm::valueChanged, this, [this](bt::String value){this->changeValue(value, 0);}); 
 

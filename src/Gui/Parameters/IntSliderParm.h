@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPen>
+#include "Engine/Parameter/Parameter.h"
 
 namespace enzo::ui
 {
@@ -13,7 +14,7 @@ class IntSliderParm
 {
     Q_OBJECT
 public:
-    IntSliderParm(bt::intT value, QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
+    IntSliderParm(std::weak_ptr<enzo::prm::Parameter> parameter, QWidget *parent = nullptr, Qt::WindowFlags f = Qt::WindowFlags());
     void setValue(bt::intT value);
 
 Q_SIGNALS:
@@ -24,10 +25,12 @@ private:
     QVBoxLayout* mainLayout_;
     QLabel* valueLabel_;
     bt::intT value_;
-    bool clampMin_ = true;
-    bool clampMax_ = true;
-    bt::intT minValue_=-5;
-    bt::intT maxValue_=10;
+    bool clampMin_;
+    bool clampMax_;
+    bt::intT minValue_;
+    bt::intT maxValue_;
+
+    std::weak_ptr<prm::Parameter> parameter_;
 
     QPen notchPen_;
     static constexpr int notchWidth = 2;

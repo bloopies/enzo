@@ -20,6 +20,8 @@ public:
     void setFloat(bt::floatT value, unsigned int index=0);
     void setString(bt::String value, unsigned int index=0);
 
+    const Template& getTemplate();
+
     boost::signals2::signal<void ()> valueChanged;
 private:
     Template template_;

@@ -1,4 +1,5 @@
 #include "Gui/Parameters/IntSliderParm.h"
+#include "Engine/Parameter/Range.h"
 #include "Engine/Types.h"
 #include <QPainter>
 #include <QPaintEvent>
@@ -12,7 +13,7 @@
 #include <icecream.hpp>
 
 
-enzo::ui::IntSliderParm::IntSliderParm(bt::intT value, QWidget *parent, Qt::WindowFlags f)
+enzo::ui::IntSliderParm::IntSliderParm(std::weak_ptr<prm::Parameter> parameter, QWidget *parent, Qt::WindowFlags f)
 : QWidget(parent, f)
 {
     // tells qt to style the widget even though it's a Q_OBJECT
@@ -21,8 +22,8 @@ enzo::ui::IntSliderParm::IntSliderParm(bt::intT value, QWidget *parent, Qt::Wind
 
     notchPen_ = QPen(QColor("#383838"), notchWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 
+    parameter_=parameter;
 
-    
     mainLayout_ = new QVBoxLayout();
     setLayout(mainLayout_);
 
@@ -39,7 +40,19 @@ enzo::ui::IntSliderParm::IntSliderParm(bt::intT value, QWidget *parent, Qt::Wind
                   )");
     mainLayout_->addWidget(valueLabel_);
 
-    setValueImpl(value);
+    if(auto parameterShared=parameter_.lock())
+    {
+        auto range = parameterShared->getTemplate().getRange();
+        minValue_=range.getMin();
+        maxValue_=range.getMax();
+        clampMin_=range.getMinFlag()==prm::RangeFlag::LOCKED;
+        clampMax_=range.getMaxFlag()==prm::RangeFlag::LOCKED;
+        setValueImpl(parameterShared->evalInt());
+    }
+    else
+    {
+        throw std::bad_weak_ptr();
+    }
 }
 
 void enzo::ui::IntSliderParm::paintEvent(QPaintEvent *event)
@@ -48,7 +61,7 @@ void enzo::ui::IntSliderParm::paintEvent(QPaintEvent *event)
     painter.setRenderHint(QPainter::Antialiasing, true);
 
     const int valueRange = maxValue_-minValue_;
-    float fillPercent = static_cast<float>(value_-minValue_)/valueRange;
+    float fillPercent = std::min<float>(static_cast<float>(value_-minValue_)/valueRange, 1);
     IC(value_, fillPercent);
     float margin = 3;
     float fillWidth = rect().width()-margin*2;
