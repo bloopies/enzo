@@ -81,6 +81,9 @@ GeoSheetMenuBarModeSelection::GeoSheetMenuBarModeSelection(QWidget *parent, Qt::
 : QWidget(parent, f)
 {
     mainLayout_ = new QHBoxLayout();
+    constexpr int mainMargin = 0;
+    mainLayout_->setContentsMargins(mainMargin,mainMargin,mainMargin,mainMargin);
+
     QWidget* buttonBg = new QWidget();
     buttonBg->setObjectName("GeoSheetMenuBarButtonBg");
     buttonBg->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
@@ -90,7 +93,7 @@ GeoSheetMenuBarModeSelection::GeoSheetMenuBarModeSelection(QWidget *parent, Qt::
     R"(
         #GeoSheetMenuBarButtonBg
         {
-            background-color: #383838;
+            background-color: #242424;
             border-radius: 8px;
         }
 
@@ -131,12 +134,22 @@ GeometrySpreadsheetMenuBar::GeometrySpreadsheetMenuBar(QWidget *parent, Qt::Wind
 {
     mainLayout_ = new QHBoxLayout();
     nodeLabel_ = new QLabel();
-    mainLayout_->addWidget(nodeLabel_);
     modeSelection = new GeoSheetMenuBarModeSelection();
+
+    mainLayout_->addWidget(nodeLabel_);
     mainLayout_->addStretch();
     mainLayout_->addWidget(modeSelection);
+    setProperty("class", "GeometrySpreadsheetMenuBar");
+    setStyleSheet(
+    R"(
+        .GeometrySpreadsheetMenuBar,
+        .GeometrySpreadsheetMenuBar *
+        {
+            background-color: #1B1B1B;
+        }
+    )");
 
-    const int margins = 0;
+    constexpr int margins = 5;
     mainLayout_->setContentsMargins(margins, margins, margins, margins);
 
     setLayout(mainLayout_);
@@ -145,5 +158,5 @@ GeometrySpreadsheetMenuBar::GeometrySpreadsheetMenuBar(QWidget *parent, Qt::Wind
 void GeometrySpreadsheetMenuBar::setNode(enzo::nt::OpId opId)
 {
     enzo::nt::GeometryOperator& geoOp = enzo::nt::nm().getGeoOperator(opId);
-    nodeLabel_->setText("Node: " + QString::fromStdString(geoOp.getLabel()));
+    nodeLabel_->setText("<b>Node: </b>" + QString::fromStdString(geoOp.getLabel()));
 }

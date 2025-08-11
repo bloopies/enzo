@@ -5,8 +5,10 @@
 #include "Engine/Types.h"
 #include <icecream.hpp>
 #include <memory>
+#include <qnamespace.h>
 #include <stdexcept>
 #include <string>
+#include <QBrush>
 
 
 GeometrySpreadsheetModel::GeometrySpreadsheetModel(QObject *parent)
@@ -111,7 +113,12 @@ QVariant GeometrySpreadsheetModel::data(const QModelIndex &index, int role) cons
     //     return QVariant();
     // }
 
-    if (role == Qt::DisplayRole)
+    if(role == Qt::BackgroundRole && index.column()==0)
+    {
+        return QBrush("#1B1B1B");
+
+    }
+    else if (role == Qt::DisplayRole)
     {
 
         if(index.column()==0)

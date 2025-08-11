@@ -14,16 +14,41 @@ GeometrySpreadsheetPanel::GeometrySpreadsheetPanel(QWidget *parent, Qt::WindowFl
 : QWidget(parent, f)
 {
     mainLayout_ = new QVBoxLayout();
+    mainLayout_->setSpacing(0);
 
 
     view_ = new QTreeView(parent);
     view_->setRootIsDecorated(false);
     view_->setAlternatingRowColors(true);
+    view_->setUniformRowHeights(true); // improves performance
     view_->setStyleSheet(R"(
         QTreeView {
             background-color: #282828;
             alternate-background-color: #242424;
             paint-alternating-row-colors-for-empty-area: 1;
+        }
+        QTreeView QScrollBar {
+            background: #1B1B1B;
+            width: 15px;
+        }
+        QTreeView QScrollBar::handle:vertical {
+            background: #282828;
+            min-height: 50px;
+            border-radius: 5px;
+            border-width: 1px;
+            border-color: #2D2D2D;
+            border-style: solid;
+            margin:2px;
+        }
+
+        QTreeView QScrollBar::add-page:vertical,
+        QTreeView QScrollBar::sub-page:vertical,
+        QTreeView QScrollBar::add-line:vertical,
+        QTreeView QScrollBar::sub-line:vertical
+        { height: 0px; }
+
+        QHeaderView::section {
+            background-color: #1B1B1B;
         }
     )");
     view_->setFrameStyle(QFrame::NoFrame);
