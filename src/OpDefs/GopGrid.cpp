@@ -40,8 +40,8 @@ void GopGrid::cookOp(enzo::op::Context context)
         {
             for(int j=0;j<rows;++j)
             {
-                const bt::floatT x = static_cast<bt::floatT>(i)/columns*width-centerOffsetX;
-                const bt::floatT z = static_cast<bt::floatT>(j)/rows*height-centerOffsetY;
+                const bt::floatT x = static_cast<bt::floatT>(i)/(columns-1)*width-centerOffsetX;
+                const bt::floatT z = static_cast<bt::floatT>(j)/(rows-1)*height-centerOffsetY;
                 geo.addPoint(bt::Vector3(x, 0, z));
             }
         }
