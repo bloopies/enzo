@@ -2,6 +2,7 @@
 #include "Engine/Operator/OperatorTable.h"
 #include "GopGeometryImport.h"
 #include "GopHouse.h"
+#include "GopOceanSurface.h"
 #include "GopTestCube.h"
 #include "OpDefs/GopTransform.hpp"
 #include "OpDefs/GopGrid.h"
@@ -74,6 +75,17 @@ extern "C"
                 "Sine Wave",
                 &GopSineWave::ctor,
                 GopSineWave::parameterList,
+                1,
+                1,
+                1,
+            }
+        );
+        addOperator(
+            enzo::op::OpInfo {
+                "oceanSurface",
+                "Ocean Surface",
+                &GopOceanSurface::ctor,
+                GopOceanSurface::parameterList,
                 1,
                 1,
                 1,
