@@ -84,6 +84,47 @@ void enzo::nt::NetworkManager::setDisplayOp(OpId opId)
     displayNodeChanged(opId);
 }
 
+void enzo::nt::NetworkManager::setSelectedNode(OpId opId, bool selected, bool add)
+{
+    if(add)
+    {
+        auto idIter = std::find(selectedNodes_.begin(), selectedNodes_.end(), opId);
+        if(selected)
+        {
+            // skip if value is already in selected nodes
+            if(idIter!=selectedNodes_.end()) return;
+            selectedNodes_.push_back(opId);
+            cookOp(opId);
+        }
+        else
+        {
+            // skip if value is not in selected nodes
+            if(idIter==selectedNodes_.end()) return;
+            selectedNodes_.erase(idIter);
+        }
+    }
+    else
+    {
+        if(selected)
+        {
+            selectedNodes_.clear();
+            selectedNodes_.push_back(opId);
+            cookOp(opId);
+        }
+        else
+        {
+            selectedNodes_.clear();
+        }
+    }
+    selectedNodesChanged(selectedNodes_);
+
+}
+
+const std::vector<enzo::nt::OpId>& enzo::nt::NetworkManager::getSelectedNodes()
+{
+    return selectedNodes_;
+}
+
 void enzo::nt::NetworkManager::cookOp(enzo::nt::OpId opId)
 {
     std::vector<enzo::nt::OpId> dependencyGraph = getDependencyGraph(opId);

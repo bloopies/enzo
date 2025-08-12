@@ -62,8 +62,18 @@ EnzoUI::EnzoUI()
     mainLayout_->addWidget(viewportSplitter_);
 
     // connect signals
-    enzo::nt::nm().displayNodeChanged.connect([parametersPanel](enzo::nt::OpId opId){parametersPanel->selectionChanged(opId);});
-    enzo::nt::nm().displayNodeChanged.connect([geometrySpreadsheetPanel](enzo::nt::OpId opId){geometrySpreadsheetPanel->setNode(opId);});
-    enzo::nt::nm().displayGeoChanged.connect([geometrySpreadsheetPanel](enzo::geo::Geometry& geometry){geometrySpreadsheetPanel->geometryChanged(geometry);});
+    enzo::nt::nm().selectedNodesChanged.connect([parametersPanel](std::vector<enzo::nt::OpId> selectedNodeIds){
+        if(selectedNodeIds.size()<=0) return;
+        parametersPanel->selectionChanged(selectedNodeIds.back());
+    });
+    enzo::nt::nm().selectedNodesChanged.connect([geometrySpreadsheetPanel](std::vector<enzo::nt::OpId> selectedNodeIds){
+        if(selectedNodeIds.size()<=0) return;
+        geometrySpreadsheetPanel->setNode(selectedNodeIds.back());
+    });
+    enzo::nt::nm().selectedNodesChanged.connect([geometrySpreadsheetPanel](std::vector<enzo::nt::OpId> selectedNodeIds){
+        if(selectedNodeIds.size()<=0) return;
+        auto& geometry = enzo::nt::nm().getGeoOperator(selectedNodeIds.back()).getOutputGeo(0);
+        geometrySpreadsheetPanel->geometryChanged(geometry);
+    });
     enzo::nt::nm().displayGeoChanged.connect([viewport](enzo::geo::Geometry& geometry){viewport->setGeometry(geometry);});
 }
