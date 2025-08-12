@@ -408,6 +408,15 @@ void Network::mouseReleaseEvent(QMouseEvent *event)
         {
             moveNodeBuffer.clear();
             state_=State::DEFAULT;
+            if(
+                QGraphicsItem* clickedNode = itemOfType<NodeGraphic>(hoverItems);
+                clickedNode &&
+                QLineF(event->pos(), leftMouseStart).length()<5.0f)
+            {
+                NodeGraphic* node = static_cast<NodeGraphic*>(clickedNode);
+                node->toggleSelected();
+            }
+
         }
         else if(floatingEdge_ && hoverSocket)
         {
