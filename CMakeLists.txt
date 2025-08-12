@@ -55,6 +55,7 @@ set(GUI_SOURCES
     src/Gui/ParametersPanel/ParametersPanel.cpp
     src/Gui/Parameters/FloatSliderParm.cpp
     src/Gui/Parameters/IntSliderParm.cpp
+    src/Gui/Parameters/BoolSwitchParm.cpp
     src/Gui/Parameters/FormParm.cpp
     src/Gui/Parameters/StringParm.cpp
 )

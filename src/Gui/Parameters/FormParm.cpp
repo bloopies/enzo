@@ -2,6 +2,7 @@
 #include "Gui/Parameters/IntSliderParm.h"
 #include "Engine/Types.h"
 #include "Gui/Parameters/FloatSliderParm.h"
+#include "Gui/Parameters/BoolSwitchParm.h"
 #include "Gui/Parameters/StringParm.h"
 #include <qboxlayout.h>
 #include <QLabel>
@@ -39,6 +40,14 @@ enzo::ui::FormParm::FormParm(std::weak_ptr<prm::Parameter> parameter)
                 IntSliderParm* slider = new IntSliderParm(parameter_);
                 mainLayout_->addWidget(slider);
                 connect(slider, &IntSliderParm::valueChanged, this, [this](bt::intT value){this->changeValue(value, 0);}); 
+                break;
+            }
+            case prm::Type::BOOL:
+            {
+                BoolSwitchParm* switchParm = new BoolSwitchParm(parameter_);
+                mainLayout_->addWidget(switchParm);
+                mainLayout_->addStretch();
+                connect(switchParm, &BoolSwitchParm::valueChanged, this, [this](bt::intT value){this->changeValue(value, 0);}); 
                 break;
             }
             case prm::Type::XYZ:
@@ -96,6 +105,19 @@ void enzo::ui::FormParm::setLeftPadding(int padding)
 }
 
 
+void enzo::ui::FormParm::changeValue(enzo::bt::intT value, unsigned int index)
+{
+    if(auto sharedParameter=parameter_.lock())
+    {
+        sharedParameter->setInt(value, index);
+    }
+    else
+    {
+        std::cout << "ERROR: parameter no longer exists\n";
+
+    }
+     
+}
 
 void enzo::ui::FormParm::changeValue(enzo::bt::floatT value, unsigned int index)
 {

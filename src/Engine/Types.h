@@ -41,8 +41,9 @@ namespace enzo
         {
             LIST_TERMINATOR,
             STRING,
-            XYZ,
             FLOAT,
+            BOOL,
+            XYZ,
             INT,
             TOGGLE
         };

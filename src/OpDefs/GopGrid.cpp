@@ -24,8 +24,8 @@ void GopGrid::cookOp(enzo::op::Context context)
         bt::floatT width = context.evalFloatParm("size", 0);
         bt::floatT height = context.evalFloatParm("size", 1);
 
-        const bt::intT columns = context.evalFloatParm("columns");
-        const bt::intT rows = context.evalFloatParm("rows");
+        const bt::intT columns = context.evalIntParm("columns");
+        const bt::intT rows = context.evalIntParm("rows");
         if(columns<=0 || rows<=0)
         {
             setOutputGeometry(0, geo);
@@ -35,13 +35,15 @@ void GopGrid::cookOp(enzo::op::Context context)
         const bt::floatT centerOffsetX = width/2.0;
         const bt::floatT centerOffsetY = height/2.0;
 
+        const bt::floatT columnDivisor = std::max<bt::floatT>(columns-1, 1);
+        const bt::floatT rowDivisor = std::max<bt::floatT>(rows-1, 1);
         // add points
         for(int i=0;i<columns;i++)
         {
             for(int j=0;j<rows;++j)
             {
-                const bt::floatT x = static_cast<bt::floatT>(i)/(columns-1)*width-centerOffsetX;
-                const bt::floatT z = static_cast<bt::floatT>(j)/(rows-1)*height-centerOffsetY;
+                const bt::floatT x = i/columnDivisor*width-centerOffsetX;
+                const bt::floatT z = j/rowDivisor*height-centerOffsetY;
                 geo.addPoint(bt::Vector3(x, 0, z));
             }
         }
@@ -80,14 +82,14 @@ enzo::prm::Template GopGrid::parameterList[] =
         enzo::prm::Name("rows", "Rows"),
         enzo::prm::Default(10),
         1,
-        enzo::prm::Range(0, enzo::prm::RangeFlag::LOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)
+        enzo::prm::Range(1, enzo::prm::RangeFlag::LOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)
     ),
     enzo::prm::Template(
         enzo::prm::Type::INT,
         enzo::prm::Name("columns", "Columns"),
         enzo::prm::Default(10),
         1,
-        enzo::prm::Range(0, enzo::prm::RangeFlag::LOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)
+        enzo::prm::Range(1, enzo::prm::RangeFlag::LOCKED, 100, enzo::prm::RangeFlag::UNLOCKED)
     ),
     enzo::prm::Terminator
 };
