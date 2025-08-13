@@ -1,7 +1,7 @@
 <div  align="center">
   <img width=180 src="static/icons/icon-main-white.png">
 </div>
-<h1 align="center">Enzo DCC</h1>
+<h1 align="center">Enzo 3D</h1>
 
 <img align="left" src="https://parkerbritt.com/jenkins_badge?job=enzo">
 <div align="right">
@@ -17,7 +17,7 @@ Enzo is a 3D animation software application focused on procedural geometry editi
 <img src="https://github.com/user-attachments/assets/e919e41b-f41f-41b9-8aec-082d53fed470">
 
 > [!IMPORTANT]
-> early work in progress
+> Early work in progress
 
 ## Dependencies
 - cmake
