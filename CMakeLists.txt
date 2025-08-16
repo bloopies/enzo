@@ -46,7 +46,7 @@ set(GUI_SOURCES
     src/Gui/Viewport/GLPoints.cpp
     src/Gui/Network/NetworkGraphicsView.cpp
     src/Gui/Network/NetworkGraphicsScene.cpp
-    src/Gui/Network/Network.cpp
+    src/Gui/Network/NetworkPanel.cpp
     src/Gui/Network/NodeGraphic.cpp
     src/Gui/Network/SocketGraphic.cpp
     src/Gui/Network/NodeEdgeGraphic.cpp

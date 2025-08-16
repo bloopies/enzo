@@ -4,7 +4,7 @@
 #include "Gui/GeometrySpreadsheetPanel/GeometrySpreadsheetPanel.h"
 #include "Gui/ParametersPanel/ParametersPanel.h"
 #include "Gui/Viewport/Viewport.h"
-#include "Gui/Network/Network.h"
+#include "Gui/Network/NetworkPanel.h"
 #include <qnamespace.h>
 #include <qpushbutton.h>
 #include <qsplitter.h>
@@ -27,7 +27,7 @@ EnzoUI::EnzoUI()
     setStyleSheet("background-color:#1d2021;");
 
     Viewport* viewport = new Viewport();
-    Network* network = new Network();
+    NetworkPanel* network = new NetworkPanel();
     ParametersPanel* parametersPanel = new ParametersPanel();
     GeometrySpreadsheetPanel* geometrySpreadsheetPanel = new GeometrySpreadsheetPanel();
 

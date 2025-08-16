@@ -4,19 +4,19 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 
-class Network;
+class NetworkPanel;
 
 class NetworkGraphicsView
 : public QGraphicsView
 {
 public:
-    NetworkGraphicsView(QWidget *parent = nullptr, Network* network=nullptr, QGraphicsScene* scene = nullptr);
+    NetworkGraphicsView(QWidget *parent = nullptr, NetworkPanel* network=nullptr, QGraphicsScene* scene = nullptr);
     QSize sizeHint() const override { return QSize(-1, -1); }
 private:
     QPointF panStartPos;
     void initUI();
     QGraphicsScene* scene_;
-    Network* network_;
+    NetworkPanel* network_;
 
 protected:
     void mouseMoveEvent(QMouseEvent *mouseEvent) override;

@@ -4,7 +4,7 @@
 #include <QSvgWidget>
 #include "Gui/Network/TabMenu.h"
 #include "Engine/Operator/OperatorTable.h"
-#include "Gui/Network/Network.h"
+#include "Gui/Network/NetworkPanel.h"
 #include <QLabel>
 #include <QLineEdit>
 #include <iostream>
@@ -178,7 +178,7 @@ void enzo::ui::TabMenu::createNode(std::string nodeName)
     // check valid result
     if(!opInfo.has_value()) {throw std::runtime_error("Couldn't find op info for: " + nodeName);}
 
-    static_cast<Network*>(parentWidget())->createNode(opInfo.value());
+    static_cast<NetworkPanel*>(parentWidget())->createNode(opInfo.value());
 }
 
 void enzo::ui::TabMenu::nodeClicked()

@@ -19,11 +19,11 @@
 #include <unordered_set>
 #include "Gui/Network/TabMenu.h"
 
-class Network
+class NetworkPanel
 : public QWidget
 {
 public:
-    Network(QWidget* parent = nullptr);
+    NetworkPanel(QWidget* parent = nullptr);
     void socketClicked(SocketGraphic* socket, QMouseEvent *event);
     void mouseMoved(QMouseEvent *event);
     QSize sizeHint() const override { return QSize(-1, -1); }

@@ -1,6 +1,6 @@
 #include "Gui/Network/NetworkGraphicsView.h"
 #include <QGraphicsItem>
-#include "Gui/Network/Network.h"
+#include "Gui/Network/NetworkPanel.h"
 #include <QCoreApplication>
 #include "Gui/Network/NetworkGraphicsScene.h"
 #include "Gui/Network/SocketGraphic.h"
@@ -11,7 +11,7 @@
 #include <qobject.h>
 #include <typeinfo>
 
-NetworkGraphicsView::NetworkGraphicsView(QWidget *parent, Network* network, QGraphicsScene* scene)
+NetworkGraphicsView::NetworkGraphicsView(QWidget *parent, NetworkPanel* network, QGraphicsScene* scene)
 : QGraphicsView(parent), scene_{scene}, network_{network}
 {
     setScene(scene_);

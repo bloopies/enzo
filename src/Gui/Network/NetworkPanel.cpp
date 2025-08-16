@@ -1,4 +1,4 @@
-#include "Gui/Network/Network.h"
+#include "Gui/Network/NetworkPanel.h"
 #include "Engine/Operator/GeometryConnection.h"
 #include "Engine/Operator/GeometryOperator.h"
 #include "Engine/Operator/OperatorTable.h"
@@ -25,7 +25,7 @@
 
 using namespace enzo;
 
-Network::Network(QWidget* parent)
+NetworkPanel::NetworkPanel(QWidget* parent)
 : QWidget(parent)
 {
 
@@ -47,7 +47,7 @@ Network::Network(QWidget* parent)
 
 }
 
-void Network::resizeEvent(QResizeEvent *event)
+void NetworkPanel::resizeEvent(QResizeEvent *event)
 {
     QPainterPath path;
     constexpr float radius = 10;
@@ -56,7 +56,7 @@ void Network::resizeEvent(QResizeEvent *event)
     this->setMask(region);
 }
 
-void Network::deleteEdge(QGraphicsItem* edge)
+void NetworkPanel::deleteEdge(QGraphicsItem* edge)
 {
     std::cout << "----\ndeleting edge\n";
     if(!edge) return;
@@ -71,7 +71,7 @@ void Network::deleteEdge(QGraphicsItem* edge)
     std::cout << "finished deleting edge\n----\n";
 }
 
-void Network::mousePressEvent(QMouseEvent *event)
+void NetworkPanel::mousePressEvent(QMouseEvent *event)
 {
     if( event->buttons() & Qt::LeftButton)
     {
@@ -80,7 +80,7 @@ void Network::mousePressEvent(QMouseEvent *event)
 
 }
 
-void Network::leftMousePressed(QMouseEvent *event)
+void NetworkPanel::leftMousePressed(QMouseEvent *event)
 {
     std::cout << "LEFT MOUSE PRESSED\n";
     Qt::KeyboardModifiers mods = event->modifiers();
@@ -127,7 +127,7 @@ void Network::leftMousePressed(QMouseEvent *event)
 
 
 
-void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
+void NetworkPanel::socketClicked(SocketGraphic* socket, QMouseEvent *event)
 {
     std::cout << "socket clicked\n";
     // clicked first socket
@@ -168,7 +168,7 @@ void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
     }
 }
 
-void Network::destroyFloatingEdge()
+void NetworkPanel::destroyFloatingEdge()
 {
     if(floatingEdge_)
     {
@@ -180,7 +180,7 @@ void Network::destroyFloatingEdge()
 
 
 
-void Network::mouseMoved(QMouseEvent *event)
+void NetworkPanel::mouseMoved(QMouseEvent *event)
 {
     // cache and reset prev hover items
     std::unordered_set<QGraphicsItem*> prevHoverItems = prevHoverItems_;
@@ -256,7 +256,7 @@ void Network::mouseMoved(QMouseEvent *event)
     }
 }
 
-void Network::moveNodes(QPointF pos)
+void NetworkPanel::moveNodes(QPointF pos)
 {
 
     for(auto node : moveNodeBuffer)
@@ -266,7 +266,7 @@ void Network::moveNodes(QPointF pos)
 }
 
 
-void Network::keyPressEvent(QKeyEvent *event)
+void NetworkPanel::keyPressEvent(QKeyEvent *event)
 {
     // modifiers
     Qt::KeyboardModifiers mods = event->modifiers();
@@ -339,7 +339,7 @@ void Network::keyPressEvent(QKeyEvent *event)
     }
 }
 
-NodeGraphic* Network::createNode(op::OpInfo opInfo)
+NodeGraphic* NetworkPanel::createNode(op::OpInfo opInfo)
 {
     if(nt::OpId id = enzo::nt::nm().addOperator(opInfo))
     {
@@ -359,7 +359,7 @@ NodeGraphic* Network::createNode(op::OpInfo opInfo)
 }
 
 
-void Network::keyReleaseEvent(QKeyEvent *event)
+void NetworkPanel::keyReleaseEvent(QKeyEvent *event)
 {
     // modifiers
     Qt::KeyboardModifiers mods = event->modifiers();
@@ -379,7 +379,7 @@ void Network::keyReleaseEvent(QKeyEvent *event)
     }
 }
 
-void Network::mouseReleaseEvent(QMouseEvent *event)
+void NetworkPanel::mouseReleaseEvent(QMouseEvent *event)
 {
     // std::cout << "----\nMOUSE RELEASED\n---\n";
     QList<QGraphicsItem*> hoverItems = view_->items(event->pos());
@@ -440,4 +440,4 @@ void Network::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-bool Network::focusNextPrevChild(bool) { return false; }
+bool NetworkPanel::focusNextPrevChild(bool) { return false; }
