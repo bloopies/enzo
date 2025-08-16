@@ -32,7 +32,7 @@ void SocketGraphic::addEdge(NodeEdgeGraphic* edge)
             {
                 continue;
             }
-            edge->cleanUp();
+            edge->remove();
         }
         edges_.clear();
     }

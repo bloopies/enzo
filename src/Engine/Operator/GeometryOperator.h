@@ -8,7 +8,7 @@
 #include <memory>
 
 namespace enzo::nt {
-void connectOperators(enzo::nt::OpId inputOpId, unsigned int inputIndex, enzo::nt::OpId outputOpId, unsigned int outputIndex);
+std::weak_ptr<GeometryConnection> connectOperators(enzo::nt::OpId inputOpId, unsigned int inputIndex, enzo::nt::OpId outputOpId, unsigned int outputIndex);
 
 class GeometryOperator
 {
@@ -20,10 +20,14 @@ public:
     GeometryOperator& operator=(const GeometryOperator&) = delete;
 
     void cookOp(op::Context context);
-    geo::Geometry& getOutputGeo(unsigned outputIndex) const;
+    geo::Geometry& getOutputGeo(unsigned int outputIndex) const;
 
     void addInputConnection(std::shared_ptr<nt::GeometryConnection> connection);
     void addOutputConnection(std::shared_ptr<nt::GeometryConnection> connection);
+
+    void removeInputConnection(unsigned int inputIndex);
+    void removeOutputConnection(const nt::GeometryConnection* connection);
+
     std::vector<std::weak_ptr<const GeometryConnection>> getInputConnections() const;
     std::vector<std::weak_ptr<const GeometryConnection>> getOutputConnections() const;
     std::optional<const GeometryConnection> getInputConnection(size_t index) const;

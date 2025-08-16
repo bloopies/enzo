@@ -6,11 +6,12 @@
 #include "Engine/Parameter/Parameter.h"
 #include "Engine/Parameter/Template.h"
 #include <iostream>
+#include <stdexcept>
 #include "icecream.hpp"
 
 using namespace enzo;
 
-void enzo::nt::connectOperators(enzo::nt::OpId inputOpId, unsigned int inputIndex, enzo::nt::OpId outputOpId, unsigned int outputIndex)
+std::weak_ptr<nt::GeometryConnection> enzo::nt::connectOperators(enzo::nt::OpId inputOpId, unsigned int inputIndex, enzo::nt::OpId outputOpId, unsigned int outputIndex)
 {
     auto& nm = nt::nm();
 
@@ -24,6 +25,8 @@ void enzo::nt::connectOperators(enzo::nt::OpId inputOpId, unsigned int inputInde
 
     // set input on the lower operator
     outputOp.addInputConnection(newConnection);
+
+    return newConnection;
 }
 
 nt::GeometryOperator::GeometryOperator(enzo::nt::OpId opId, op::OpInfo opInfo)
@@ -101,6 +104,39 @@ void nt::GeometryOperator::addOutputConnection(std::shared_ptr<nt::GeometryConne
     outputConnections_.push_back(connection); 
     std::cout << "size: " << outputConnections_.size() << "\n";
 }
+
+void nt::GeometryOperator::removeInputConnection(unsigned int inputIndex)
+{
+    for(auto it=inputConnections_.begin(); it!=inputConnections_.end(); ++it)
+    {
+        if((*it)->getInputIndex() == inputIndex)
+        {
+            inputConnections_.erase(it);
+            dirtyNode();
+            std::cout << "removing input connection\n";
+            return;
+        }
+    }
+    std::cerr << "Couldn't remove input connection: " << inputIndex << "\n";
+}
+
+void nt::GeometryOperator::removeOutputConnection(const nt::GeometryConnection* connectionPtr)
+{
+    for(auto it=outputConnections_.begin(); it!=outputConnections_.end(); ++it)
+    {
+        const nt::GeometryConnection* otherConnectionPtr = (*it).get();
+        if(connectionPtr == otherConnectionPtr)
+        {
+            outputConnections_.erase(it);
+            dirtyNode();
+            std::cout << "removing output connection\n";
+            return;
+        }
+    }
+    std::cerr << "Couldn't remove output connection\n";
+
+}
+
 
 std::weak_ptr<prm::Parameter> nt::GeometryOperator::getParameter(std::string parameterName)
 {

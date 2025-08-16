@@ -67,7 +67,7 @@ void Network::deleteEdge(QGraphicsItem* edge)
     // NOTE: deleting edge kept giving me segmentation faults
     // I coundn't figure it out so I'm just leaving it for now
     // delete edge;
-    static_cast<NodeEdgeGraphic*>(edge)->cleanUp();
+    static_cast<NodeEdgeGraphic*>(edge)->remove();
     std::cout << "finished deleting edge\n----\n";
 }
 
@@ -158,13 +158,12 @@ void Network::socketClicked(SocketGraphic* socket, QMouseEvent *event)
         std::cout << "CONNECTING opid: " << inputNodeSocket->getOpId() << " -> " << outputNodeSocket->getOpId() << "\n";
 
 
-        nt::connectOperators(inputNodeSocket->getOpId(), inputNodeSocket->getIndex(), outputNodeSocket->getOpId(), outputNodeSocket->getIndex());
+        std::weak_ptr<nt::GeometryConnection> newConnection = nt::connectOperators(inputNodeSocket->getOpId(), inputNodeSocket->getIndex(), outputNodeSocket->getOpId(), outputNodeSocket->getIndex());
 
+        NodeEdgeGraphic* newEdgeGraphic = new NodeEdgeGraphic(outputNodeSocket, inputNodeSocket, newConnection);
 
-        NodeEdgeGraphic* newEdge = new NodeEdgeGraphic(outputNodeSocket, inputNodeSocket);
-
-        newEdge->setPos(outputNodeSocket->scenePos(), inputNodeSocket->scenePos());
-        scene_->addItem(newEdge);
+        newEdgeGraphic->setPos(outputNodeSocket->scenePos(), inputNodeSocket->scenePos());
+        scene_->addItem(newEdgeGraphic);
         destroyFloatingEdge();
     }
 }

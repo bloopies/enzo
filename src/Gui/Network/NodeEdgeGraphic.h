@@ -1,14 +1,16 @@
 #pragma once
 #include <QGraphicsItem>
 #include "Gui/Network/SocketGraphic.h"
+#include "Engine/Operator/GeometryConnection.h"
 
 #include <QPainter>
+#include <memory>
 
 class NodeEdgeGraphic
 : public QGraphicsItem
 {
 public:
-    NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2, QGraphicsItem *parent = nullptr);
+    NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2, std::weak_ptr<enzo::nt::GeometryConnection> connection, QGraphicsItem *parent = nullptr);
     ~NodeEdgeGraphic();
     QRectF boundingRect() const override;
 
@@ -20,7 +22,7 @@ public:
     void setPos(QPointF pos1, QPointF pos2);
     void setStartPos(QPointF pos);
     void setEndPos(QPointF pos);
-    void cleanUp();
+    void remove();
     void setDeleteHighlight(bool state);
     QPen deleteHighlightPen_;
     QPen defaultPen_;
@@ -40,6 +42,8 @@ private:
     QRectF boundRect_;
     qreal padding_=40;
     QPointF hoverPos_;
+
+    std::weak_ptr<enzo::nt::GeometryConnection> connection_;
 
     void updatePath();
 protected:

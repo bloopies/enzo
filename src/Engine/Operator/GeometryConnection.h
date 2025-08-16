@@ -16,6 +16,9 @@ public:
     enzo::nt::OpId getOutputOpId() const;
     unsigned int getInputIndex() const;
     unsigned int getOutputIndex() const;
+
+    void remove();
+    // bool isValid();
 private:
     enzo::nt::OpId inputOperatorId_;
     enzo::nt::OpId outputOperatorId_;
