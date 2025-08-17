@@ -42,6 +42,30 @@ unsigned int ga::Attribute::Attribute::getTypeSize() const
 }
 
 
+void ga::Attribute::resize(size_t size)
+{
+    using namespace enzo::ga;
+    switch(type_)
+    {
+        case AttributeType::intT:
+            intStore_->resize(size);
+            break;
+        case AttributeType::floatT:
+            floatStore_->resize(size);
+            break;
+        case AttributeType::boolT:
+            boolStore_->resize(size);
+            break;
+        case AttributeType::vectorT:
+            vector3Store_->resize(size);
+            break;
+        default:
+            throw std::runtime_error("type not accounted for");
+
+    }
+    
+}
+
 
 ga::Attribute::Attribute(const Attribute& other)
 {

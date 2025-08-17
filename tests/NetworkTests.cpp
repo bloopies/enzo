@@ -26,7 +26,8 @@ struct OperatorTableInit
     OperatorTableInit() { enzo::op::OperatorTable::initPlugins(); }
 };
 static OperatorTableInit _operatorTableInit;
-auto testOpInfo = enzo::op::OperatorTable::getOpInfo("house").value();
+auto testOpInfoOptional = enzo::op::OperatorTable::getOpInfo("grid");
+auto testOpInfo = testOpInfoOptional.value();
 
 TEST_CASE_METHOD(NMReset, "network fixture separation start")
 {

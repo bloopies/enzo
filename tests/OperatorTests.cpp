@@ -32,7 +32,7 @@ TEST_CASE("geometry")
 
     // check getter
     std::shared_ptr<ga::Attribute> myAttribute = geo.getAttribByName(ga::AttrOwner::POINT, "index");
-    ga::AttributeHandle<int> myHandle2(myAttribute);
+    ga::AttributeHandle<bt::intT> myHandle2(myAttribute);
     REQUIRE(myHandle2.getValue(0)==5);
     REQUIRE(myHandle2.getValue(1)==6);
 

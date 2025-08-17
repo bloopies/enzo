@@ -66,6 +66,38 @@ enzo::geo::Geometry& enzo::geo::Geometry::operator=(const enzo::geo::Geometry& r
     return *this;
 }
 
+// void geo::Geometry::merge(Geometry& other)
+// {
+//     pointAttributes_.reserve(pointAttributes_.size()+other.pointAttributes_.size());
+//     ga::Offset attributeSize = getNumPoints();
+
+//     // add each other attribute to self
+//     for(std::shared_ptr<ga::Attribute> otherAttribute : other.pointAttributes_)
+//     {
+//         bt::String otherAttributeName = otherAttribute->getName();
+//         bool alreadyExists = false;
+//         for(std::shared_ptr<ga::Attribute> attribute : pointAttributes_)
+//         {
+//             if(otherAttributeName == attribute->getName())
+//             {
+//                 alreadyExists = true;
+//                 break;
+//             }
+//         }
+
+//         if(alreadyExists)
+//         {
+//             for
+//         }
+//         else
+//         {
+//             otherAttribute->resize(attributeSize);
+//         }
+//         
+//     }
+
+// }
+
 void geo::Geometry::addFace(const std::vector<ga::Offset>& pointOffsets, bool closed)
 {
     const ga::Offset primNum = vertexCountHandlePrim_.getSize();

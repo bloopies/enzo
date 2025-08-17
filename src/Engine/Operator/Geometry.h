@@ -72,6 +72,8 @@ public:
 
     bt::boolT isClosed(ga::Offset primOffset) const;
 
+    void merge(Geometry& other);
+
     void computePrimStartVertices() const;
 private:
     using attribVector = std::vector<std::shared_ptr<ga::Attribute>>;

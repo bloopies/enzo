@@ -24,6 +24,7 @@ namespace enzo{
             std::string getName() const;
             unsigned int getTypeSize() const;
 
+            void resize(size_t size);
 
 
             template <typename T>

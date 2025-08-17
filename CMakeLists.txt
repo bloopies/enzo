@@ -202,6 +202,7 @@ target_include_directories(${TestExec} PUBLIC
     ${ENGINE_INCLUDE_DIRECTORIES}
     ${BOOST_INCLUDE_DIRS}
 )
+target_compile_definitions(${TestExec} PRIVATE ENZO_DEV_LIB_DIR="${ENZO_DEV_LIB_DIR}")
 
 # benchmarks
 add_executable(${BenchExec}
@@ -214,4 +215,5 @@ target_compile_definitions(${BenchExec} PRIVATE UNIT_TEST)
 target_include_directories(${BenchExec} PUBLIC 
     ${ENGINE_INCLUDE_DIRECTORIES}
 )
+target_compile_definitions(${BenchExec} PRIVATE ENZO_DEV_LIB_DIR="${ENZO_DEV_LIB_DIR}")
 
