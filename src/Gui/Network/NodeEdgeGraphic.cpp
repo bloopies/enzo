@@ -1,5 +1,6 @@
 #include "Gui/Network/NodeEdgeGraphic.h"
 #include <QTextDocument>
+#include "Engine/Operator/GeometryConnection.h"
 #include "Gui/Network/SocketGraphic.h"
 #include <iostream>
 #include <qgraphicsitem.h>
@@ -158,6 +159,12 @@ void NodeEdgeGraphic::remove(bool full)
 {
     // TODO: possible memory leak
     // these probably aren't necessary but i'm trying to fix a bug
+
+    if(connection_.expired())
+    {
+        return;
+    }
+
     prepareGeometryChange();
     update();
     scene()->update();
@@ -170,6 +177,8 @@ void NodeEdgeGraphic::remove(bool full)
     {
         if(auto connectionShared = connection_.lock())
         {
+            // remove connection
+            connection_ = std::weak_ptr<enzo::nt::GeometryConnection>();
             connectionShared->remove();
         }
     }
