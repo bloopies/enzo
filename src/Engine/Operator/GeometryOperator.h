@@ -4,6 +4,7 @@
 #include "Engine/Operator/GeometryOpDef.h"
 #include "Engine/Parameter/Parameter.h"
 #include "Engine/Types.h"
+#include <functional>
 #include <optional>
 #include <memory>
 
@@ -30,7 +31,7 @@ public:
 
     std::vector<std::weak_ptr<const GeometryConnection>> getInputConnections() const;
     std::vector<std::weak_ptr<const GeometryConnection>> getOutputConnections() const;
-    std::optional<const GeometryConnection> getInputConnection(size_t index) const;
+    std::optional<std::reference_wrapper<const GeometryConnection>> getInputConnection(size_t index) const;
     std::vector<std::weak_ptr<prm::Parameter>> getParameters();
     std::weak_ptr<prm::Parameter> getParameter(std::string parameterName);
 

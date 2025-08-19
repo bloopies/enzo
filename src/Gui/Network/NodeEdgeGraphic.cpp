@@ -21,6 +21,11 @@ NodeEdgeGraphic::NodeEdgeGraphic(SocketGraphic* socket1, SocketGraphic* socket2,
     deleteHighlightPen_.setWidth(2);
     updateDeleteHighlightPen();
 
+    // remove self when connection is removed
+    if(auto connectionShared = connection_.lock())
+    {
+        connectionShared->removed.connect([this](){ this->remove(false); });
+    }
 
     socket1_->addEdge(this);
     socket2_->addEdge(this);
@@ -149,7 +154,7 @@ void NodeEdgeGraphic::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
  
 }
 
-void NodeEdgeGraphic::remove()
+void NodeEdgeGraphic::remove(bool full)
 {
     // TODO: possible memory leak
     // these probably aren't necessary but i'm trying to fix a bug
@@ -161,8 +166,11 @@ void NodeEdgeGraphic::remove()
     socket1_->removeEdge(this);
     socket2_->removeEdge(this);
 
-    if(auto connectionShared = connection_.lock())
+    if(full)
     {
-        connectionShared->remove();
+        if(auto connectionShared = connection_.lock())
+        {
+            connectionShared->remove();
+        }
     }
 }

@@ -22,7 +22,7 @@ public:
     void setPos(QPointF pos1, QPointF pos2);
     void setStartPos(QPointF pos);
     void setEndPos(QPointF pos);
-    void remove();
+    void remove(bool full=true);
     void setDeleteHighlight(bool state);
     QPen deleteHighlightPen_;
     QPen defaultPen_;

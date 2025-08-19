@@ -1,4 +1,5 @@
 #include "Engine/Operator/GeometryOperator.h"
+#include <functional>
 #include <memory>
 #include "Engine/Network/NetworkManager.h"
 #include <optional>
@@ -78,22 +79,24 @@ geo::Geometry& enzo::nt::GeometryOperator::getOutputGeo(unsigned outputIndex) co
 void nt::GeometryOperator::addInputConnection(std::shared_ptr<nt::GeometryConnection> newConnection)
 {
     // delete previous input
-    for(auto it=inputConnections_.begin(); it!=inputConnections_.end();)
+    std::shared_ptr<nt::GeometryConnection> previousConection = nullptr;
+    IC();
+    for(auto it=inputConnections_.begin(); it!=inputConnections_.end(); ++it)
     {
         if((*it)->getOutputIndex()==newConnection->getOutputIndex())
         {
-            inputConnections_.erase(it);
+            previousConection = *it;
+            break;
         }
-        else
-        {
-            ++it;
-        }
+    }
+    if(previousConection)
+    {
+        previousConection->remove();
     }
 
     // add new newConnection
     inputConnections_.push_back(newConnection); 
 
-    IC();
     dirtyNode();
 }
 
@@ -113,11 +116,12 @@ void nt::GeometryOperator::removeInputConnection(unsigned int inputIndex)
         {
             inputConnections_.erase(it);
             dirtyNode();
-            std::cout << "removing input connection\n";
+            std::cerr << "removing input connection\n";
             return;
         }
     }
     std::cerr << "Couldn't remove input connection: " << inputIndex << "\n";
+    IC(inputIndex, opId_, inputConnections_.size());
 }
 
 void nt::GeometryOperator::removeOutputConnection(const nt::GeometryConnection* connectionPtr)
@@ -177,13 +181,13 @@ std::string nt::GeometryOperator::getTypeName()
 }
 
 
-std::optional<const nt::GeometryConnection> nt::GeometryOperator::getInputConnection(size_t index) const
+std::optional<std::reference_wrapper<const nt::GeometryConnection>> nt::GeometryOperator::getInputConnection(size_t index) const
 {
     for(auto it=inputConnections_.begin(); it!=inputConnections_.end();)
     {
         if((*it)->getOutputIndex()==index)
         {
-            return std::optional<const nt::GeometryConnection>(**it);
+            return std::cref(**it);
         }
     }
     return std::nullopt;

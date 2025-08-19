@@ -22,29 +22,28 @@ unsigned int SocketGraphic::getIndex() const
 
 void SocketGraphic::addEdge(NodeEdgeGraphic* edge)
 {
-    std::cout << "adding edge\n";
-    if(getIO()==enzo::nt::SocketIOType::Input && edges_.size()>0)
-    {
-        std::unordered_set<NodeEdgeGraphic*> edgesCopy = edges_;
-        for(NodeEdgeGraphic* edge : edgesCopy)
-        {
-            if(!edge)
-            {
-                continue;
-            }
-            edge->remove();
-        }
-        edges_.clear();
-    }
+    // std::cout << "adding edge\n";
+    // const bool isInput = getIO()==enzo::nt::SocketIOType::Input;
+    // if(isInput && edges_.size()>0)
+    // {
+    //     std::unordered_set<NodeEdgeGraphic*> edgesCopy = edges_;
+    //     for(NodeEdgeGraphic* edge : edgesCopy)
+    //     {
+    //         if(!edge)
+    //         {
+    //             continue;
+    //         }
+    //         edge->remove();
+    //     }
+    //     edges_.clear();
+    // }
     edges_.insert(edge);
 }
 
 void SocketGraphic::removeEdge(NodeEdgeGraphic* edge)
 {
     std::cout << "removing edge\n";
-    std::cout << "before size: " << edges_.size() << "\n";
     edges_.erase(edge);
-    std::cout << "after size: " << edges_.size() << "\n";
     // auto it = find(edges_.begin(), edges_.end(), edge);
     // if(it!=edges_.end())
     // {

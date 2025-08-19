@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Engine/Types.h"
+#include <boost/signals2.hpp>
+
 namespace enzo::nt
 {
 class GeometryOperator;
@@ -16,7 +18,12 @@ public:
     enzo::nt::OpId getOutputOpId() const;
     unsigned int getInputIndex() const;
     unsigned int getOutputIndex() const;
+    friend std::ostream& operator<<(std::ostream& os, const GeometryConnection& p)
+    {
+        return os << p.inputOperatorId_ << ":" << p.inputIndex_ << " -> " << p.outputOperatorId_ << ":" << p.outputIndex_ << "\n";
+    }
 
+    boost::signals2::signal<void ()> removed;
     void remove();
     // bool isValid();
 private:
