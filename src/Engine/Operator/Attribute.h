@@ -15,15 +15,53 @@ namespace enzo{
         template <typename T>
         class AttributeHandle;
 
+        /**
+        * @class enzo::ga::Attribute
+        * @brief Containers for geometry data.
+        *
+        * Attributes are the containers for geometry data in the engine. 
+        * Each attribute is a single column in the spreadsheet that makes up your geometry.
+        * The column has a single name and type. Based on the attribute owner it will also
+        * have a value for each element. For example, if the owner is a point then your
+        * attribute might be Color, your type might be a vector, and the attribute will
+        * have a color value for each point in the mesh. Attributes own the underlying 
+        * storage for their values, which is contiguous and strongly typed
+        * (e.g., ints, floats, vectors, bools). This allows a single attribute class 
+        * to store data regardless of the type without templates.
+        * Attributes cannot be read or written from by themselves. 
+        * For that an attribute handle is required, (see #enzo::ga::AttributeHandle).
+        *
+        * @note Values are strongly typed; invalid type combinations are guarded both
+        *       at compile time (via handles) and at runtime (defensive checks).
+        */
         class Attribute
         {
         public:
+            /**
+            * @brief Construct a new attribute and initialize its typed storage.
+            *
+            * @param name Human-readable identifier, spaces are not permitted (unique within a collection/scope).
+            * @param type #ga::AttributeType that attribute values will be stored in.
+            *
+            */
             Attribute(std::string name, ga::AttributeType type);
             Attribute(const Attribute& other);
+            /**
+            * @brief Returns the attribute type this attribute stores.
+            */
             AttributeType getType() const;
+            /**
+            * @brief Returns the name of this attribute.
+            */
             std::string getName() const;
+            /**
+            * @brief Returns the number of components in the type (eg. StringT is 1, vectorT is 3).
+            */
             unsigned int getTypeSize() const;
 
+            /**
+            *  @brief Changes the number of elements stored
+            */
             void resize(size_t size);
 
 

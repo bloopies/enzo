@@ -1,3 +1,8 @@
+/**
+ * @file Types.h
+ * @brief Basic attribute, parameter, and node types for Enzo.
+ */
+
 #pragma once
 #include <Eigen/Dense>
 
@@ -13,6 +18,9 @@ namespace enzo
             PRIMITIVE,
             GLOBAL
         };
+        /**
+         * @brief Data types available to store attribute values in.
+         */
         enum class AttributeType
         {
             intT,
