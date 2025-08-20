@@ -37,13 +37,13 @@ public:
     *
     * @param OpInfo Data designating the properties of the node.
     *
-    * @returns The operator ID of the newly created onode
+    * @returns The operator ID of the newly created node
     */
     OpId addOperator(op::OpInfo opInfo);
 
     /** @brief Returns the operator ID for the node with its display flag set.
     * There can only be only be one operator displayed at a time.
-    * Return value is nullop if no node is set to display
+    * Return value is nullopt if no node is set to display
     */
     std::optional<OpId> getDisplayOp();
 
@@ -60,7 +60,7 @@ public:
     GeometryOperator& getGeoOperator(nt::OpId opId);
 
     /**
-    * @brief Sets given OpId to be dislayed, releasing previous display Node
+    * @brief Sets given OpId to be displayed, releasing previous display Node
     */
     void setDisplayOp(OpId opId);
 
