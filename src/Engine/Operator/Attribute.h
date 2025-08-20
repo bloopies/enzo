@@ -41,7 +41,7 @@ namespace enzo{
             * @brief Construct a new attribute and initialize its typed storage.
             *
             * @param name Human-readable identifier, spaces are not permitted (unique within a collection/scope).
-            * @param type #ga::AttributeType that attribute values will be stored in.
+            * @param type Attribute data type that values will be stored in.
             *
             */
             Attribute(std::string name, ga::AttributeType type);

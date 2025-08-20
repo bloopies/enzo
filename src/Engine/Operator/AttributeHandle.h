@@ -13,12 +13,43 @@
 
 namespace enzo::ga{
 
+/**
+* @class enzo::ga::AttributeHandle
+* @brief Read write accessor for #enzo::ga::Attribute
+*
+* @tparam T C++ value type matching the Attribute’s logical type
+*           (e.g., bt::intT, bt::floatT, bt::Vector3, bt::boolT).
+*
+* An Attribute Handle is a typed view into an attribute’s storage.
+* It binds at construction to a concrete type and exposes operations
+* like reserving capacity, appending values, and reading/writing by
+* index. Because the handle uses templating, most misuse is caught
+* at compile time, and runtime guards raise errors if an attribute/handle
+* type combination isn’t accounted for. In the future implicit casting
+* can be added for convenience. Handles don’t own data,
+* they just reference the attribute’s storage.
+*
+* There is also a read-only handle variant that provides the same
+* typed accessors without mutation. This is useful when an operator
+* needs to inspect data but must not modify it, when the engine exposes
+* attributes to user code with limited permissions, or when implementing
+* const member functions that require attribute access.
+*
+* Together, attributes define the schema and storage, while handles
+* provide the typed access that nodes and tools use to operate on data directly.
+*/
 template <typename T>
 class AttributeHandle
 {
 public:
     ga::AttributeType type_;
 
+    /**
+    * @brief Construct a new typed handle linked to a target attribute
+    *
+    * @param attribute The target attribute this handle will modify
+    *
+    */
     AttributeHandle(std::shared_ptr<Attribute> attribute)
     {
         type_ = attribute->getType();
@@ -53,6 +84,12 @@ public:
         }
     }
 
+    /**
+    * @brief Adds an element to the end of the attribute.
+    *
+    * @param The element value the value to add to the attribute.
+    *
+    */
     void addValue(T value)
     {
         // TODO:make this private (primitive friend classes only)
@@ -60,35 +97,65 @@ public:
     }
 
 
+    /**
+    * @brief Reserves more space in the attribute to add new elements
+    *
+    * This is important when adding many elements to the attribute as automatic resizing is expensive.
+    *
+    * @param newCap The new maximum number of elements the attribute can hold before needing to automatically allocate more.
+    *
+    */
     void reserve(std::size_t newCap)
     {
         data_->reserve(newCap);
     }
 
     // TODO: replace with iterator
+    /**
+    * @brief Gets a vector containing all the values stored in this attribute.
+    *
+    * @todo Replace with an iterator for accessing many values.
+    *
+    * @returns A vector containing all the values stored in this attribute.
+    *
+    */
     std::vector<T> getAllValues() const
     {
         return {data_->begin(), data_->end()};
     }
 
+    /**
+    * @brief Gets the number of element stored in the attribute
+    */
     size_t getSize() const
     {
         return data_->size();
     }
 
-    T getValue(size_t pos) const
+    /**
+    * @brief Gets the value at a given offset
+    * @returns The value stored at a given offset
+    * @todo protect against invalid positions
+    * @todo Add implicit casting between types (eg. if T is int but the parameter's #ga::AttributeType is floatT 5.3 return 5)
+    */
+    T getValue(size_t offset) const
     {
-        // TODO:protect against invalid positions
-        // TODO: cast types
-        return (*data_)[pos];
+        return (*data_)[offset];
     }
 
-    void setValue(size_t pos, const T& value)
+    /**
+    * @brief Sets the value at a given offset.
+    * @todo protect against invalid positions
+    * @todo Add implicit casting between types (eg. if T is int but the parameter's #ga::AttributeType is floatT 5.3 return 5)
+    */
+    void setValue(size_t offset, const T& value)
     {
-        // TODO:protect against invalid positions
-        // TODO: cast types
-        (*data_)[pos] = value;
+        (*data_)[offset] = value;
     }
+
+    /**
+    * @brief Returs the attribute name as a string
+    */
     std::string getName() const
     {
         return name_;
@@ -120,11 +187,16 @@ using AttributeHandleVector3 = AttributeHandle<enzo::bt::Vector3>;
 using AttributeHandleBool = AttributeHandle<enzo::bt::boolT>;
 
 template <typename T>
+/**
+* @brief Read only accessor for #enzo::ga::Attribute
+* @copydetails AttributeHandle
+*/
 class AttributeHandleRO
 {
 public:
     ga::AttributeType type_;
 
+    /// @copydoc AttributeHandle::AttributeHandle
     AttributeHandleRO(std::shared_ptr<const Attribute> attribute)
     {
         type_ = attribute->getType();
@@ -160,17 +232,19 @@ public:
 
     }
 
-    // TODO: replace with iterator
+    /// @copydoc AttributeHandle::getAllValues
     std::vector<T> getAllValues() const
     {
         return {data_->begin(), data_->end()};
     }
 
+    /// @copydoc AttributeHandle::getSize
     size_t getSize() const
     {
         return data_->size();
     }
 
+    /// @copydoc AttributeHandle::getValue
     T getValue(size_t pos) const
     {
         // TODO:protect against invalid positions
@@ -178,6 +252,7 @@ public:
         return (*data_)[pos];
     }
 
+    /// @copydoc AttributeHandle::getName
     std::string getName() const
     {
         return name_;
