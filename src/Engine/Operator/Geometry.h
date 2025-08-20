@@ -53,6 +53,9 @@ using attributeIterator = std::vector<std::shared_ptr<ga::Attribute>>::iterator;
 class Geometry
 {
 public:
+    Geometry();
+    Geometry(const Geometry& other);
+
    /**
     * @brief Assignment operator. Performs a deep copy of another Geometry.
     * @param rhs The Geometry object to copy from.
