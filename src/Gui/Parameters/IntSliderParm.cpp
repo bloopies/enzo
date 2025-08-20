@@ -25,6 +25,7 @@ enzo::ui::IntSliderParm::IntSliderParm(std::weak_ptr<prm::Parameter> parameter, 
     parameter_=parameter;
 
     mainLayout_ = new QVBoxLayout();
+    mainLayout_->setContentsMargins(0,0,0,0);
     setLayout(mainLayout_);
 
     valueLabel_ = new QLabel();

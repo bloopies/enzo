@@ -21,6 +21,7 @@ enzo::ui::FloatSliderParm::FloatSliderParm(std::weak_ptr<prm::Parameter> paramet
     parameter_ = parameter;
     
     mainLayout_ = new QVBoxLayout();
+    mainLayout_->setContentsMargins(0,0,0,0);
     setLayout(mainLayout_);
 
     valueLabel_ = new QLabel();

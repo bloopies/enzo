@@ -15,8 +15,8 @@ int main(int argc, char **argv)
     format.setSamples(4);
     QSurfaceFormat::setDefaultFormat(format);
 
+    // init plugins
     enzo::op::OperatorTable::initPlugins();
-
 
     QApplication app (argc, argv);
 

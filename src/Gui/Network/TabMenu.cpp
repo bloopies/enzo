@@ -320,6 +320,8 @@ enzo::ui::TabMenuButton::TabMenuButton(const QString &text, QWidget *parent)
     icon_->setFixedSize(16, 16);
 
     mainLayout_ = new QHBoxLayout();
+    constexpr int leftRightMargin = 10;
+    mainLayout_->setContentsMargins(leftRightMargin,0,leftRightMargin,0);
 
     mainLayout_->addWidget(icon_);
     mainLayout_->addWidget(textLabel_);
