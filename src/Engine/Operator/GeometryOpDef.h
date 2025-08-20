@@ -60,7 +60,7 @@ public:
     */
     void throwError(std::string error);
 
-    /// @brief Returns the minimum number of input connections for the node to function required. Set by op::OpInfo when registering the operator.
+    /// @brief Returns the minimum number of input connections required for the node to function. Set by op::OpInfo when registering the operator.
     unsigned int getMinInputs() const;
     /// @brief Returns the maximum number of input connections accepted by the node. Set by op::OpInfo when registering the operator.
     unsigned int getMaxInputs() const;
