@@ -74,6 +74,9 @@ namespace enzo
     }
     namespace nt
     {
+        /**
+        * @brief The unique ID assigned to each node in the network.
+        */
         using OpId = uint64_t;
 
         enum class SocketIOType {
